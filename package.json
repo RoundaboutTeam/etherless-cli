@@ -1,0 +1,31 @@
+{
+  "name": "etherless-cli",
+  "version": "1.0.0",
+  "description": "Module to which the developer interacts with ​etherless​.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rounadbout/etherless-cli.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rounadbout/etherless-cli/issues"
+  },
+  "homepage": "https://github.com/Rounadbout/etherless-cli#readme",
+  "dependencies": {
+    "typescript": "^3.8.3",
+    "yargs": "^15.3.1"
+  },
+  "devDependencies": {
+    "@types/yargs": "^15.0.4",
+    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/parser": "^2.29.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2"
+  }
+}
