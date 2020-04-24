@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-import SayCommand from './Command/sayCommand';
+import RunCommand from './Command/runCommand';
+import DeleteCommand from './Command/deleteCommand';
+import SignupCommand from './Command/signupCommand';
 import CommandManager from './Command/commandManager';
 
-CommandManager.addCommand(new SayCommand());
+CommandManager.addCommand(new RunCommand());
+CommandManager.addCommand(new DeleteCommand());
+CommandManager.addCommand(new SignupCommand());
 CommandManager.init();
