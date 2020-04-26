@@ -1,4 +1,4 @@
-import {Argv} from 'yargs';
+import { Argv } from 'yargs';
 import Command from './command';
 
 class SignupCommand extends Command {
