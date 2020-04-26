@@ -1,9 +1,9 @@
 import {Argv} from 'yargs';
 
 abstract class Command {
-  protected command : string;
+  protected command : string = 'DEFAULT_COMMAND';
 
-  protected description : string;
+  protected description : string = 'DEFAULT_DESCRIPTION';
 
   abstract builder(yargs : Argv) : any;
 
@@ -12,7 +12,7 @@ abstract class Command {
    * @method exec
    * @param yargs: arguments nedded for the command
    */
-  abstract exec(args : any) : void;
+  abstract async exec(args : any) : Promise<any>;
 
   /**
    * @method getCommand

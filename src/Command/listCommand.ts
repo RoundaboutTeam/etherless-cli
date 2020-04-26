@@ -6,7 +6,7 @@ class ListCommand extends Command {
 
   description = 'list functions inside Etherless platform';
 
-  exec(args: any) : void {
+  async exec(args: any) : Promise<any> {
     if (args.m) {
       console.log('Displaying all functions owned by current user inside Etherless platform');
     } else {

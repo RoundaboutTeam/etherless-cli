@@ -6,7 +6,7 @@ class DeleteCommand extends Command {
 
   description = 'delete a function';
 
-  exec(args: any) : void {
+  async exec(args: any) : Promise<any> {
     console.log(`Deleting function ${args.function_name}`);
   }
 

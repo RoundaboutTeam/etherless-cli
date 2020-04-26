@@ -11,6 +11,8 @@ import CommandManager from './Command/commandManager';
 const commandTypes : Array<any> = [RunCommand, DeleteCommand, SignupCommand, LoginCommand,
   ListCommand, HistoryCommand];
 
-commandTypes.forEach((CommandType) => CommandManager.addCommand(new CommandType()));
+commandTypes.forEach(
+  (CommandType) => CommandManager.addCommand(new CommandType())
+);
 
 CommandManager.init();

@@ -6,7 +6,7 @@ class ExecCommand extends Command {
 
   description = 'execute a function ';
 
-  exec(args: any) : void {
+  async exec(args: any) : Promise<any> {
     console.log(`Executing function ${args.function_name}`);
     if (args.params.length > 0) {
       console.log(`With params: ${args.params}`);

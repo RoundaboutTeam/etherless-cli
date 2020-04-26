@@ -6,7 +6,7 @@ class HistoryCommand extends Command {
 
   description = 'show the executing history of the current user';
 
-  exec(args: any) : void {
+  async exec(args: any) : Promise<any> {
     console.log('Showing past executions and results');
     if (args.limit) {
       console.log(`Showing at most ${args.limit} items`);

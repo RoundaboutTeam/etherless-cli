@@ -6,7 +6,7 @@ class SignupCommand extends Command {
 
   description = 'create a new account';
 
-  exec(args: any) : void {
+  async exec(args: any) : Promise<any> {
     console.log('Creating new account...');
     if (args.save === true) {
       console.log('And saving credentials in file');

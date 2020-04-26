@@ -6,7 +6,7 @@ class LoginCommand extends Command {
 
   description = 'login inside Ethereum network';
 
-  exec(args: any) : void {
+  async exec(args: any) : Promise<any> {
     console.log(`Login inside Ethereum network with private key: ${args.private_key}`);
   }
 

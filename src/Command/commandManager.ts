@@ -11,7 +11,11 @@ class CommandManager {
       command.getCommand(),
       command.getDescription(),
       command.builder,
-      command.exec,
+      (args) => {
+        command.exec(args)
+          .then((result) => console.log(result))
+          .catch((error) => console.log(error));
+      },
     );
   }
 
