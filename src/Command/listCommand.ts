@@ -12,6 +12,16 @@ class ListCommand extends Command {
     } else {
       console.log('Displaying all functions inside Etherless platform');
     }
+    /**
+     * if(UserSession.getInstance().isLogged) {
+     *  const contract : Contract = new ethers.Contract(address, abi,
+     *    getDefaultProvider('ropsten));
+     *  const functionList : Array<string> = await contract.getList();
+     *  if(args.m)
+     *    // pensare come fare il controllo
+     *  console.log(functionList);
+     * }
+     */
   }
 
   builder(yargs : Argv) : any {

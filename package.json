@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Rounadbout/etherless-cli#readme",
   "dependencies": {
+    "@types/node": "^13.13.4",
     "ethers": "^4.0.47",
     "typescript": "^3.8.3",
     "yargs": "^15.3.1"

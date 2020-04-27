@@ -13,8 +13,8 @@ class CommandManager {
       command.builder,
       (args) => {
         command.exec(args)
-          .then((result) => console.log(result))
-          .catch((error) => console.log(error));
+          .then((result : string) => console.log(`Result: ${result}`))
+          .catch((error : Error) => console.log(`Error: ${error}`));
       },
     );
   }

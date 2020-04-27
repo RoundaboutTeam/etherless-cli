@@ -12,7 +12,7 @@ abstract class Command {
    * @method exec
    * @param yargs: arguments nedded for the command
    */
-  abstract async exec(args : any) : Promise<any>;
+  abstract async exec(args : any) : Promise<string>;
 
   /**
    * @method getCommand
