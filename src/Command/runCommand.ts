@@ -19,9 +19,9 @@ class ExecCommand extends Command {
 
     const requestId : string = ethers.utils.bigNumberify(ethers.utils.randomBytes(4)).toString();
     const functionName : string = args.function_name;
-    const params : string = args.params.toString();
+    const params : string = JSON.stringify(args.params);
 
-    console.log('Creating request...');
+    console.log('Sending request to execute function...');
     let tx = await contract.runFunction(functionName, params, requestId,
       { value: ethers.utils.parseEther('0.001') });
     await tx.wait();
