@@ -1,18 +1,37 @@
+import { ethers, Wallet, getDefaultProvider } from 'ethers';
 import KeyManager from './keyManager';
-class userSession {
-    private static instance: userSession;
 
-    private constructor() { 
-        this.wallet=false;
+class UserSession {
+  private static instance : UserSession;
+
+  private wallet : Wallet|null = null;
+
+  /*private constructor() {
+    this.wallet = null;
+  }*/
+
+  public static getInstance() : UserSession {
+    if (!UserSession.instance) {
+      UserSession.instance = new UserSession();
     }
 
-    public static getInstance(): userSession {
-        if (!userSession.instance) {
-            userSession.instance = new userSession();
-        }
+    return UserSession.instance;
+  }
+  // wallet : boolean;
 
-        return userSession.instance;
+  public loginWithPrivateKey(privateKey : string) : void {
+    if (this.wallet) {
+      throw new Error('You are already logged in!');
     }
+
+    this.wallet = new Wallet(privateKey, getDefaultProvider('ropsten'));
+  }
+
+  public loginWithMnemonic(mnemonic : string) : void {
+    if (this.wallet) {
+      throw new Error('You are already logged in!');
+    }
+<<<<<<< HEAD
     wallet : boolean;
 
     public loginWithPrivateKey(key:string){
@@ -31,13 +50,68 @@ class userSession {
 
     public isLoggedIn() : boolean{
         return this.wallet;
+=======
+
+    this.wallet = Wallet.fromMnemonic(mnemonic).connect(getDefaultProvider('ropsten'));
+  }
+
+  public getWallet() : Wallet|null {
+    return this.wallet;
+  }
+
+  public static signup() {
+    const wallet : Wallet = Wallet.createRandom();
+    return {
+      address: wallet.address,
+      private: wallet.privateKey,
+      mnemonic: wallet.mnemonic,
+    };
+  }
+
+  public logout() {
+    if (!this.wallet) {
+      throw new Error('No user logged');
     }
+
+    this.wallet = null;
+  }
+
+  public isLogged() : boolean {
+    return this.wallet !== null;
+  }
+
+  public loadFromFile(password : string) : void {
+    if (this.wallet) {
+      throw new Error('User already logged');
+    }
+
+    /*
+      const json : string = readFile ....
+      this.wallet = Wallet.fromEncryptedJson(PATH, password).connect(getDefaultProvider('ropsten'));
+    */
+  }
+
+  public saveInFile(password : string) : void {
+    if (!this.wallet) {
+      throw new Error('No wallet found');
+>>>>>>> 4d0356d70145765de7de125f0cc017a0910ab25e
+    }
+
+    /*
+      const jsonP : Promise<string> = wallet.encrypt(password);
+      ... salvataggio su file nel then della promise
+    */
+  }
 }
 
 /**
  * The client code. Must be deleted
+<<<<<<< HEAD
  */
 /*
+=======
+
+>>>>>>> 4d0356d70145765de7de125f0cc017a0910ab25e
 function clientCodes() {
     const s1 = userSession.getInstance();
     const s2 = userSession.getInstance();
@@ -56,5 +130,9 @@ function clientCodes() {
 
 clientCodes();
 */
+<<<<<<< HEAD
 
 export default userSession;
+=======
+export default UserSession;
+>>>>>>> 4d0356d70145765de7de125f0cc017a0910ab25e
