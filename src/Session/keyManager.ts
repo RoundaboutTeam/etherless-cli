@@ -1,18 +1,18 @@
 declare function require(name:string):any;
-const Configstore = require('configstore');
 const pkg = require('../../package.json');
+import Configstore from 'configstore';
 
 class keyManager{
-    conf:any;
+    conf:Configstore;
     constructor(){
         this.conf= new Configstore(pkg.name);
     }
-    public setkey(key:string){
+    setkey(key:string){
         this.conf.set('privateKey',key);
         return key;
     }
 
-    public getkey():string{
+    getkey():string{
         const key:string = this.conf.get('privateKey');
         if(!key){
             console.log('No Private Key Found');
@@ -20,7 +20,7 @@ class keyManager{
         return key;
     }
 
-    public deletekey(){
+    deletekey(){
         const key = this.conf.get('privateKey');
         if(!key){
             console.log('No Private Key Found');
@@ -31,6 +31,7 @@ class keyManager{
     }
 }
 //Test code to delete
+/*
 function clientCodes() {
     const k = new keyManager();
     k.setkey("BestPrivateKey");
@@ -39,5 +40,5 @@ function clientCodes() {
     k.getkey();
 }
 clientCodes();
-
+*/
 export default keyManager;

@@ -16,7 +16,7 @@ class userSession {
     wallet : boolean;
 
     public loginWithPrivateKey(key:string){
-        if(!this.isLoggedin()){
+        if(!this.isLoggedIn()){
             console.log("Logged with key: "+key);
             this.wallet=true;
         }else{
@@ -24,12 +24,12 @@ class userSession {
         }
     }
 
-    public logout(){
+    public logOut(){
         this.wallet=false;
         console.log("Longin out");
     }
 
-    public isLoggedin() : boolean{
+    public isLoggedIn() : boolean{
         return this.wallet;
     }
 }
@@ -37,6 +37,7 @@ class userSession {
 /**
  * The client code. Must be deleted
  */
+/*
 function clientCodes() {
     const s1 = userSession.getInstance();
     const s2 = userSession.getInstance();
@@ -47,12 +48,13 @@ function clientCodes() {
         console.log('Singleton failed, variables contain different instances.');
     }
     s1.loginWithPrivateKey("BestPass");
-    console.log(s1.isLoggedin());
-    s2.isLoggedin();
-    s2.logout();
-    s1.isLoggedin();
+    console.log(s1.isLoggedIn());
+    s2.isLoggedIn();
+    s2.logOut();
+    s1.isLoggedIn();
 }
 
 clientCodes();
+*/
 
 export default userSession;
