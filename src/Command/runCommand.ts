@@ -1,5 +1,11 @@
 import { Argv } from 'yargs';
-import { ethers, Contract, Wallet, getDefaultProvider, EventFilter } from 'ethers';
+import {
+  ethers,
+  Contract,
+  Wallet,
+  getDefaultProvider,
+  EventFilter,
+} from 'ethers';
 
 import Command from './command';
 
@@ -22,7 +28,7 @@ class ExecCommand extends Command {
     const params : string = JSON.stringify(args.params);
 
     console.log('Sending request to execute function...');
-    let tx = await contract.runFunction(functionName, params, requestId,
+    const tx = await contract.runFunction(functionName, params, requestId,
       { value: ethers.utils.parseEther('0.001') });
     await tx.wait();
     console.log('Request done.');
