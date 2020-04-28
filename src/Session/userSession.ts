@@ -31,26 +31,6 @@ class UserSession {
     if (this.wallet) {
       throw new Error('You are already logged in!');
     }
-<<<<<<< HEAD
-    wallet : boolean;
-
-    public loginWithPrivateKey(key:string){
-        if(!this.isLoggedIn()){
-            console.log("Logged with key: "+key);
-            this.wallet=true;
-        }else{
-            console.log("You are still loggedIn");
-        }
-    }
-
-    public logOut(){
-        this.wallet=false;
-        console.log("Longin out");
-    }
-
-    public isLoggedIn() : boolean{
-        return this.wallet;
-=======
 
     this.wallet = Wallet.fromMnemonic(mnemonic).connect(getDefaultProvider('ropsten'));
   }
@@ -94,7 +74,6 @@ class UserSession {
   public saveInFile(password : string) : void {
     if (!this.wallet) {
       throw new Error('No wallet found');
->>>>>>> 4d0356d70145765de7de125f0cc017a0910ab25e
     }
 
     /*
@@ -106,12 +85,6 @@ class UserSession {
 
 /**
  * The client code. Must be deleted
-<<<<<<< HEAD
- */
-/*
-=======
-
->>>>>>> 4d0356d70145765de7de125f0cc017a0910ab25e
 function clientCodes() {
     const s1 = userSession.getInstance();
     const s2 = userSession.getInstance();
@@ -130,9 +103,4 @@ function clientCodes() {
 
 clientCodes();
 */
-<<<<<<< HEAD
-
-export default userSession;
-=======
 export default UserSession;
->>>>>>> 4d0356d70145765de7de125f0cc017a0910ab25e
