@@ -73,6 +73,7 @@ class UserSession {
       Wallet.fromEncryptedJson(encryptedJson, password)
         .then((wallet : Wallet) => {
           this.wallet = wallet;
+          console.log('Loaded wallet of the user with address: ' + wallet.address);
         })
         .catch((error : Error) => {
           throw new Error(`Error trying loading wallet: ${error.message}`);
