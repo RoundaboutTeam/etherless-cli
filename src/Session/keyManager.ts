@@ -1,6 +1,8 @@
 import Configstore from 'configstore';
-import { Wallet} from 'ethers';
-declare function require(name:string):any;
+import { Wallet } from 'ethers';
+
+declare function require(name:string) : any;
+
 const pkg = require('../../package.json');
 
 class keyManager {
@@ -38,28 +40,26 @@ class keyManager {
 
   getState() : Wallet {
     const state : Wallet = this.conf.get('state');
-    if (state===undefined) {
+    if (state === undefined) {
       throw new Error('No State found');
     }
+
     return state;
   }
 
   deleteState() : void {
     const state = this.conf.get('state');
     console.log(this.conf.get('state'));
-    if (state===undefined) {
+    if (state === undefined) {
       throw new Error('No State found');
     }
 
     this.conf.delete('state');
   }
 
-  isSetState():boolean{
+  isSetState() : boolean {
     const state : string = this.conf.get('state');
-    if(state!==null && state!==undefined){
-      return true;
-    }
-    return false;
+    return state !== null && state !== undefined;
   }
 }
 

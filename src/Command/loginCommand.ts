@@ -9,8 +9,12 @@ class LoginCommand extends Command {
 
   async exec(args: any) : Promise<any> {
     return new Promise<string>((resolve, reject) => {
-      UserSession.getInstance().loginWithPrivateKey(`${args.private_key}`);
-      console.log(`Login inside Ethereum network with private key: ${args.private_key}`);
+      try {
+        UserSession.getInstance().loginWithPrivateKey(args.private_key);
+        resolve('Login successfully inside Ethereum network with private key');
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 

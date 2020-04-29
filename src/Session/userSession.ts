@@ -13,16 +13,18 @@ class UserSession {
 
   private wallet : Wallet|null = null;
 
-  private constructor() { 
-    if(new KeyManager().isSetState()){
+  private constructor() {
+    if (new KeyManager().isSetState()) {
       this.loadState();
     }
   }
-  private saveState(){
+
+  private saveState() {
     new KeyManager().setState(this.wallet);
   }
-  private loadState(){
-    if(new KeyManager().isSetState()){
+
+  private loadState() {
+    if (new KeyManager().isSetState()) {
       this.wallet = new KeyManager().getState();
     }
   }
@@ -53,7 +55,11 @@ class UserSession {
     this.saveState();
   }
 
-  public getWallet() : Wallet|null {
+  public getWallet() : Wallet {
+    if (!this.wallet) {
+      throw Error('No wallet found');
+    }
+
     return this.wallet;
   }
 
@@ -90,7 +96,7 @@ class UserSession {
       Wallet.fromEncryptedJson(encryptedJson, password)
         .then((wallet : Wallet) => {
           this.wallet = wallet;
-          console.log('Loaded wallet of the user with address: ' + wallet.address);
+          console.log(`Loaded wallet of the user with address: ${wallet.address}`);
           this.saveState();
         })
         .catch((error : Error) => {
