@@ -8,20 +8,10 @@ class LoginCommand extends Command {
   description = 'login inside Ethereum network';
 
   async exec(args: any) : Promise<any> {
-    try {
-      /* if (args.private_key === null) {
-        UserSession.getInstance().loadFromFile('password');
-      } else {
-        UserSession.getInstance().loginWithPrivateKey(`${args.private_key}`);
-        console.log(`Login inside Ethereum network with private key: ${args.private_key}`);
-      } */
-
+    return new Promise<string>((resolve, reject) => {
       UserSession.getInstance().loginWithPrivateKey(`${args.private_key}`);
       console.log(`Login inside Ethereum network with private key: ${args.private_key}`);
-
-    } catch (error) {
-      console.log(error);
-    }
+    });
   }
 
   builder(yargs : Argv) : any {

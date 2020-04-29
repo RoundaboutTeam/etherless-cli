@@ -8,16 +8,14 @@ class LogoutCommand extends Command {
   description = 'logout from Ethereum network';
 
   async exec(args: any) : Promise<any> {
-    try {
+    return new Promise<string>((resolve, reject) => {
       UserSession.getInstance().logout();
       console.log('Logout from Ethereum network');
-    } catch (error) {
-      console.log(error);
-    }
+    });
   }
 
   builder(yargs : Argv) : any {
-    return null;
+    return {};
   }
 }
 
