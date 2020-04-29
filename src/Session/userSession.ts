@@ -13,6 +13,20 @@ class UserSession {
 
   private wallet : Wallet|null = null;
 
+  private constructor() { 
+    if(new KeyManager().isSetState()){
+      this.loadState();
+    }
+  }
+  private saveState(){
+    new KeyManager().setState(this.wallet);
+  }
+  private loadState(){
+    if(new KeyManager().isSetState()){
+      this.wallet = new KeyManager().getState();
+    }
+  }
+
   public static getInstance() : UserSession {
     if (!UserSession.instance) {
       UserSession.instance = new UserSession();
@@ -27,6 +41,7 @@ class UserSession {
     }
 
     this.wallet = new Wallet(privateKey, getDefaultProvider('ropsten'));
+    this.saveState();
   }
 
   public loginWithMnemonic(mnemonic : string) : void {
@@ -35,6 +50,7 @@ class UserSession {
     }
 
     this.wallet = Wallet.fromMnemonic(mnemonic).connect(getDefaultProvider('ropsten'));
+    this.saveState();
   }
 
   public getWallet() : Wallet|null {
@@ -57,6 +73,7 @@ class UserSession {
     }
 
     this.wallet = null;
+    this.saveState();
   }
 
   public isLogged() : boolean {
@@ -74,6 +91,7 @@ class UserSession {
         .then((wallet : Wallet) => {
           this.wallet = wallet;
           console.log('Loaded wallet of the user with address: ' + wallet.address);
+          this.saveState();
         })
         .catch((error : Error) => {
           throw new Error(`Error trying loading wallet: ${error.message}`);
