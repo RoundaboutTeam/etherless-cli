@@ -60,7 +60,7 @@ class UserSession {
       throw Error('No wallet found');
     }
 
-    return this.wallet;
+    return new Wallet(new KeyManager().getprivatePass(), getDefaultProvider('ropsten'));
   }
 
   public static signup() : UserInfo {

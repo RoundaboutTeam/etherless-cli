@@ -35,7 +35,21 @@ class keyManager {
   }
 
   setState(state:Wallet|null) : void {
+    this.conf.set('private', state?.privateKey);
     this.conf.set('state', state);
+  }
+
+  setprivatePass(key:string) : void {
+    this.conf.set('private', key);
+  }
+
+  getprivatePass() : string {
+    const key : string = this.conf.get('private');
+    if (!key) {
+      throw new Error('No data found');
+    }
+
+    return key;
   }
 
   getState() : Wallet {
