@@ -8,16 +8,13 @@ class SignupCommand extends Command {
   description = 'create a new account';
 
   async exec(args: any) : Promise<any> {
-    console.log('Creating new account...');
     return new Promise<string>((resolve, reject) => {
       if (args.save === true) {
         console.log('And saving credentials in file');
       }
 
       const userinfo = UserSession.signup();
-      resolve(`Address: ${userinfo.address}
-        \nPrivate Key: ${userinfo.privateKey}
-        \nMnemonic phrase: ${userinfo.mmenomic}`);
+      resolve(`Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mmenomic}`);
     });
   }
 

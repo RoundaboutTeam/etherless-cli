@@ -11,7 +11,7 @@ class LoginCommand extends Command {
     return new Promise<string>((resolve, reject) => {
       try {
         UserSession.getInstance().loginWithPrivateKey(args.private_key);
-        resolve('Login successfully inside Ethereum network with private key');
+        resolve('Login successfully done within the Ethereum network');
       } catch (error) {
         reject(error);
       }

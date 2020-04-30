@@ -19,9 +19,8 @@ class ExecCommand extends Command {
 
   async exec(args: any) : Promise<any> {
     try {
-      //const wallet : Wallet = new Wallet('0x326712c09375d35e396b0cd80bc7002f13cd227b70e1959686f28ca994a28635').connect(getDefaultProvider('ropsten'));
       const contract : Contract = new ethers.Contract('0x2eB8B6049391BD385DDD59aA020e8BC85f9eF57e', ESmart.abi,
-        getDefaultProvider('ropsten')).connect(UserSession.getInstance().getWallet()) /**da errore se provo al posto di wallet metto UserSession.getInstance().getWallet() */;
+        getDefaultProvider('ropsten')).connect(UserSession.getInstance().getWallet());
 
       const requestId : string = ethers.utils.bigNumberify(ethers.utils.randomBytes(4)).toString();
       const functionName : string = args.function_name;
