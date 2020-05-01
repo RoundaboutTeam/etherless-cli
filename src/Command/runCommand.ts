@@ -9,6 +9,8 @@ import {
 
 import Command from './command';
 import UserSession from '../Session/userSession';
+import { TransactionReceipt } from 'ethers/providers';
+import { BigNumber } from 'ethers/utils';
 
 const ESmart = require('../../contracts/EtherlessSmart.json');
 
@@ -19,22 +21,23 @@ class ExecCommand extends Command {
 
   async exec(args: any) : Promise<any> {
     try {
-      const contract : Contract = new ethers.Contract('0x2eB8B6049391BD385DDD59aA020e8BC85f9eF57e', ESmart.abi,
+      const contract : Contract = new ethers.Contract('0xF93aB9d297bc05C373eA788C83f506E812c36DFF', ESmart.abi,
         getDefaultProvider('ropsten')).connect(UserSession.getInstance().getWallet());
 
-      const requestId : string = ethers.utils.bigNumberify(ethers.utils.randomBytes(4)).toString();
       const functionName : string = args.function_name;
       const params : string = args.params.toString();
 
-      console.log('Sending request to execute function...');
-      const tx = await contract.runFunction(functionName, params, requestId,
-        { value: ethers.utils.parseEther('0.001') });
-      await tx.wait();
-      console.log('Request done.');
+      console.log('Creating request to execute function..');
+      const tx = await contract.runFunction(functionName, params, { value: ethers.utils.parseEther('0.001') });
 
-      // to add: filter for the request ud
-      const eventFilter : EventFilter = contract.filters.response();
+      console.log('Sending request...');
+      const receipt = await tx.wait();
+
+      console.log('Request done.');
+      const requestId : BigNumber = contract.interface.parseLog(receipt.events[0]).values.id;
+
       console.log('Waiting for the result...');
+      const eventFilter : EventFilter = contract.filters.response(null, requestId);
       return new Promise<string>((resolve, reject) => {
         contract.on(eventFilter, (result, id, event) => {
           resolve(JSON.parse(result).message);
