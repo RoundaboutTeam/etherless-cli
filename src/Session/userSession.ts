@@ -2,7 +2,7 @@ import { Wallet, getDefaultProvider } from 'ethers';
 
 import KeyManager from './keyManager';
 
-interface UserInfo {
+export interface UserInfo {
   address: string,
   privateKey: string,
   mmenomic: string
