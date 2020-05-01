@@ -1,6 +1,7 @@
 import { Argv } from 'yargs';
+import * as fs from 'fs';
 import Command from './command';
-import UserSession from '../Session/userSession';
+import UserSession, { UserInfo } from '../Session/userSession';
 
 class SignupCommand extends Command {
   command = 'signup [save]';
@@ -9,11 +10,16 @@ class SignupCommand extends Command {
 
   async exec(args: any) : Promise<any> {
     return new Promise<string>((resolve, reject) => {
+      console.log('Creating a new account');
+      const userinfo : UserInfo = UserSession.signup();
       if (args.save === true) {
         console.log('And saving credentials in file');
+        fs.writeFile('./credential.txt', `Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mmenomic}`,(err) => {
+          if (err) {
+            reject(err);
+          }
+        });
       }
-
-      const userinfo = UserSession.signup();
       resolve(`Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mmenomic}`);
     });
   }
