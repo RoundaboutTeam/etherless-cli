@@ -1,5 +1,6 @@
 import { Argv } from 'yargs';
 import * as fs from 'fs';
+
 import Command from './command';
 import UserSession, { UserInfo } from '../Session/userSession';
 
@@ -14,7 +15,7 @@ class SignupCommand extends Command {
       const userinfo : UserInfo = UserSession.signup();
       if (args.save === true) {
         console.log('And saving credentials in file');
-        fs.writeFile('./credential.txt', `Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mmenomic}`,(err) => {
+        fs.writeFile('./credential.txt', `Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mmenomic}`, (err) => {
           if (err) {
             reject(err);
           }

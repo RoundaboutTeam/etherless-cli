@@ -2,15 +2,13 @@ import { Argv } from 'yargs';
 import {
   ethers,
   Contract,
-  Wallet,
   getDefaultProvider,
   EventFilter,
 } from 'ethers';
+import { BigNumber } from 'ethers/utils';
 
 import Command from './command';
 import UserSession from '../Session/userSession';
-import { TransactionReceipt } from 'ethers/providers';
-import { BigNumber } from 'ethers/utils';
 
 const ESmart = require('../../contracts/EtherlessSmart.json');
 

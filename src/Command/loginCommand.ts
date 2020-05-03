@@ -1,4 +1,5 @@
 import { Argv } from 'yargs';
+
 import Command from './command';
 import UserSession from '../Session/userSession';
 
