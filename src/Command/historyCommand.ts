@@ -1,12 +1,4 @@
 import { Argv } from 'yargs';
-import * as inquirer from 'inquirer';
-import {
-  ethers,
-  Wallet,
-  getDefaultProvider,
-  Contract,
-} from 'ethers';
-import SessionManager from '../Session/sessionManager';
 import Command from './command';
 
 const ESmart = require('../../contracts/EtherlessSmart.json');
@@ -17,6 +9,7 @@ class HistoryCommand extends Command {
   description = 'show the executing history of the current user';
 
   async exec(args: any) : Promise<any> {
+    /*
     let password = '';
     await inquirer
       .prompt([{
@@ -38,11 +31,13 @@ class HistoryCommand extends Command {
       console.log('Showing past executions and results');
     }
 
-    const wallet : Wallet = (await SessionManager.getWallet(password)).connect(getDefaultProvider('ropsten'));
-    const contract : Contract = new ethers.Contract('0xF93aB9d297bc05C373eA788C83f506E812c36DFF', ESmart.abi,
+    const wallet : Wallet =
+      (await SessionManager.getWallet(password)).connect(getDefaultProvider('ropsten'));
+    const contract : Contract =
+      new ethers.Contract('0xF93aB9d297bc05C373eA788C83f506E812c36DFF', ESmart.abi,
       getDefaultProvider('ropsten')).connect(wallet);
 
-    const filter = contract.filters.ValueChanged('0xF93aB9d297bc05C373eA788C83f506E812c36DFF');
+    const filter = contract.filters.runRequest(wallet.address);
 
     getDefaultProvider('ropsten').getLogs({
       ...filter, // spread operator -> permette di ottenere tutte le proprietà dell'oggetto filter
@@ -56,6 +51,11 @@ class HistoryCommand extends Command {
           console.log(contract.interface.parseLog(log));
         });
       });
+    */
+
+    return new Promise<string>((resolve, reject) => {
+      resolve('Showing your execution history');
+    });
   }
 
   builder(yargs : Argv) : any {

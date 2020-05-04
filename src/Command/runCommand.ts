@@ -4,6 +4,7 @@ import {
   Contract,
   getDefaultProvider,
   EventFilter,
+  Wallet,
 } from 'ethers';
 import { BigNumber } from 'ethers/utils';
 import * as inquirer from 'inquirer';
@@ -21,6 +22,10 @@ class ExecCommand extends Command {
   async exec(args: any) : Promise<any> {
     try {
       let password = '';
+
+      if (!SessionManager.isLogged()) {
+        throw new Error('To execute this command you must be logged');
+      }
 
       await inquirer
         .prompt([{
@@ -42,7 +47,7 @@ class ExecCommand extends Command {
       console.log('Creating request to execute function..');
       const tx = await contract.runFunction(functionName, params, { value: ethers.utils.parseEther('0.001') });
 
-      console.log('Sending request...');
+      console.log(`Sending request, transaction hash: ${tx.hash}`);
       const receipt = await tx.wait();
 
       console.log('Request done.');

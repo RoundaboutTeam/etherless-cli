@@ -4,8 +4,6 @@ import * as inquirer from 'inquirer';
 import Command from './command';
 import SessionManager from '../Session/sessionManager';
 
-// import UserSession from '../Session/userSession';
-
 class LoginPKCommand extends Command {
   command = 'login <private_key>';
 
@@ -13,8 +11,11 @@ class LoginPKCommand extends Command {
 
   async exec(args: any) : Promise<any> {
     try {
-      let password = '';
+      if (SessionManager.isLogged()) {
+        throw new Error('User already logged');
+      }
 
+      let password = '';
       await inquirer
         .prompt([{
           type: 'password',
@@ -24,6 +25,7 @@ class LoginPKCommand extends Command {
         .then((answers) => {
           password = answers.password;
         });
+
       SessionManager.loginWithPrivateKey(args.private_key, password);
       return new Promise<string>((resolve, reject) => {
         resolve('Login successfully done within the Ethereum network');

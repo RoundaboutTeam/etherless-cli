@@ -23,7 +23,8 @@ class DeleteCommand extends Command {
      *
      *  const wallet : Wallet = (await SessionManager.getWallet(password))
      *    .connect(getDefaultProvider('ropsten'));
-     *  const contract : Contract = new ethers.Contract('0xF93aB9d297bc05C373eA788C83f506E812c36DFF',
+     *  const contract : Contract =
+     *  new ethers.Contract('0xF93aB9d297bc05C373eA788C83f506E812c36DFF',
      *    ESmart.abi, getDefaultProvider('ropsten')).connect(wallet);
      *
      *  const response : boolean = await contract.deleteFunction(args.function_name);

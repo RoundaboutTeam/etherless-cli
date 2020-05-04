@@ -16,7 +16,7 @@ class SignupCommand extends Command {
       if (args.save === true) {
         console.log('And saving credentials in file');
 
-        fs.writeFile('./credential.txt', `Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mmenomic}`, (err) => {
+        fs.writeFile('./credential.txt', `Address: ${userinfo.address} \nPrivate Key: ${userinfo.privateKey} \nMnemonic phrase: ${userinfo.mnemonic}`, (err) => {
           if (err) {
             reject(err);
           }

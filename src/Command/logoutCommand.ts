@@ -11,7 +11,7 @@ class LogoutCommand extends Command {
     return new Promise<string>((resolve, reject) => {
       try {
         SessionManager.logout();
-        resolve('Logout from Ethereum network done successfully');
+        resolve('Logout from Ethereum network successfully done');
       } catch (error) {
         reject(error);
       }

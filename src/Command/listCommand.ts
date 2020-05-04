@@ -19,20 +19,11 @@ class ListCommand extends Command {
         .then((answers) => {
           password = answers.password;
         });
+
       console.log('Displaying all functions owned by current user inside Etherless platform');
     } else {
       console.log('Displaying all functions inside Etherless platform');
     }
-    /**
-     * if(SessionManager.isLogged()) {
-     *  const contract : Contract = new ethers.Contract(address, abi,
-     *    getDefaultProvider('ropsten'));
-     *  const functionList : Array<string> = await contract.getList();
-     *  if(args.m)
-     *    // pensare come fare il controllo
-     *  console.log(functionList);
-     * }
-     */
   }
 
   builder(yargs : Argv) : any {
