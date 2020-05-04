@@ -6,9 +6,10 @@ import {
   EventFilter,
 } from 'ethers';
 import { BigNumber } from 'ethers/utils';
+import * as inquirer from 'inquirer';
 
 import Command from './command';
-import UserSession from '../Session/userSession';
+import SessionManager from '../Session/sessionManager';
 
 const ESmart = require('../../contracts/EtherlessSmart.json');
 
@@ -19,8 +20,21 @@ class ExecCommand extends Command {
 
   async exec(args: any) : Promise<any> {
     try {
+      let password = '';
+
+      await inquirer
+        .prompt([{
+          type: 'password',
+          message: 'Enter the password to decrypt your wallet: ',
+          name: 'password',
+        }])
+        .then((answers) => {
+          password = answers.password;
+        });
+
+      const wallet : Wallet = (await SessionManager.getWallet(password)).connect(getDefaultProvider('ropsten'));
       const contract : Contract = new ethers.Contract('0xF93aB9d297bc05C373eA788C83f506E812c36DFF', ESmart.abi,
-        getDefaultProvider('ropsten')).connect(UserSession.getInstance().getWallet());
+        getDefaultProvider('ropsten')).connect(wallet);
 
       const functionName : string = args.function_name;
       const params : string = args.params.toString();
