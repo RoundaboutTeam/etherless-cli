@@ -1,4 +1,4 @@
-import {Argv} from 'yargs';
+import { Argv } from 'yargs';
 
 abstract class Command {
   protected command : string = 'DEFAULT_COMMAND';

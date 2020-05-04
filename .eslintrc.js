@@ -22,6 +22,23 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-console': 'off',
     'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'error',
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        'js': 'never',
+        'jsx': 'never',
+        'ts': 'never',
+        'tsx': 'never',
+        'json': 'never'
+        }
+    ],
   },
+  settings: {
+    'import/resolver': {
+        node: {
+            extensions: [".js", ".jsx", ".ts", ".tsx"]
+            }
+        }
+    }
 };

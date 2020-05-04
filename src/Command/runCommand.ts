@@ -2,12 +2,12 @@ import { Argv } from 'yargs';
 import {
   ethers,
   Contract,
-  Wallet,
   getDefaultProvider,
   EventFilter,
 } from 'ethers';
 import { BigNumber } from 'ethers/utils';
 import * as inquirer from 'inquirer';
+
 import Command from './command';
 import SessionManager from '../Session/sessionManager';
 

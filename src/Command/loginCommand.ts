@@ -1,5 +1,6 @@
 import { Argv } from 'yargs';
 import * as inquirer from 'inquirer';
+
 import Command from './command';
 import SessionManager from '../Session/sessionManager';
 
