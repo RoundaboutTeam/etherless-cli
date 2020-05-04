@@ -18,9 +18,11 @@
   "homepage": "https://github.com/Rounadbout/etherless-cli#readme",
   "dependencies": {
     "@types/configstore": "^4.0.0",
+    "@types/inquirer": "^6.5.0",
     "@types/node": "^13.13.4",
     "configstore": "^5.0.1",
     "ethers": "^4.0.47",
+    "inquirer": "^7.1.0",
     "ts-node": "^8.9.1",
     "typescript": "^3.8.3",
     "yargs": "^15.3.1"
