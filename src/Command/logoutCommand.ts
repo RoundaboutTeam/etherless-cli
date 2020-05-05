@@ -1,6 +1,6 @@
 import { Argv } from 'yargs';
 import Command from './command';
-import UserSession from '../Session/userSession';
+import SessionManager from '../Session/sessionManager';
 
 class LogoutCommand extends Command {
   command = 'logout';
@@ -10,8 +10,8 @@ class LogoutCommand extends Command {
   async exec(args: any) : Promise<any> {
     return new Promise<string>((resolve, reject) => {
       try {
-        UserSession.getInstance().logout();
-        resolve('Logout from Ethereum network done successfully');
+        SessionManager.logout();
+        resolve('Logout from Ethereum network successfully done');
       } catch (error) {
         reject(error);
       }
