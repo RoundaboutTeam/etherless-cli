@@ -24,7 +24,7 @@ class ExecCommand extends Command {
       let password = '';
 
       if (!SessionManager.isLogged()) {
-        throw new Error('To execute this command you must be logged');
+        throw new Error('To execute this command you must be logged!');
       }
 
       await inquirer
