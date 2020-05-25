@@ -27,6 +27,7 @@
     "configstore": "^5.0.1",
     "ethers": "^4.0.47",
     "inquirer": "^7.1.0",
+    "ipfs-http-client": "^44.1.0",
     "ts-node": "^8.9.1",
     "typescript": "^3.8.3",
     "yargs": "^15.3.1"
