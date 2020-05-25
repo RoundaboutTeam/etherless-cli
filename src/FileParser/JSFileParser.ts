@@ -7,7 +7,7 @@ class JSFileParser implements FileParser {
   private parsedFile : any;
 
   constructor(path : string) {
-    if (!this.fileExists(path)) {
+    if (!fs.existsSync(path)) {
       throw new Error('File doesn\'t exists');
     }
 
@@ -26,10 +26,6 @@ class JSFileParser implements FileParser {
     const funcNode : any = this.findFuncNode(funcName);
     const funcParams : string = this.funcSignatureFromNode(funcNode);
     return `(${funcParams})`;
-  }
-
-  private fileExists(path: string) : boolean {
-    return fs.existsSync(path);
   }
 
   private findFuncNode(funcName: string) : any {
