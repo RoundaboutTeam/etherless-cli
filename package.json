@@ -23,6 +23,7 @@
     "@types/configstore": "^4.0.0",
     "@types/inquirer": "^6.5.0",
     "@types/node": "^13.13.4",
+    "acorn": "^7.2.0",
     "configstore": "^5.0.1",
     "ethers": "^4.0.47",
     "inquirer": "^7.1.0",
