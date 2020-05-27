@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
 
-import Command from './command';
+import Command from './Command';
 
 class CommandManager {
   /**

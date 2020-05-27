@@ -1,38 +1,30 @@
 import { Argv } from 'yargs';
 import * as inquirer from 'inquirer';
 
-import Command from './command';
-import SessionManager from '../Session/sessionManager';
+import Command from './Command';
 
 class LoginPKCommand extends Command {
   command = 'login <private_key>';
-
   description = 'login inside Ethereum network';
 
   async exec(args: any) : Promise<any> {
-    try {
-      if (SessionManager.isLogged()) {
-        throw new Error('User already logged');
-      }
-
-      let password = '';
-      await inquirer
+    return new Promise((resolve, reject) => { 
+        inquirer
         .prompt([{
           type: 'password',
           message: 'Enter a password to encrypt your wallet: ',
           name: 'password',
         }])
         .then((answers) => {
-          password = answers.password;
+          try{
+            this.ethManager.loginWithPrivateKey(args.private_key, answers.password);
+            resolve('Login successfully done within the Ethereum network');
+          }catch(e){
+            reject(e);
+          }
+            
         });
-
-      SessionManager.loginWithPrivateKey(args.private_key, password);
-      return new Promise<string>((resolve, reject) => {
-        resolve('Login successfully done within the Ethereum network');
-      });
-    } catch (error) {
-      return new Promise((resolve, reject) => { reject(error); });
-    }
+    });
   }
 
   builder(yargs : Argv) : any {

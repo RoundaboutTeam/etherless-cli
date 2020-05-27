@@ -1,16 +1,12 @@
 #!/usr/bin/env ts-node-script
 
-import RunCommand from './Command/runCommand';
-import DeleteCommand from './Command/deleteCommand';
-import SignupCommand from './Command/signupCommand';
-import LoginCommand from './Command/loginCommand';
-import LogoutCommand from './Command/logoutCommand';
-import ListCommand from './Command/listCommand';
-import HistoryCommand from './Command/historyCommand';
-import CommandManager from './Command/commandManager';
+import SignupCommand from './Command/SignupCommand';
+import LoginCommand from './Command/LoginCommand';
+import LogoutCommand from './Command/LogoutCommand';
+import CommandManager from './Command/CommandManager';
 
-const commandTypes : Array<any> = [RunCommand, DeleteCommand, SignupCommand, LoginCommand,
-  LogoutCommand, ListCommand, HistoryCommand];
+const commandTypes : Array<any> = [SignupCommand, LoginCommand,
+  LogoutCommand];
 
 commandTypes.forEach(
   (CommandType) => CommandManager.addCommand(new CommandType()),
