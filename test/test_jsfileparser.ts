@@ -21,7 +21,7 @@ describe('JSFileParser', () => {
   });
 
   after(() => {
-    fs.unlinkSync('fileToBeParsed.js');
+    fs.unlinkSync(filePath);
   });
 
   it('getting function signature', function () {
