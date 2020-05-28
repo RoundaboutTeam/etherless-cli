@@ -4,16 +4,18 @@ import * as fs from 'fs';
 */
 import { Provider } from 'ethers/providers';
 import { Wallet } from 'ethers';
-import FileManager from '../IPFS/FileManager';
+
+import IPFS from '../IPFS/IPFSFileManager';
+import JSParser from '../FileParser/JSFileParser';
 import UserSession from '../Session/EthereumUserSession';
 
 export interface EthContrct{}
 
 class EtherlessManager {
-  private session:UserSession;
+  private session : UserSession;
 
   // private ipfsManager:FileManager;
-  private etherlessContract:EthContrct;
+  private etherlessContract : EthContrct;
 
   constructor(pr:Provider) {
     this.session = new UserSession(pr);
@@ -32,7 +34,7 @@ class EtherlessManager {
     this.session.logout();
   }
 
-  signup(save:boolean):Wallet {
+  signup(save:boolean) : Wallet {
     const wallet = this.session.signup();
     if (save) {
       fs.writeFile('./credential.txt', `Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`, (err) => {
@@ -58,31 +60,34 @@ class EtherlessManager {
     return new Promise((resolve, reject) => {});
   }
 
-  runFunction(name: string, params: string, psw : string): void{
+  runFunction(name: string, params: string, psw : string) : void {
     /*
       *Need EthContract
       */
   }
 
-  deployFunction(name: string, path: string, desc: string, psw: string): void{
+  async deployFunction(name: string, path: string, desc: string, psw: string) : void {
+    const signature : string = new JSParser(path).getFunctionSignature(name);
+    const fileCID : string = await new IPFS().save(fs.readFileSync(path));
+
+    /*
+    *Need EthContract
+    */
+  }
+
+  updateFuncDesc(name: string, desc: string, psw: string) : void {
     /*
       *Need EthContract
       */
   }
 
-  updateFuncDesc(name: string, desc: string, psw: string): void{
+  updateFuncCode(name: string, path: string, psw: string) : void {
     /*
       *Need EthContract
       */
   }
 
-  updateFuncCode(name: string, path: string, psw: string): void{
-    /*
-      *Need EthContract
-      */
-  }
-
-  deleteFunction(name: string): void{
+  deleteFunction(name: string) : void {
     /*
       *Need EthContract
       */
