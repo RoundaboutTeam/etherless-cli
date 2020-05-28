@@ -1,8 +1,7 @@
 import { Argv } from 'yargs';
+import { Wallet } from 'ethers';
 
 import Command from './Command';
-import UserInfo from '../Session/UserInfo';
-import { Wallet } from 'ethers';
 
 class SignupCommand extends Command {
   command = 'signup [save]';
@@ -15,10 +14,11 @@ class SignupCommand extends Command {
       if (args.save === true) {
         console.log('And saving credentials in file');
       }
-      try{
+
+      try {
         const wallet : Wallet = this.ethManager.signup(args.save);
         resolve(`Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`);
-      }catch(e){
+      } catch (e) {
         reject(e);
       }
     });

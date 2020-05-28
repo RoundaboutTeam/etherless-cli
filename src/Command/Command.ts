@@ -1,13 +1,14 @@
 import { Argv } from 'yargs';
-import EtherlessManager from '../Manager/EtherlessManager';
 import { getDefaultProvider } from 'ethers';
+
+import EtherlessManager from '../Manager/EtherlessManager';
 
 abstract class Command {
   protected command : string = 'DEFAULT_COMMAND';
 
   protected description : string = 'DEFAULT_DESCRIPTION';
 
-  protected ethManager:EtherlessManager = new EtherlessManager(getDefaultProvider('ropsten'));
+  protected ethManager : EtherlessManager = new EtherlessManager(getDefaultProvider('ropsten'));
 
   abstract builder(yargs : Argv) : any;
 
