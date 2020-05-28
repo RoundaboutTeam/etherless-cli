@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -r ts-node/register test/*.ts || exit 0",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test"
+    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
+    "lint": "eslint src/**/*.ts"
   },
   "repository": {
     "type": "git",
