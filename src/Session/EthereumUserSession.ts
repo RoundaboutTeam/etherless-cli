@@ -9,6 +9,7 @@ const pkg = require('../../package.json');
 class EthereumUserSession{
 
     private conf:Configstore;
+    private static store:string= 'criptedWallet';
 
     private provider:Provider;
     constructor(provider:Provider){
@@ -16,38 +17,35 @@ class EthereumUserSession{
         this.conf = new Configstore(pkg.name)
     }
     private checkStatus():boolean{
-        return this.conf.get('criptedWallet') !== null && this.conf.get('criptedWallet') !== undefined
+        return this.conf.get(EthereumUserSession.store) !== null && this.conf.get(EthereumUserSession.store) !== undefined;
     }
     private saveWallet(password:string,wallet:Wallet):void{    
         wallet.encrypt(password).then((encryptedJson : string) => {
-        this.conf.set('criptedWallet', encryptedJson);
+        this.conf.set(EthereumUserSession.store, encryptedJson);
         });
     }
-    loginWithPrivateKey(privateKey:string,password:string):void{
+    loginWithPrivateKey(privateKey:string,password:string):Wallet{
         if (this.checkStatus()) {
             throw new Error('You are already logged in!');
         }
         const wallet : Wallet = new Wallet(privateKey, this.provider);
         this.saveWallet(password,wallet);
+        return wallet;
     }
-    loginWithMnamonicPhrase(mnemonic:string,password:string):void{
+    loginWithMnamonicPhrase(mnemonic:string,password:string):Wallet{
         if (this.checkStatus()) {
             throw new Error('You are already logged in!');
         }
         const wallet : Wallet = Wallet.fromMnemonic(mnemonic).connect(this.provider);
         this.saveWallet(password,wallet);
+        return wallet;
     }
-    signup():UserInfo{
-        const wallet : Wallet = Wallet.createRandom();
-        return {
-            address: wallet.address,
-            privateKey: wallet.privateKey,
-            mnemonic: wallet.mnemonic,
-        };
+    signup():Wallet{
+        return Wallet.createRandom();
     }
-    logout(){
+    logout():void{
         if (this.checkStatus()) {
-            this.conf.delete('criptedWallet');
+            this.conf.delete(EthereumUserSession.store);
         } else {
             throw new Error('You are not logged in!');
         }
@@ -55,7 +53,7 @@ class EthereumUserSession{
     
     restoreWallet(password:string):Promise<Wallet>{
         if (this.checkStatus()) {
-            return Wallet.fromEncryptedJson(this.conf.get('criptedWallet'), password);
+            return Wallet.fromEncryptedJson(this.conf.get(EthereumUserSession.store), password);
         }
       
         throw new Error('No wallet found');

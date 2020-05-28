@@ -4,9 +4,8 @@ import * as fs from 'fs';
 /*
 *Da sostituire con la classe corretta
 */
-import UserInfo from '../Session/UserInfo';
 import { Provider } from 'ethers/providers';
-import { userInfo } from 'os';
+import { Wallet } from 'ethers';
 export interface EthContrct{}
 
 
@@ -20,25 +19,25 @@ class EtherlessManager{
         this.etherlessContract= {};
     }
 
-    loginWithPrivateKey(private_key:string,psw:string):void{
-        this.session.loginWithPrivateKey(private_key,psw);
+    loginWithPrivateKey(private_key:string,psw:string):Wallet{
+        return this.session.loginWithPrivateKey(private_key,psw);
     }
-    loginWithMnemonicPhrase(mnemonic_phrase:string,psw:string):void{
-        this.session.loginWithMnamonicPhrase(mnemonic_phrase,psw);
+    loginWithMnemonicPhrase(mnemonic_phrase:string,psw:string):Wallet{
+        return this.session.loginWithMnamonicPhrase(mnemonic_phrase,psw);
     }
     logout():void{
         this.session.logout();
     }
-    signup(save:boolean):UserInfo{
-        const uS=this.session.signup();
+    signup(save:boolean):Wallet{
+        const wallet=this.session.signup();
         if(save){
-        fs.writeFile('./credential.txt', `Address: ${uS.address} \nPrivate Key: ${uS.privateKey} \nMnemonic phrase: ${uS.mnemonic}`, (err) => {
+        fs.writeFile('./credential.txt', `Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`, (err) => {
             if (err) {
               throw err;
             }
           });
         }
-        return uS;
+        return wallet;
     };
     listAllFunction():Promise<Array<Function>>{
         /*
