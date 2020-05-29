@@ -4,25 +4,36 @@ import * as fs from 'fs';
 */
 import { Provider } from 'ethers/providers';
 import { Wallet } from 'ethers';
+import { rejects } from 'assert';
 
 import IPFS from '../IPFS/IPFSFileManager';
 import JSParser from '../FileParser/JSFileParser';
 import UserSession from '../Session/EthereumUserSession';
+import EthContract from '../EtherlessContract/EthContract';
+import EtherlessContract from '../EtherlessContract/EtherlessContract';
+import Function from '../EtherlessContract/Function';
+import BriefFunction from '../EtherlessContract/BriefFunction';
+import HistoryItem from '../EtherlessContract/HistoryItem';
 
-export interface EthContrct{}
+const ESmart = require('../../contracts/EtherlessSmart.json');
 
 class EtherlessManager {
   private session : UserSession;
 
   // private ipfsManager:FileManager;
-  private etherlessContract : EthContrct;
 
-  constructor(pr:Provider) {
+  private etherlessContract : EthContract;
+
+  constructor(pr : Provider) {
     this.session = new UserSession(pr);
-    this.etherlessContract = {};
+    this.etherlessContract = new EtherlessContract(
+      '0xbb3196457153f67421a89d3f0591a2473fcab9c6',
+      ESmart.abi,
+      pr,
+    );
   }
 
-  loginWithPrivateKey(privateKey : string, psw:string) : Wallet {
+  loginWithPrivateKey(privateKey : string, psw : string) : Wallet {
     return this.session.loginWithPrivateKey(privateKey, psw);
   }
 
@@ -30,7 +41,7 @@ class EtherlessManager {
     return this.session.loginWithMnamonicPhrase(mnemonicPhrase, psw);
   }
 
-  logout():void{
+  logout() : void {
     this.session.logout();
   }
 
@@ -46,65 +57,97 @@ class EtherlessManager {
     return wallet;
   }
 
-  listAllFunction():Promise<Array<Function>> {
-    /*
-      *Need Ethcontract
-      */
-    return new Promise((resolve, reject) => {});
+  async listAllFunctions(psw : string) : Promise<Array<BriefFunction>> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract.getAllFunctions();
   }
 
-  listMyFunction(psw : string): Promise<Array<Function>> {
-    /*
-      *Need EthContract
-      */
-    return new Promise((resolve, reject) => {});
+  async listMyFunctions(psw : string) : Promise<Array<BriefFunction>> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract.getMyFunctions();
   }
 
-  runFunction(name: string, params: string, psw : string) : void {
-    /*
-      *Need EthContract
-      */
+  async searchFunctions(pattern : string, psw: string) : Promise<Array<BriefFunction>> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract.getSearchedFunction(pattern);
   }
 
-  async deployFunction(name: string, path: string, desc: string, psw: string) : void {
-    const signature : string = new JSParser(path).getFunctionSignature(name);
-    const fileCID : string = await new IPFS().save(fs.readFileSync(path));
-
-    /*
-    *Need EthContract
-    */
+  async getFunctionInfo(name: string, psw: string) : Promise<Function> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract.getFunctionInfo(name);
   }
 
-  updateFuncDesc(name: string, desc: string, psw: string) : void {
-    /*
-      *Need EthContract
-      */
+  async getExecHistory(psw : string) : Promise<Array<HistoryItem>> {
+    try {
+      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      return this.etherlessContract.getExecHistory();
+    } catch (error) {
+      return new Promise<Array<HistoryItem>>((response, reject) => {
+        rejects(error);
+      });
+    }
   }
 
-  updateFuncCode(name: string, path: string, psw: string) : void {
-    /*
-      *Need EthContract
-      */
+  async runFunction(name: string, params: string, psw : string) : Promise<string> {
+    try {
+      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      return this.etherlessContract
+        .listenRunResponse(await this.etherlessContract.sendRunRequest(name, params));
+    } catch (error) {
+      return new Promise<string>((response, reject) => {
+        reject(error);
+      });
+    }
   }
 
-  deleteFunction(name: string) : void {
-    /*
-      *Need EthContract
-      */
+  async deleteFunction(name: string, psw: string) : Promise<string> {
+    try {
+      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      return this.etherlessContract
+        .listenDeleteResponse(await this.etherlessContract.sendDeleteRequest(name));
+    } catch (error) {
+      return new Promise<string>((response, reject) => {
+        reject(error);
+      });
+    }
   }
 
-  getFunctionInfo(name: string): Promise<Function> {
-    /*
-      *Need EthContract
-      */
-    return new Promise((resolve, reject) => {});
+  async updateFuncCode(name: string, path: string, psw: string) : Promise<string> {
+    try {
+      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      return this.etherlessContract
+        .listenCodeUpdateResponse(await this.etherlessContract.sendCodeUpdateRequest(name, path));
+    } catch (error) {
+      return new Promise<string>((response, reject) => {
+        reject(error);
+      });
+    }
   }
 
-  searchFunction(pattern: string): Promise<Array<Function>> {
-    /*
-      *Need EthContract
-      */
-    return new Promise((resolve, reject) => {});
+  async updateFuncDesc(name: string, desc: string, psw: string) : Promise<string> {
+    try {
+      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      return this.etherlessContract
+        .listenDescUpdateResponse(await this.etherlessContract.sendDescUpdateRequest(name, desc));
+    } catch (error) {
+      return new Promise<string>((response, reject) => {
+        reject(error);
+      });
+    }
+  }
+
+  async deployFunction(name: string, path: string, desc: string, psw: string) : Promise<string> {
+    try {
+      const signature : string = new JSParser(path).getFunctionSignature(name);
+      const fileCID : string = await new IPFS().save(fs.readFileSync(path));
+      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      return this.etherlessContract
+        .listenDeployResponse(await this.etherlessContract.sendDeployRequest(name, path, desc));
+    } catch (error) {
+      return new Promise<string>((response, reject) => {
+        reject(error);
+      });
+    }
   }
 }
 

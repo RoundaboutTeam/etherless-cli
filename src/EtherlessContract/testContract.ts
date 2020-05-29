@@ -21,11 +21,21 @@ ec.getFunctionInfo('mul')
 */
 
 // TEST getAllFunctions()
-/*
+
 ec.getAllFunctions()
-  .then((res: Array<BriefFunction>) => { console.log(res); })
+  .then((res: Array<BriefFunction>) => {
+    if (res.length === 0) console.log('There are no functions!');
+    else {
+      let printString : string = 'List of functions: \n';
+      for (let i = 0; i < res.length; i += 1) {
+        printString += `  - Name: ${res[i].name}, Price: ${res[i].price}\n`;
+      }
+      console.log(printString);
+    }
+    // console.log(String(res));
+  })
   .catch((error: Error) => { console.log(error); });
-*/
+
 
 // TEST RUN FUNCTION
 /*

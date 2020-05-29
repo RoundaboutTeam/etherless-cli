@@ -1,7 +1,6 @@
 import {
   ethers,
   Contract,
-  getDefaultProvider,
   Wallet,
   EventFilter,
 } from 'ethers';
@@ -14,6 +13,12 @@ import Function from './Function';
 import HistoryItem from './HistoryItem';
 
 class EtherlessContract implements EthContract {
+  // METHOD FOR TESTING addFunction() OF THE SMART CONTRACT
+  public addFunction(name: string, signature: string, price: number, description: string): void {
+    this.contract.addFunction(name, signature, price, description);
+    // .catch((error: Error) => { console.log(error); });
+  }
+
   private contract: Contract;
 
   constructor(address: string, abi: string, provider: Provider) {
@@ -47,6 +52,14 @@ class EtherlessContract implements EthContract {
     }
   }
 
+  public async getMyFunctions() : Promise<Array<BriefFunction>> {
+    return new Promise<Array<BriefFunction>>((response, reject) => {});
+  }
+
+  public async getSearchedFunction(pattern : string) : Promise<Array<BriefFunction>> {
+    return new Promise<Array<BriefFunction>>((response, reject) => {});
+  }
+
   public async getFunctionInfo(name : string) : Promise<Function> {
     // const str = await this.contract.getInfo(name);
     // console.log(str);
@@ -69,12 +82,6 @@ class EtherlessContract implements EthContract {
     }
   }
 
-  // TEST METHOD
-  public addFunction(name: string, signature: string, price: number, description: string): void {
-    this.contract.addFunction(name, signature, price, description);
-    // .catch((error: Error) => { console.log(error); });
-  }
-
   public async getFunctionCost(name : string) : Promise<number> {
     // console.log(Number(await this.contract.getCost(name)));
     try {
@@ -90,16 +97,7 @@ class EtherlessContract implements EthContract {
   }
 
   public async getExecHistory() : Promise<Array<HistoryItem>> {
-    const historyItemList: HistoryItem[] = [];
-    return new Promise<Array<HistoryItem>>((resolve, reject) => {
-      resolve(historyItemList);
-    });
-  }
-
-  public async updateFunctionDesc(name: string, newDesc : string) : Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      resolve(false);
-    });
+    return new Promise<Array<HistoryItem>>((resolve, reject) => {});
   }
 
   public async sendRunRequest(name : string, params: string) : Promise<BigNumber> {
@@ -116,21 +114,20 @@ class EtherlessContract implements EthContract {
   }
 
   public async sendDeleteRequest(name: string) : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {
-      resolve(new BigNumber(-1));
-    });
+    return new Promise<BigNumber>((resolve, reject) => {});
   }
 
   public async sendCodeUpdateRequest(name: string, filePath: string) : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {
-      resolve(new BigNumber(-1));
-    });
+    return new Promise<BigNumber>((resolve, reject) => {});
   }
 
-  public async sendDeployRequest(name: string, filePath: string, desc : string) : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {
-      resolve(new BigNumber(-1));
-    });
+  public async sendDescUpdateRequest(name: string, newDesc : string) : Promise<BigNumber> {
+    return new Promise<BigNumber>((resolve, reject) => {});
+  }
+
+  public async sendDeployRequest(name: string, filePath: string, desc : string)
+    : Promise<BigNumber> {
+    return new Promise<BigNumber>((resolve, reject) => {});
   }
 
   public listenRunResponse(requestId : BigNumber) : Promise<string> {
@@ -151,6 +148,12 @@ class EtherlessContract implements EthContract {
   }
 
   public async listenCodeUpdateResponse(requestId : BigNumber) : Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      resolve('Method not implemented');
+    });
+  }
+
+  public async listenDescUpdateResponse(requestId : BigNumber) : Promise<string> {
     return new Promise<string>((resolve, reject) => {
       resolve('Method not implemented');
     });
