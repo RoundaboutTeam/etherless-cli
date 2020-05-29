@@ -45,7 +45,7 @@ class EtherlessManager {
     this.session.logout();
   }
 
-  signup(save:boolean) : Wallet {
+  signup(save : boolean) : Wallet {
     const wallet = this.session.signup();
     if (save) {
       fs.writeFile('./credential.txt', `Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`, (err) => {
@@ -54,11 +54,12 @@ class EtherlessManager {
         }
       });
     }
+
     return wallet;
   }
 
-  async listAllFunctions(psw : string) : Promise<Array<BriefFunction>> {
-    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+  async listAllFunctions() : Promise<Array<BriefFunction>> {
+    // this.etherlessContract.connect(await this.session.restoreWallet(psw));
     return this.etherlessContract.getAllFunctions();
   }
 

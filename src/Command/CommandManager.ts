@@ -14,7 +14,7 @@ class CommandManager {
       (args) => {
         command.exec(args)
           .then((result : string) => console.log(`${result}`))
-          .catch((error : Error) => console.log(`${error}`));
+          .catch((error : Error) => console.log(`Something went wrong: ${error.name} \nMessage: ${error.message}`));
       },
     );
   }
