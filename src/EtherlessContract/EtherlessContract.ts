@@ -15,8 +15,11 @@ import HistoryItem from './HistoryItem';
 class EtherlessContract implements EthContract {
   // METHOD FOR TESTING addFunction() OF THE SMART CONTRACT
   public addFunction(name: string, signature: string, price: number, description: string): void {
-    this.contract.addFunction(name, signature, price, description);
-    // .catch((error: Error) => { console.log(error); });
+    try {
+      this.contract.addFunction(name, signature, price, description);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   private contract: Contract;
@@ -41,10 +44,8 @@ class EtherlessContract implements EthContract {
         };
         briefFunctionList.push(briefFunction);
       }
-      // console.log(briefFunctionList);
-      return new Promise<Array<BriefFunction>>((resolve, reject) => {
-        resolve(briefFunctionList);
-      });
+
+      return briefFunctionList;
     } catch (error) {
       return new Promise<Array<BriefFunction>>((resolve, reject) => {
         reject(error);
@@ -53,7 +54,9 @@ class EtherlessContract implements EthContract {
   }
 
   public async getMyFunctions() : Promise<Array<BriefFunction>> {
-    return new Promise<Array<BriefFunction>>((response, reject) => {});
+    const briefFunctionList: BriefFunction[] = [];
+    // CALL SMART CONTRACT'S METHOD
+    return briefFunctionList;
   }
 
   public async getSearchedFunction(pattern : string) : Promise<Array<BriefFunction>> {
@@ -83,7 +86,6 @@ class EtherlessContract implements EthContract {
   }
 
   public async getFunctionCost(name : string) : Promise<number> {
-    // console.log(Number(await this.contract.getCost(name)));
     try {
       const cost = await this.contract.getCost(name);
       return new Promise<number>((resolve, reject) => {

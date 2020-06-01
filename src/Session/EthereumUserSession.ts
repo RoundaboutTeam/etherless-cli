@@ -17,7 +17,7 @@ class EthereumUserSession {
     this.conf = new Configstore(pkg.name);
   }
 
-  private checkStatus():boolean {
+  checkStatus():boolean {
     return this.conf.get(EthereumUserSession.store) !== null
       && this.conf.get(EthereumUserSession.store) !== undefined;
   }
