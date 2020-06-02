@@ -45,6 +45,10 @@ class EtherlessManager {
     this.session.logout();
   }
 
+  getAddress(psw:string):Promise<string>{
+    return this.session.getAddress(psw);
+  }
+
   signup(save : boolean) : Wallet {
     const wallet = this.session.signup();
     if (save) {
