@@ -7,7 +7,9 @@ import UserSession from './UserSession';
 const pkg = require('../../package.json');
 
 class EthereumUserSession implements UserSession {
-  private static store : string = 'criptedWallet';
+  private static WALLET_KEY : string = 'criptedWallet';
+
+  private static ADDRESS_KEY : string = 'walletAddress';
 
   private conf : Configstore;
 
@@ -18,15 +20,17 @@ class EthereumUserSession implements UserSession {
     this.conf = new Configstore(pkg.name);
   }
 
-  isLogged() : boolean {
-    return this.conf.get(EthereumUserSession.store) !== null
-      && this.conf.get(EthereumUserSession.store) !== undefined;
-  }
-
   private saveWallet(password : string, wallet : Wallet) : void {
     wallet.encrypt(password).then((encryptedJson : string) => {
-      this.conf.set(EthereumUserSession.store, encryptedJson);
+      this.conf.set(EthereumUserSession.WALLET_KEY, encryptedJson);
     });
+
+    this.conf.set(EthereumUserSession.ADDRESS_KEY, wallet.address);
+  }
+
+  isLogged() : boolean {
+    return this.conf.get(EthereumUserSession.WALLET_KEY) !== null
+      && this.conf.get(EthereumUserSession.WALLET_KEY) !== undefined;
   }
 
   loginWithPrivateKey(privateKey : string, password : string) : Wallet {
@@ -55,7 +59,7 @@ class EthereumUserSession implements UserSession {
 
   logout() : void {
     if (this.isLogged()) {
-      this.conf.delete(EthereumUserSession.store);
+      this.conf.delete(EthereumUserSession.WALLET_KEY);
     } else {
       throw new Error('You are not logged in!');
     }
@@ -64,7 +68,7 @@ class EthereumUserSession implements UserSession {
   async restoreWallet(password:string) : Promise<Wallet> {
     if (this.isLogged()) {
       const wallet : Wallet = await Wallet.fromEncryptedJson(
-        this.conf.get(EthereumUserSession.store),
+        this.conf.get(EthereumUserSession.WALLET_KEY),
         password,
       );
 
@@ -79,9 +83,12 @@ class EthereumUserSession implements UserSession {
     return wallet.connect(this.provider).getBalance();
   }
 
-  async getAddress(password : string) : Promise<string> {
-    const wallet : Wallet = await this.restoreWallet(password);
-    return wallet.address;
+  getAddress() : string {
+    if (this.isLogged()) {
+      return this.conf.get(EthereumUserSession.ADDRESS_KEY);
+    }
+
+    throw new Error('No user logged in');
   }
 }
 

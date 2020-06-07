@@ -9,13 +9,22 @@ import {
 import { BigNumber } from 'ethers/utils';
 import * as inquirer from 'inquirer';
 
+import UserSession from '../Session/UserSession';
+import EtherlessContract from '../EtherlessContract/EtherlessContract';
+
 import Command from './Command';
-import EtherlessManager from '../Manager/EtherlessManager';
 
 class RunCommand extends Command {
   command = 'run <function_name> [params..]';
 
   description = 'execute a function ';
+
+  private contract : EtherlessContract;
+
+  constructor(session : UserSession, contract : EtherlessContract) {
+    super(session);
+    this.contract = contract;
+  }
 
   async exec(args: any) : Promise<any> {
 
@@ -26,7 +35,16 @@ class RunCommand extends Command {
         name: 'password',
       }]).then((answer : any) => answer.password);
 
-    return this.ethManager.runFunction(args.function_name, args.params.toString(), password);
+    const wallet : Wallet = await this.session.restoreWallet(password);
+    this.contract.connect(wallet);
+
+    const requestId : BigNumber = await this.contract.sendRunRequest(
+      args.function_name,
+      args.params.toString(),
+    );
+
+    const result : string = await this.contract.listenResponse(requestId);
+    return result;
   }
 
   builder(yargs : Argv) : any {

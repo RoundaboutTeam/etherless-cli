@@ -1,44 +1,33 @@
 import { Argv } from 'yargs';
-import { getDefaultProvider } from 'ethers';
 import Command from './Command';
-import EtherlessManager from '../Manager/EtherlessManager';
 import BriefFunction from '../EtherlessContract/BriefFunction';
+import UserSession from '../Session/UserSession';
+import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
 class ListCommand extends Command {
   command = 'list [m]';
 
   description = 'list functions inside Etherless platform';
 
+  private contract : EtherlessContract;
+
+  constructor(contract : EtherlessContract, session : UserSession) {
+    super(session);
+    this.contract = contract;
+  }
+
   async exec(args: any) : Promise<string> {
-    try {
-      const em : EtherlessManager = new EtherlessManager(getDefaultProvider('ropsten'));
-      let resDesc : string = args.m ? 'Displaying all functions owned by current user\n'
-        : 'Displaying all functions inside Etherless platform\n';
+    const resDesc : string = args.m ? 'Displaying all functions owned by current user:\n'
+      : 'Displaying all functions inside Etherless platform:\n';
 
-      if (args.m) {
-        if (!em.userLogged()) return 'You must be logged!';
+    const address : string = this.session.getAddress();
+    const list : Array<BriefFunction> = args.m
+      ? await this.contract.getMyFunctions(address)
+      : await this.contract.getAllFunctions();
 
-        const list : Array<BriefFunction> = await em.listMyFunctions();
-
-        if (list.length === 0) {
-          resDesc += 'There are no functions owned by the user inside Etherless platform!';
-        } else {
-          resDesc += list.map((item : BriefFunction) => `${item.name} ${item.price}`).join('\n');
-        }
-      } else {
-        const list : Array<BriefFunction> = await em.listAllFunctions();
-
-        if (list.length === 0) {
-          resDesc += 'There are no functions inside Etherless platform!';
-        } else {
-          resDesc += list.map((item : BriefFunction) => ` -Name: ${item.name}, price: ${item.price}`).join('\n');
-        }
-      }
-
-      return resDesc;
-    } catch (error) {
-      return error.reason;
-    }
+    return resDesc + (list.length === 0
+      ? 'No function found'
+      : list.map((item : BriefFunction) => `- Name: ${item.name} Price: ${item.price}`).join('\n'));
   }
 
   builder(yargs : Argv) : any {

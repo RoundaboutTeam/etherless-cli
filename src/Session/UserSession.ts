@@ -7,5 +7,5 @@ export default interface UserSession {
   signup() : Wallet;
   logout() : void;
   restoreWallet(password : string) : Promise<Wallet>;
-  getAddress(password : string) : Promise<string>;
+  getAddress() : string;
 }

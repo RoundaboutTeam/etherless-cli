@@ -1,5 +1,5 @@
 export default interface Function {
-  owner: string;
+  developer: string;
   signature: string;
   name: string;
   price: number;
