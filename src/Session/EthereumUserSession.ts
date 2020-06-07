@@ -74,6 +74,12 @@ class EthereumUserSession {
         .then((result) => resolve(result.connect(this.provider).getBalance()));
     });
   }
+  getAddress(password : string) : Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      this.restoreWallet(password)
+        .then((result) => resolve(result.connect(this.provider).getAddress()));
+    });
+  }
 }
 
 export default EthereumUserSession;
