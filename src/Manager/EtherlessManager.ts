@@ -26,6 +26,9 @@ class EtherlessManager {
 
   constructor(pr : Provider) {
     this.session = new UserSession(pr);
+
+    // this.ipfsManager = ...
+
     this.etherlessContract = new EtherlessContract(
       '0xbb3196457153f67421a89d3f0591a2473fcab9c6',
       ESmart.abi,
@@ -62,38 +65,47 @@ class EtherlessManager {
     return wallet;
   }
 
+  userLogged() : boolean {
+    return this.session.checkStatus();
+  }
+
   async listAllFunctions() : Promise<Array<BriefFunction>> {
-    // this.etherlessContract.connect(await this.session.restoreWallet(psw));
     return this.etherlessContract.getAllFunctions();
   }
 
-  async listMyFunctions(psw : string) : Promise<Array<BriefFunction>> {
-    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+  async listMyFunctions() : Promise<Array<BriefFunction>> {
+    // Get address of the user logged ad use it to get functions owned by the user;
     return this.etherlessContract.getMyFunctions();
   }
 
-  async searchFunctions(pattern : string, psw: string) : Promise<Array<BriefFunction>> {
-    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+  async searchFunctions(pattern : string) : Promise<Array<BriefFunction>> {
     return this.etherlessContract.getSearchedFunction(pattern);
   }
 
-  async getFunctionInfo(name: string, psw: string) : Promise<Function> {
-    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+  async getFunctionInfo(name: string) : Promise<Function> {
     return this.etherlessContract.getFunctionInfo(name);
   }
 
   async getExecHistory(psw : string) : Promise<Array<HistoryItem>> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract.getExecHistory();
+    /*
     try {
       this.etherlessContract.connect(await this.session.restoreWallet(psw));
       return this.etherlessContract.getExecHistory();
     } catch (error) {
       return new Promise<Array<HistoryItem>>((response, reject) => {
-        rejects(error);
+        reject(error);
       });
     }
+    */
   }
 
   async runFunction(name: string, params: string, psw : string) : Promise<string> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract
+      .listenRunResponse(await this.etherlessContract.sendRunRequest(name, params));
+    /*
     try {
       this.etherlessContract.connect(await this.session.restoreWallet(psw));
       return this.etherlessContract
@@ -103,9 +115,14 @@ class EtherlessManager {
         reject(error);
       });
     }
+    */
   }
 
   async deleteFunction(name: string, psw: string) : Promise<string> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract
+      .listenDeleteResponse(await this.etherlessContract.sendDeleteRequest(name));
+    /*
     try {
       this.etherlessContract.connect(await this.session.restoreWallet(psw));
       return this.etherlessContract
@@ -115,9 +132,14 @@ class EtherlessManager {
         reject(error);
       });
     }
+    */
   }
 
   async updateFuncCode(name: string, path: string, psw: string) : Promise<string> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract
+      .listenCodeUpdateResponse(await this.etherlessContract.sendCodeUpdateRequest(name, path));
+    /*
     try {
       this.etherlessContract.connect(await this.session.restoreWallet(psw));
       return this.etherlessContract
@@ -127,9 +149,14 @@ class EtherlessManager {
         reject(error);
       });
     }
+    */
   }
 
   async updateFuncDesc(name: string, desc: string, psw: string) : Promise<string> {
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract
+      .listenDescUpdateResponse(await this.etherlessContract.sendDescUpdateRequest(name, desc));
+    /*
     try {
       this.etherlessContract.connect(await this.session.restoreWallet(psw));
       return this.etherlessContract
@@ -139,9 +166,16 @@ class EtherlessManager {
         reject(error);
       });
     }
+    */
   }
 
   async deployFunction(name: string, path: string, desc: string, psw: string) : Promise<string> {
+    const signature : string = new JSParser(path).getFunctionSignature(name);
+    const fileCID : string = await new IPFS().save(fs.readFileSync(path));
+    this.etherlessContract.connect(await this.session.restoreWallet(psw));
+    return this.etherlessContract
+      .listenDeployResponse(await this.etherlessContract.sendDeployRequest(name, path, desc));
+    /*
     try {
       const signature : string = new JSParser(path).getFunctionSignature(name);
       const fileCID : string = await new IPFS().save(fs.readFileSync(path));
@@ -153,6 +187,7 @@ class EtherlessManager {
         reject(error);
       });
     }
+    */
   }
 }
 
