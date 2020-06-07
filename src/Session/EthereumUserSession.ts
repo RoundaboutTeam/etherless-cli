@@ -2,11 +2,12 @@ import Configstore from 'configstore';
 import { Wallet } from 'ethers';
 import { Provider } from 'ethers/providers';
 import { BigNumber } from 'ethers/utils';
+import UserSession from './UserSession';
 
 const pkg = require('../../package.json');
 
-class EthereumUserSession {
-  private static store : string= 'criptedWallet';
+class EthereumUserSession implements UserSession {
+  private static store : string = 'criptedWallet';
 
   private conf : Configstore;
 
@@ -17,7 +18,7 @@ class EthereumUserSession {
     this.conf = new Configstore(pkg.name);
   }
 
-  checkStatus():boolean {
+  isLogged() : boolean {
     return this.conf.get(EthereumUserSession.store) !== null
       && this.conf.get(EthereumUserSession.store) !== undefined;
   }
@@ -29,7 +30,7 @@ class EthereumUserSession {
   }
 
   loginWithPrivateKey(privateKey : string, password : string) : Wallet {
-    if (this.checkStatus()) {
+    if (this.isLogged()) {
       throw new Error('You are already logged in!');
     }
 
@@ -38,8 +39,8 @@ class EthereumUserSession {
     return wallet;
   }
 
-  loginWithMnamonicPhrase(mnemonic : string, password: string) : Wallet {
-    if (this.checkStatus()) {
+  loginWithMnemonicPhrase(mnemonic : string, password: string) : Wallet {
+    if (this.isLogged()) {
       throw new Error('You are already logged in!');
     }
 
@@ -53,32 +54,34 @@ class EthereumUserSession {
   }
 
   logout() : void {
-    if (this.checkStatus()) {
+    if (this.isLogged()) {
       this.conf.delete(EthereumUserSession.store);
     } else {
       throw new Error('You are not logged in!');
     }
   }
 
-  restoreWallet(password:string) : Promise<Wallet> {
-    if (this.checkStatus()) {
-      return Wallet.fromEncryptedJson(this.conf.get(EthereumUserSession.store), password);
+  async restoreWallet(password:string) : Promise<Wallet> {
+    if (this.isLogged()) {
+      const wallet : Wallet = await Wallet.fromEncryptedJson(
+        this.conf.get(EthereumUserSession.store),
+        password,
+      );
+
+      return wallet.connect(this.provider);
     }
 
     throw new Error('No wallet found');
   }
 
-  getBalance(password : string) : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {
-      this.restoreWallet(password)
-        .then((result) => resolve(result.connect(this.provider).getBalance()));
-    });
+  async getBalance(password : string) : Promise<BigNumber> {
+    const wallet : Wallet = await this.restoreWallet(password);
+    return wallet.connect(this.provider).getBalance();
   }
-  getAddress(password : string) : Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-      this.restoreWallet(password)
-        .then((result) => resolve(result.connect(this.provider).getAddress()));
-    });
+
+  async getAddress(password : string) : Promise<string> {
+    const wallet : Wallet = await this.restoreWallet(password);
+    return wallet.address;
   }
 }
 

@@ -1,14 +1,16 @@
 import { Argv } from 'yargs';
-import { getDefaultProvider } from 'ethers';
-
-import EtherlessManager from '../Manager/EtherlessManager';
+import UserSession from '../Session/UserSession';
 
 abstract class Command {
   protected command : string = 'DEFAULT_COMMAND';
 
   protected description : string = 'DEFAULT_DESCRIPTION';
 
-  protected ethManager : EtherlessManager = new EtherlessManager(getDefaultProvider('ropsten'));
+  protected session : UserSession;
+
+  constructor(session : UserSession) {
+    this.session = session;
+  }
 
   abstract builder(yargs : Argv) : any;
 

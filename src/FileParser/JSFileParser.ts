@@ -1,12 +1,12 @@
-import FileParser from './FileParser';
+import { FileParser } from './FileParser';
 
 const fs = require('fs');
-const { Parser } = require('acorn');
+const Parser = require('acorn');
 
 class JSFileParser implements FileParser {
-  private parsedFile : any;
+  private parsedFile : any | undefined;
 
-  constructor(path : string) {
+  parse(path : string) {
     if (!fs.existsSync(path)) {
       throw new Error('File doesn\'t exists');
     }
@@ -15,10 +15,18 @@ class JSFileParser implements FileParser {
   }
 
   public existsFunction(funcName: string) : boolean {
+    if (typeof this.parsedFile === 'undefined') {
+      throw new Error('No file loaded');
+    }
+
     return this.findFuncNode(funcName) !== undefined;
   }
 
   public getFunctionSignature(funcName: string) : string {
+    if (typeof this.parsedFile === 'undefined') {
+      throw new Error('No file loaded');
+    }
+
     if (!this.existsFunction(funcName)) {
       throw new Error(`No function ${funcName} found in file`);
     }

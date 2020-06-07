@@ -1,7 +1,6 @@
 import { Argv } from 'yargs';
 import { getDefaultProvider } from 'ethers';
 import Command from './Command';
-import EtherlessManager from '../Manager/EtherlessManager';
 import Function from '../EtherlessContract/Function';
 
 class InfoCommand extends Command {
@@ -11,7 +10,6 @@ class InfoCommand extends Command {
 
   async exec(args: any) : Promise<string> {
     try {
-      const em : EtherlessManager = new EtherlessManager(getDefaultProvider('ropsten'));
       const listInfo : Function = await em.getFunctionInfo(args.function_name);
       let info: string = `Informations about '${listInfo.name}' function:\n`;
       info += `  - Owner: ${listInfo.owner}\n`;
