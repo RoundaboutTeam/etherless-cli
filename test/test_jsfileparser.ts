@@ -5,6 +5,7 @@ import {
   before,
   after,
 } from 'mocha';
+
 import JSFileParser from '../src/FileParser/JSFileParser';
 
 const fs = require('fs');
@@ -17,7 +18,8 @@ describe('JSFileParser', () => {
   before(function () {
     const fileCode : string = `function ${funcName}${funcSignature} {}`;
     fs.writeFileSync(filePath, fileCode);
-    this.fileParser = new JSFileParser(filePath);
+    this.fileParser = new JSFileParser();
+    this.fileParser.parse(filePath);
   });
 
   after(() => {

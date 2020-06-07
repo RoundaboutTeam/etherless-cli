@@ -1,4 +1,4 @@
-import { FileParser } from './FileParser';
+import FileParser from './FileParser';
 
 const fs = require('fs');
 const Parser = require('acorn');
