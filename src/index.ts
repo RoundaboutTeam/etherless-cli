@@ -9,6 +9,7 @@ import InfoCommand from './Command/InfoCommand';
 import WhoAmICommand from './Command/WhoAmI';
 import Init from './Command/Init';
 import CommandManager from './Command/CommandManager';
+import RunCommand from './Command/RunCommand';
 
 const commandTypes : Array<any> = [SignupCommand, LoginCommand,
   LogoutCommand, ListCommand, InfoCommand,

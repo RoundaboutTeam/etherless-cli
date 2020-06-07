@@ -137,6 +137,7 @@ class EtherlessContract implements EthContract {
     const eventFilter : EventFilter = this.contract.filters.response(null, requestId);
     return new Promise<string>((resolve, reject) => {
       this.contract.on(eventFilter, (result, id, event) => {
+        console.log("Result_ ", result);
         resolve(JSON.parse(result).message);
         this.contract.removeAllListeners(eventFilter);
       });

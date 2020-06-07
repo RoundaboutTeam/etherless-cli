@@ -3,7 +3,7 @@ import * as fs from 'fs';
 *Da sostituire con la classe corretta
 */
 import { Provider } from 'ethers/providers';
-import { Wallet } from 'ethers';
+import { Wallet, getDefaultProvider } from 'ethers';
 import { rejects } from 'assert';
 
 import IPFS from '../IPFS/IPFSFileManager';
@@ -30,7 +30,7 @@ class EtherlessManager {
     // this.ipfsManager = ...
 
     this.etherlessContract = new EtherlessContract(
-      '0xbb3196457153f67421a89d3f0591a2473fcab9c6',
+      '0x5f95F9FC6345C8f6CC94D154e3C6212722660146',
       ESmart.abi,
       pr,
     );
@@ -107,7 +107,9 @@ class EtherlessManager {
       .listenRunResponse(await this.etherlessContract.sendRunRequest(name, params));
     /*
     try {
-      this.etherlessContract.connect(await this.session.restoreWallet(psw));
+      const wallet : Wallet = (await this.session.restoreWallet(psw)).connect(getDefaultProvider('ropsten'));
+
+      this.etherlessContract.connect(wallet);
       return this.etherlessContract
         .listenRunResponse(await this.etherlessContract.sendRunRequest(name, params));
     } catch (error) {
