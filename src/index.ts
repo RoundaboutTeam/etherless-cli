@@ -31,6 +31,7 @@ import EthereumContract from './EtherlessContract/EthereumContract';
 import ListCommand from './Command/ListCommand';
 import WhoAmICommand from './Command/WhoamiCommand';
 import RunCommand from './Command/RunCommand';
+import SearchCommand from './Command/SearchCommand';
 
 const ESmart = require('../contracts/EtherlessSmart.json');
 
@@ -51,6 +52,7 @@ const commands : Array<Command> = [
   new InfoCommand(ethContract, ethSession),
   new ListCommand(ethContract, ethSession),
   new RunCommand(ethSession, ethContract),
+  new SearchCommand(ethSession, ethContract),
 ];
 
 commands.forEach(

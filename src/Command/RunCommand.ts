@@ -26,8 +26,7 @@ class RunCommand extends Command {
     this.contract = contract;
   }
 
-  async exec(args: any) : Promise<any> {
-
+  async exec(args: any) : Promise<string> {
     const password : string = await inquirer
       .prompt([{
         type: 'password',
