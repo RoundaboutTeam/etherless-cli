@@ -5,7 +5,7 @@ import {
   EventFilter,
 } from 'ethers';
 import { Provider } from 'ethers/providers';
-import { BigNumber } from 'ethers/utils';
+import { BigNumber, bigNumberify, parseEther } from 'ethers/utils';
 
 import EtherlessContract from './EtherlessContract';
 import BriefFunction from './BriefFunction';
@@ -34,27 +34,10 @@ class EthereumContract implements EtherlessContract {
 
   async getAllFunctions() : Promise<Array<BriefFunction>> {
     return JSON.parse(await this.contract.getFuncList()).functionArray;
-
-    /*
-      const briefFunctionList: BriefFunction[] = [];
-      let briefFunction: BriefFunction;
-      for (let i = 0; i < functionList.length; i += 1) {
-        briefFunction = {
-          name: functionList[i].name,
-          price: functionList[i].price,
-        };
-        briefFunctionList.push(briefFunction);
-      }
-
-      return briefFunctionList;
-    */
   }
 
-  /** TODO */
-  async getMyFunctions() : Promise<Array<BriefFunction>> {
-    const briefFunctionList: BriefFunction[] = [];
-    // CALL SMART CONTRACT'S METHOD
-    return briefFunctionList;
+  async getMyFunctions(address : string) : Promise<Array<BriefFunction>> {
+    return JSON.parse(await this.contract.getOwnedList(ethers.utils.getAddress(address))).functionArray;
   }
 
   /** TODO */
@@ -63,8 +46,7 @@ class EthereumContract implements EtherlessContract {
   }
 
   async getFunctionInfo(name : string) : Promise<Function> {
-    const result : string = await this.contract.getInfo(name);
-    return JSON.parse(result);
+    return JSON.parse(await this.contract.getInfo(name));
   }
 
   /** TODO */
@@ -84,9 +66,16 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
-  /** TODO */
   async sendDeleteRequest(name: string) : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {});
+    console.log('Creating request to delete function..');
+    const tx = await this.contract.deleteFunction(name, { value: bigNumberify('10') });
+
+    console.log(`Sending request, transaction hash: ${tx.hash}`);
+    const receipt = await tx.wait();
+
+    console.log('Request done.');
+    const requestId : BigNumber = this.contract.interface.parseLog(receipt.events[0]).values.id;
+    return requestId;
   }
 
   /** TODO */
@@ -99,20 +88,39 @@ class EthereumContract implements EtherlessContract {
     return new Promise<void>((resolve, reject) => {});
   }
 
-  /** TODO */
-  async sendDeployRequest(name: string, filePath: string, desc : string)
-    : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {});
+  async sendDeployRequest(name: string, signature: string, cid: string, desc : string)
+      : Promise<BigNumber> {
+
+    console.log('Creating request to delete function..');
+    const tx = await this.contract.deployFunction(name, signature, desc, cid, { value: bigNumberify('10') });
+
+    console.log(`Sending request, transaction hash: ${tx.hash}`);
+    const receipt = await tx.wait();
+
+    console.log('Request done.');
+    const requestId : BigNumber = this.contract.interface.parseLog(receipt.events[0]).values.id;
+    return requestId;
   }
 
   listenResponse(requestId : BigNumber) : Promise<string> {
     console.log('Waiting for the result...');
-    const eventFilter : EventFilter = this.contract.filters.response(null, requestId);
+
+    const successFilter : EventFilter = this.contract.filters.resultOk(null, requestId);
+    const errorFilter : EventFilter = this.contract.filters.resultError(null, requestId);
 
     return new Promise<string>((resolve, reject) => {
-      this.contract.on(eventFilter, (result, id, event) => {
+      // ascolto per eventi di successo
+      this.contract.on(successFilter, (result, id, event) => {
         resolve(result);
-        this.contract.removeAllListeners(eventFilter);
+        this.contract.removeAllListeners(successFilter);
+        this.contract.removeAllListeners(errorFilter);
+      });
+
+      // asolto per eventi di errore
+      this.contract.on(errorFilter, (result, id, event) => {
+        reject(result);
+        this.contract.removeAllListeners(successFilter);
+        this.contract.removeAllListeners(errorFilter);
       });
     });
   }

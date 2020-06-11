@@ -15,9 +15,9 @@ import EtherlessContract from '../EtherlessContract/EtherlessContract';
 import Command from './Command';
 
 class RunCommand extends Command {
-  command = 'run <function_name> [params..]';
+  command = 'delete <function_name>';
 
-  description = 'execute a function ';
+  description = 'delete a function ';
 
   private contract : EtherlessContract;
 
@@ -37,9 +37,8 @@ class RunCommand extends Command {
     const wallet : Wallet = await this.session.restoreWallet(password);
     this.contract.connect(wallet);
 
-    const requestId : BigNumber = await this.contract.sendRunRequest(
+    const requestId : BigNumber = await this.contract.sendDeleteRequest(
       args.function_name,
-      args.params.toString(),
     );
 
     const result : string = await this.contract.listenResponse(requestId);
@@ -50,9 +49,6 @@ class RunCommand extends Command {
     return yargs.positional('function_name', {
       describe: 'Name of the function to execute',
       type: 'string',
-    }).option('params', {
-      describe: 'Array of params to use for the execution',
-      type: 'array',
     });
   }
 }

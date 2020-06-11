@@ -13,7 +13,7 @@ class SearchCommand extends Command {
 
   private contract : EtherlessContract;
 
-  constructor(session : UserSession, contract : EtherlessContract) {
+  constructor(contract : EtherlessContract, session : UserSession) {
     super(session);
     this.contract = contract;
   }
