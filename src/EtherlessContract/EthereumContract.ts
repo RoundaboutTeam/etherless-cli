@@ -13,15 +13,6 @@ import Function from './Function';
 import HistoryItem from './HistoryItem';
 
 class EthereumContract implements EtherlessContract {
-  // METHOD FOR TESTING addFunction() OF THE SMART CONTRACT
-  addFunction(name: string, signature: string, price: number, description: string): void {
-    try {
-      this.contract.addFunction(name, signature, price, description);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   private contract: Contract;
 
   constructor(address: string, abi: string, provider: Provider) {
@@ -37,7 +28,9 @@ class EthereumContract implements EtherlessContract {
   }
 
   async getMyFunctions(address : string) : Promise<Array<BriefFunction>> {
-    return JSON.parse(await this.contract.getOwnedList(ethers.utils.getAddress(address))).functionArray;
+    return JSON.parse(
+      await this.contract.getOwnedList(ethers.utils.getAddress(address)),
+    ).functionArray;
   }
 
   /** TODO */
@@ -90,7 +83,6 @@ class EthereumContract implements EtherlessContract {
 
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
       : Promise<BigNumber> {
-
     console.log('Creating request to deploy function..');
     const tx = await this.contract.deployFunction(name, signature, desc, cid, { value: bigNumberify('10') });
 
@@ -111,7 +103,6 @@ class EthereumContract implements EtherlessContract {
     return new Promise<string>((resolve, reject) => {
       // ascolto per eventi di successo
       this.contract.on(successFilter, (result, id, event) => {
-        console.log("Risultato ok: " + result);
         resolve(result);
         this.contract.removeAllListeners(successFilter);
         this.contract.removeAllListeners(errorFilter);
@@ -119,7 +110,6 @@ class EthereumContract implements EtherlessContract {
 
       // asolto per eventi di errore
       this.contract.on(errorFilter, (result, id, event) => {
-        console.log("Errore " + result);
         reject(result);
         this.contract.removeAllListeners(successFilter);
         this.contract.removeAllListeners(errorFilter);

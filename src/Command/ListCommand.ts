@@ -22,7 +22,6 @@ class ListCommand extends Command {
     const resDesc : string = args.m ? `Displaying all functions owned by current user: (address: ${address})\n`
       : 'Displaying all functions inside Etherless platform:\n';
 
-
     const list : Array<BriefFunction> = args.m
       ? await this.contract.getMyFunctions(address)
       : await this.contract.getAllFunctions();
