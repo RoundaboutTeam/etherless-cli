@@ -56,7 +56,7 @@ class EthereumContract implements EtherlessContract {
 
   async sendRunRequest(name : string, params: string) : Promise<BigNumber> {
     console.log('Creating request to execute function..');
-    const tx = await this.contract.runFunction(name, params, { value: ethers.utils.parseEther('0.001') });
+    const tx = await this.contract.runFunction(name, params, { value: bigNumberify('10') });
 
     console.log(`Sending request, transaction hash: ${tx.hash}`);
     const receipt = await tx.wait();
@@ -88,10 +88,10 @@ class EthereumContract implements EtherlessContract {
     return new Promise<void>((resolve, reject) => {});
   }
 
-  async sendDeployRequest(name: string, signature: string, cid: string, desc : string)
+  async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
       : Promise<BigNumber> {
 
-    console.log('Creating request to delete function..');
+    console.log('Creating request to deploy function..');
     const tx = await this.contract.deployFunction(name, signature, desc, cid, { value: bigNumberify('10') });
 
     console.log(`Sending request, transaction hash: ${tx.hash}`);
@@ -103,7 +103,7 @@ class EthereumContract implements EtherlessContract {
   }
 
   listenResponse(requestId : BigNumber) : Promise<string> {
-    console.log('Waiting for the result...');
+    console.log('Waiting for the response...');
 
     const successFilter : EventFilter = this.contract.filters.resultOk(null, requestId);
     const errorFilter : EventFilter = this.contract.filters.resultError(null, requestId);
@@ -111,6 +111,7 @@ class EthereumContract implements EtherlessContract {
     return new Promise<string>((resolve, reject) => {
       // ascolto per eventi di successo
       this.contract.on(successFilter, (result, id, event) => {
+        console.log("Risultato ok: " + result);
         resolve(result);
         this.contract.removeAllListeners(successFilter);
         this.contract.removeAllListeners(errorFilter);
@@ -118,6 +119,7 @@ class EthereumContract implements EtherlessContract {
 
       // asolto per eventi di errore
       this.contract.on(errorFilter, (result, id, event) => {
+        console.log("Errore " + result);
         reject(result);
         this.contract.removeAllListeners(successFilter);
         this.contract.removeAllListeners(errorFilter);

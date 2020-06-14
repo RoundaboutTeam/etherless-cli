@@ -53,9 +53,9 @@ class RunCommand extends Command {
 
     const sourceCode : Buffer = fs.readFileSync(args.path);
 
-    console.log('Loading file in IPFS');
+    console.log('Uploading file in IPFS');
     const CID : string = await this.fileManager.save(sourceCode);
-    console.log(`File caricato, cid: ${CID}`);
+    console.log(`File uploaded, cid: ${CID}`);
 
     const requestId : BigNumber = await this.contract.sendDeployRequest(
       args.function_name,
@@ -77,7 +77,7 @@ class RunCommand extends Command {
       type: 'string',
     }).positional('description', {
       describe: 'Description of the function to deploy',
-      type: 'string'
+      type: 'string',
     });
   }
 }
