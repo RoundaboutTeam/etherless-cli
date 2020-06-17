@@ -13,7 +13,7 @@ class LoginCommand extends Command {
     const password : string = await Inquirer
       .prompt([{
         type: 'password',
-        message: 'Enter the password to decrypt your wallet: ',
+        message: 'Enter the password to encrypt your wallet: ',
         name: 'password',
       }]).then((answer : any) => answer.password);
 
