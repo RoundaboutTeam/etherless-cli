@@ -1,6 +1,6 @@
 import * as yargs from 'yargs';
 
-import Command from './command';
+import Command from './Command';
 
 class CommandManager {
   /**
@@ -14,7 +14,10 @@ class CommandManager {
       (args) => {
         command.exec(args)
           .then((result : string) => console.log(`${result}`))
-          .catch((error : Error) => console.log(`${error}`));
+          .catch((error : any) => {
+            console.log(`Something went wrong! \nError name: ${error.name} \nMessage: ${error.message}`);
+            if (error.reason) console.log(`Reason: ${error.reason}`);
+          });
       },
     );
   }

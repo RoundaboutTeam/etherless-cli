@@ -1,9 +1,16 @@
 import { Argv } from 'yargs';
+import UserSession from '../Session/UserSession';
 
 abstract class Command {
   protected command : string = 'DEFAULT_COMMAND';
 
   protected description : string = 'DEFAULT_DESCRIPTION';
+
+  protected session : UserSession;
+
+  constructor(session : UserSession) {
+    this.session = session;
+  }
 
   abstract builder(yargs : Argv) : any;
 
