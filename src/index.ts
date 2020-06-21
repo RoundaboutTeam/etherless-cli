@@ -26,6 +26,8 @@ import FileParser from './FileParser/FileParser';
 import JSFileParser from './FileParser/JSFileParser';
 import FileManager from './IPFS/FileManager';
 
+const IPFS = require('ipfs-mini');
+
 const ESmart = require('../contracts/EtherlessSmart.json');
 
 const provider = getDefaultProvider('ropsten');
@@ -37,7 +39,7 @@ const ethContract : EthereumContract = new EthereumContract(
   provider,
 );
 
-const ipfsFileManager : FileManager = new IPFSFileManager();
+const ipfsFileManager : FileManager = new IPFSFileManager(new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }));
 const jsFileParser : FileParser = new JSFileParser();
 
 const commands : Array<Command> = [

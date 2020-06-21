@@ -1,13 +1,12 @@
 import FileManager from './FileManager';
 
-const IPFS = require('ipfs-mini');
 const fs = require('fs');
 
 class IPFSFileManager implements FileManager {
   private ipfs : any;
 
-  constructor() {
-    this.ipfs = new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
+  constructor(ipfsObj : any) {
+    this.ipfs = ipfsObj;
   }
 
   /**
