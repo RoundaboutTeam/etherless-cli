@@ -4,7 +4,6 @@ import Function from '../EtherlessContract/Function';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
-
 class InfoCommand extends Command {
   command = 'info <function_name>';
 

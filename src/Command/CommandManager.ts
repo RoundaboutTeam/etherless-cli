@@ -15,8 +15,8 @@ class CommandManager {
         command.exec(args)
           .then((result : string) => console.log(`${result}`))
           .catch((error : any) => {
-            const msg : string = error.reason ? error.reason : error.message;
-            console.log(`Something went wrong! \nError name: ${error.name} \nMessage: ${msg}`);
+            console.log(`Something went wrong! \nError name: ${error.name} \nMessage: ${error.message}`);
+            if (error.reason) console.log(`Reason: ${error.reason}`);
           });
       },
     );
