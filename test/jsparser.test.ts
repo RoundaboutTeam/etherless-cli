@@ -3,6 +3,8 @@ import FileParser from '../src/FileParser/FileParser';
 
 const fs = require('fs');
 
+jest.mock('fs');
+
 const fileContent : string = 'function foo(var1, var2, var3) {}';
 const funcName : string = 'foo';
 const funcSignature : string = '(var1, var2, var3)';
@@ -18,13 +20,8 @@ test('get function signature on not loaded file', () => {
 });
 
 test('parsing not existing file', () => {
-  fs.existsSync = jest.fn().mockImplementationOnce(
-    (filePath) => false,
-  );
-
-  fs.readFileSync = jest.fn().mockImplementationOnce(
-    (filePath, options?) => fileContent,
-  );
+  fs.existsSync.mockReturnValue(false);
+  fs.readFileSync.mockReturnValue(fileContent);
 
   expect(() => fileParser.parse('mockPath')).toThrowError();
 });
