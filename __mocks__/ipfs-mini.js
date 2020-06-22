@@ -1,5 +1,3 @@
-jest.genMockFromModule('ipfs-mini');
-
 const IPFS = {
   Ipfs: jest.fn().mockImplementation(() => ({
     cat: jest.fn((cid) => Promise.resolve(Buffer.from(`data from ${cid}`))),
