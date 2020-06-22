@@ -38,7 +38,7 @@ test('get function signature on not loaded file', () => {
   expect(() => fileParser.getFunctionSignature('mockFuncName')).toThrowError();
 });
 
-/*
+
 test('request function signature of not existing function', () => {
   fs.existsSync = jest.fn().mockImplementationOnce(
     (filePath) => true,
@@ -52,6 +52,7 @@ test('request function signature of not existing function', () => {
   expect(() => fileParser.getFunctionSignature('randomFuncName')).toThrowError();
 });
 
+/*
 test('get function signature of existing function', () => {
   fs.existsSync = jest.fn().mockImplementationOnce(
     (filePath) => true,
