@@ -13,6 +13,10 @@ beforeEach(() => {
   fileParser = new JSFileParser();
 });
 
+test('get function signature on not loaded file', () => {
+  expect(() => fileParser.getFunctionSignature('mockFuncName')).toThrowError();
+});
+
 test('parsing not existing file', () => {
   fs.existsSync = jest.fn().mockImplementationOnce(
     (filePath) => false,
@@ -38,9 +42,6 @@ test('parsing not existing file', () => {
   expect(() => fileParser.parse('mockPath')).not.toThrowError();
 });*/
 
-test('get function signature on not loaded file', () => {
-  expect(() => fileParser.getFunctionSignature('mockFuncName')).toThrowError();
-});
 
 /*
 test('request function signature of not existing function', () => {
