@@ -1,6 +1,5 @@
 import Configstore from 'configstore';
 import { Wallet } from 'ethers';
-import { Provider } from 'ethers/providers';
 import { BigNumber } from 'ethers/utils';
 import UserSession from './UserSession';
 
@@ -13,10 +12,7 @@ class EthereumUserSession implements UserSession {
 
   private conf : Configstore;
 
-  private provider : Provider;
-
-  constructor(provider : Provider) {
-    this.provider = provider;
+  constructor() {
     this.conf = new Configstore(pkg.name);
   }
 
@@ -38,7 +34,7 @@ class EthereumUserSession implements UserSession {
       throw new Error('You are already logged in!');
     }
 
-    const wallet : Wallet = new Wallet(privateKey, this.provider);
+    const wallet : Wallet = new Wallet(privateKey);
     this.saveWallet(password, wallet);
     return wallet;
   }
@@ -48,7 +44,7 @@ class EthereumUserSession implements UserSession {
       throw new Error('You are already logged in!');
     }
 
-    const wallet : Wallet = Wallet.fromMnemonic(mnemonic).connect(this.provider);
+    const wallet : Wallet = Wallet.fromMnemonic(mnemonic);
     this.saveWallet(password, wallet);
     return wallet;
   }
@@ -72,15 +68,10 @@ class EthereumUserSession implements UserSession {
         password,
       );
 
-      return wallet.connect(this.provider);
+      return wallet;
     }
 
     throw new Error('No wallet found');
-  }
-
-  async getBalance(password : string) : Promise<BigNumber> {
-    const wallet : Wallet = await this.restoreWallet(password);
-    return wallet.connect(this.provider).getBalance();
   }
 
   getAddress() : string {
