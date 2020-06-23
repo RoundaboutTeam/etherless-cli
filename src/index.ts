@@ -1,7 +1,7 @@
 #!/usr/bin/env ts-node-script
 
-
 import { getDefaultProvider } from 'ethers';
+import Configstore from 'configstore';
 
 import Command from './Command/Command';
 import CommandManager from './Command/CommandManager';
@@ -26,13 +26,20 @@ import FileParser from './FileParser/FileParser';
 import JSFileParser from './FileParser/JSFileParser';
 import FileManager from './IPFS/FileManager';
 
+
 const IPFS = require('ipfs-mini');
 
 const ESmart = require('../contracts/EtherlessSmart.json');
 
+const pkg = require('../package.json');
+
 const provider = getDefaultProvider('ropsten');
 
-const ethSession : EthereumUsesSession = new EthereumUsesSession(provider);
+const ethSession : EthereumUsesSession = new EthereumUsesSession(
+  new Configstore(pkg.name),
+  provider,
+);
+
 const ethContract : EthereumContract = new EthereumContract(
   '0x7eAF55b6E2126f7931aeC056C7839716b804c767',
   ESmart.abi,
