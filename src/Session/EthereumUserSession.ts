@@ -1,9 +1,9 @@
 import Configstore from 'configstore';
 import { Wallet } from 'ethers';
 import { BigNumber } from 'ethers/utils';
-import UserSession from './UserSession';
+import { Provider } from 'ethers/providers';
 
-const pkg = require('../../package.json');
+import UserSession from './UserSession';
 
 class EthereumUserSession implements UserSession {
   private static WALLET_KEY : string = 'criptedWallet';
@@ -12,8 +12,11 @@ class EthereumUserSession implements UserSession {
 
   private conf : Configstore;
 
-  constructor() {
-    this.conf = new Configstore(pkg.name);
+  private provider : Provider;
+
+  constructor(conf : any, provider : Provider) {
+    this.conf = conf;
+    this.provider = provider;
   }
 
   private saveWallet(password : string, wallet : Wallet) : void {
@@ -68,7 +71,7 @@ class EthereumUserSession implements UserSession {
         password,
       );
 
-      return wallet;
+      return wallet.connect(this.provider);
     }
 
     throw new Error('No wallet found');
