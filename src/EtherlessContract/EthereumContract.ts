@@ -15,12 +15,8 @@ import HistoryItem from './HistoryItem';
 class EthereumContract implements EtherlessContract {
   private contract: Contract;
 
-  constructor(address: string, abi: string, provider: Provider) {
-    this.contract = new ethers.Contract(address, abi, provider);
-  }
-
-  connect(wallet: Wallet): void {
-    this.contract = this.contract.connect(wallet);
+  constructor(contract : Contract) {
+    this.contract = contract;
   }
 
   async getAllFunctions() : Promise<Array<BriefFunction>> {
