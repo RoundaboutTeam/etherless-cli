@@ -1,50 +1,55 @@
 import Configstore from 'configstore';
+import UserSession from '../../src/Session/UserSession';
+import EthereumUserSession from '../../src/Session/EthereumUserSession';
 
-import { getDefaultProvider } from 'ethers';
+const ethers = require('ethers');
 
-import UserSession from '../src/Session/UserSession';
-import EthereumUserSession from '../src/Session/EthereumUserSession';
+jest.mock('ethers');
 
 jest.mock('configstore');
 
-const pkg = require('../package.json');
+const pkg = require('../../package.json');
 
 const cfgStore = new Configstore(pkg.name);
 
 const privateKey : string = '0x2bbd8f70ee60484124e3575a06e14527a82d0cca16cb162a1d9ef5df11440e60';
-const address : string = '0x1611Ef4B1A22ff3f3fF62Fd86b9059e3679b6212';
 const mnemonic : string = 'apple inner trash finger buyer tomorrow abstract donate donor caught high weird';
 const password : string = 'password';
 
-const userSession : UserSession = new EthereumUserSession(cfgStore, getDefaultProvider('ropsten'));
+const userSession : UserSession = new EthereumUserSession(cfgStore, ethers.getDefaultProvider('ropsten'));
 
 test('Login with PrivateKey', () => {
-  (cfgStore.set as jest.Mock).mockImplementation(
+  (cfgStore.set as jest.Mock).mockImplementationOnce(
     (key, value) => 'stored',
   );
 
-  (cfgStore.get as jest.Mock).mockImplementation(
+  (cfgStore.get as jest.Mock).mockImplementationOnce(
     (key) => null,
   );
 
-  expect(userSession.loginWithPrivateKey(privateKey, password).address).toBe(address);
+  expect(() => userSession.loginWithPrivateKey(privateKey, password)).not.toThrowError();
 });
 
 test('Login with Mnemonic', () => {
-  (cfgStore.set as jest.Mock).mockImplementation(
+  (cfgStore.set as jest.Mock).mockImplementationOnce(
     (key, value) => 'stored',
   );
 
-  (cfgStore.get as jest.Mock).mockImplementation(
+  (cfgStore.get as jest.Mock).mockImplementationOnce(
     (key) => null,
   );
 
-  expect(userSession.loginWithMnemonicPhrase(mnemonic, password).address).toBe(address);
+  ethers.Wallet.fromMnemonic = jest.fn().mockImplementation(() => new ethers.Wallet());
+  expect(() => userSession.loginWithMnemonicPhrase(mnemonic, password)).not.toThrowError();
 });
 
 test('Login with private key in wrong format', () => {
-  (cfgStore.get as jest.Mock).mockImplementation(
+  (cfgStore.get as jest.Mock).mockImplementationOnce(
     (key) => null,
+  );
+
+  ethers.Wallet = jest.fn().mockImplementationOnce(
+    () => new Error('Private key in wrong format'),
   );
 
   expect(() => userSession.loginWithPrivateKey('privateKeyInWrongFormat', password)).toThrowError();
@@ -52,6 +57,10 @@ test('Login with private key in wrong format', () => {
 
 test('Login with mnemonic phrase in wrong format', () => {
   (cfgStore.get as jest.Mock).mockReturnValue(null);
+  ethers.Wallet.fromMnemonic = jest.fn().mockImplementationOnce(
+    (menmonic : string) => new Error('Mnemonic phrase in wrong format'),
+  );
+
   expect(() => userSession.loginWithMnemonicPhrase('mnemonicInWrongFormat', password)).toThrowError();
 });
 
@@ -76,6 +85,7 @@ test('Logout with no user logged', () => {
 });
 
 test('create new wallet', () => {
+  ethers.Wallet.createRandom = jest.fn().mockImplementationOnce(() => {});
   expect(() => userSession.signup()).not.toThrowError();
 });
 
@@ -94,10 +104,13 @@ test('Restore wallet from not logged user', () => {
   expect(userSession.restoreWallet(password)).rejects.toThrowError();
 });
 
-const mockedEncryptedWallet = '{"address":"1611ef4b1a22ff3f3ff62fd86b9059e3679b6212","id":"ff525029-c1cd-4132-b6b4-4d72fe592f5d","version":3,"Crypto":{"cipher":"aes-128-ctr","cipherparams":{"iv":"6d00947b8ca8a1d7f7d4a190d241d415"},"ciphertext":"90dcb4aaadd5d91601075a0ba9fc4265d4a79e0df20eace99772344eccce991e","kdf":"scrypt","kdfparams":{"salt":"bf58e81e18f1e98d1542be316750b10724bc9bf4762d84c5b066674e41bedb59","n":131072,"dklen":32,"p":1,"r":8},"mac":"7a9ef3a4a03b6fdcc698050d0803d4965c2f30c2367eb6891f36963080012c16"}}';
 test('Restore wallet', async () => {
-  (cfgStore.get as jest.Mock).mockReturnValue(mockedEncryptedWallet);
+  (cfgStore.get as jest.Mock).mockReturnValue('mocked encrypted wallet');
+  ethers.Wallet.fromEncryptedJson = jest.fn().mockImplementationOnce(
+    (encryptedJson) => Promise.resolve({
+      connect: jest.fn().mockImplementation(() => new ethers.Wallet()),
+    }),
+  );
 
-  const wallet = await userSession.restoreWallet(password);
-  expect(wallet.address).toEqual(address);
-}, 10000);
+  expect(userSession.restoreWallet(password)).resolves.toBeDefined();
+});

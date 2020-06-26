@@ -5,8 +5,6 @@ import BriefFunction from './BriefFunction';
 import HistoryItem from './HistoryItem';
 
 export default interface EtherlessContract {
-  connect(wallet : Wallet) : void;
-
   getAllFunctions() : Promise<Array<BriefFunction>>;
   getMyFunctions(address : string) : Promise<Array<BriefFunction>>;
   getFunctionInfo(name : string) : Promise<Function>;

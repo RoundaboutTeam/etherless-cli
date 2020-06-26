@@ -1,4 +1,4 @@
-import IPFSFileManager from '../src/IPFS/IPFSFileManager';
+import IPFSFileManager from '../../src/IPFS/IPFSFileManager';
 
 jest.mock('ipfs-mini');
 
