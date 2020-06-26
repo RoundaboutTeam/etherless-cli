@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
-import JSFileParser from '../src/FileParser/JSFileParser';
-import FileParser from '../src/FileParser/FileParser';
+import JSFileParser from '../../src/FileParser/JSFileParser';
+import FileParser from '../../src/FileParser/FileParser';
 
 jest.mock('fs');
 

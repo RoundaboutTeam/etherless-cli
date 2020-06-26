@@ -1,6 +1,6 @@
 import Configstore from 'configstore';
-import UserSession from '../src/Session/UserSession';
-import EthereumUserSession from '../src/Session/EthereumUserSession';
+import UserSession from '../../src/Session/UserSession';
+import EthereumUserSession from '../../src/Session/EthereumUserSession';
 
 const ethers = require('ethers');
 
@@ -8,23 +8,22 @@ jest.mock('ethers');
 
 jest.mock('configstore');
 
-const pkg = require('../package.json');
+const pkg = require('../../package.json');
 
 const cfgStore = new Configstore(pkg.name);
 
 const privateKey : string = '0x2bbd8f70ee60484124e3575a06e14527a82d0cca16cb162a1d9ef5df11440e60';
-const address : string = '0x1611Ef4B1A22ff3f3fF62Fd86b9059e3679b6212';
 const mnemonic : string = 'apple inner trash finger buyer tomorrow abstract donate donor caught high weird';
 const password : string = 'password';
 
 const userSession : UserSession = new EthereumUserSession(cfgStore, ethers.getDefaultProvider('ropsten'));
 
 test('Login with PrivateKey', () => {
-  (cfgStore.set as jest.Mock).mockImplementation(
+  (cfgStore.set as jest.Mock).mockImplementationOnce(
     (key, value) => 'stored',
   );
 
-  (cfgStore.get as jest.Mock).mockImplementation(
+  (cfgStore.get as jest.Mock).mockImplementationOnce(
     (key) => null,
   );
 
@@ -32,26 +31,25 @@ test('Login with PrivateKey', () => {
 });
 
 test('Login with Mnemonic', () => {
-  (cfgStore.set as jest.Mock).mockImplementation(
+  (cfgStore.set as jest.Mock).mockImplementationOnce(
     (key, value) => 'stored',
   );
 
-  (cfgStore.get as jest.Mock).mockImplementation(
+  (cfgStore.get as jest.Mock).mockImplementationOnce(
     (key) => null,
   );
 
   ethers.Wallet.fromMnemonic = jest.fn().mockImplementation(() => new ethers.Wallet());
-
   expect(() => userSession.loginWithMnemonicPhrase(mnemonic, password)).not.toThrowError();
 });
 
 test('Login with private key in wrong format', () => {
-  (cfgStore.get as jest.Mock).mockImplementation(
+  (cfgStore.get as jest.Mock).mockImplementationOnce(
     (key) => null,
   );
 
   ethers.Wallet = jest.fn().mockImplementationOnce(
-    () => Promise.reject(new Error('Private key in wrong format')),
+    () => new Error('Private key in wrong format'),
   );
 
   expect(() => userSession.loginWithPrivateKey('privateKeyInWrongFormat', password)).toThrowError();
@@ -60,7 +58,7 @@ test('Login with private key in wrong format', () => {
 test('Login with mnemonic phrase in wrong format', () => {
   (cfgStore.get as jest.Mock).mockReturnValue(null);
   ethers.Wallet.fromMnemonic = jest.fn().mockImplementationOnce(
-    (menmonic : string) => Promise.reject(new Error('Mnemonic phrase in wrong format')),
+    (menmonic : string) => new Error('Mnemonic phrase in wrong format'),
   );
 
   expect(() => userSession.loginWithMnemonicPhrase('mnemonicInWrongFormat', password)).toThrowError();
@@ -109,8 +107,10 @@ test('Restore wallet from not logged user', () => {
 test('Restore wallet', async () => {
   (cfgStore.get as jest.Mock).mockReturnValue('mocked encrypted wallet');
   ethers.Wallet.fromEncryptedJson = jest.fn().mockImplementationOnce(
-    (encryptedJson) => Promise.resolve(new ethers.Wallet()),
+    (encryptedJson) => Promise.resolve({
+      connect: jest.fn().mockImplementation(() => new ethers.Wallet()),
+    }),
   );
 
-  expect(() => userSession.restoreWallet(password)).not.toThrowError();
+  expect(userSession.restoreWallet(password)).resolves.toBeDefined();
 });

@@ -5,7 +5,7 @@ import {
   EventFilter,
 } from 'ethers';
 import { Provider } from 'ethers/providers';
-import { BigNumber, bigNumberify, parseEther } from 'ethers/utils';
+import { BigNumber, bigNumberify, getAddress, parseEther } from 'ethers/utils';
 
 import EtherlessContract from './EtherlessContract';
 import BriefFunction from './BriefFunction';
@@ -25,13 +25,8 @@ class EthereumContract implements EtherlessContract {
 
   async getMyFunctions(address : string) : Promise<Array<BriefFunction>> {
     return JSON.parse(
-      await this.contract.getOwnedList(ethers.utils.getAddress(address)),
+      await this.contract.getOwnedList(getAddress(address)),
     ).functionArray;
-  }
-
-  /** TODO */
-  async getSearchedFunction(pattern : string) : Promise<Array<BriefFunction>> {
-    return new Promise<Array<BriefFunction>>((response, reject) => {});
   }
 
   async getFunctionInfo(name : string) : Promise<Function> {
