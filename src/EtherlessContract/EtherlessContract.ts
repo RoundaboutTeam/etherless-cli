@@ -17,7 +17,7 @@ export default interface EtherlessContract {
 
   sendRunRequest(name : string, params: string) : Promise<BigNumber>;
   sendDeleteRequest(name: string) : Promise<BigNumber>;
-  sendCodeUpdateRequest(name: string, filePath: string) : Promise<BigNumber>;
+  sendCodeUpdateRequest(name: string, signature: string, cid: string) : Promise<BigNumber>;
   sendDeployRequest(name: string, signature: string, desc : string, cid: string)
     : Promise<BigNumber>;
 

@@ -16,6 +16,8 @@ import RunCommand from './Command/RunCommand';
 import SearchCommand from './Command/SearchCommand';
 import DeleteCommand from './Command/DeleteCommand';
 import DeployCommand from './Command/DeployCommand';
+import InitCommand from './Command/InitCommand';
+import EditCommand from './Command/EditCommand';
 
 
 import EthereumUsesSession from './Session/EthereumUserSession';
@@ -60,6 +62,8 @@ const commands : Array<Command> = [
   new SearchCommand(ethContract, ethSession),
   new DeleteCommand(ethContract, ethSession),
   new DeployCommand(jsFileParser, ipfsFileManager, ethContract, ethSession),
+  new InitCommand(ethSession),
+  new EditCommand(jsFileParser, ipfsFileManager, ethContract, ethSession)
 ];
 
 commands.forEach(

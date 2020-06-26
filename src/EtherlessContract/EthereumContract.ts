@@ -33,11 +33,6 @@ class EthereumContract implements EtherlessContract {
     ).functionArray;
   }
 
-  /** TODO */
-  async getSearchedFunction(pattern : string) : Promise<Array<BriefFunction>> {
-    return new Promise<Array<BriefFunction>>((response, reject) => {});
-  }
-
   async getFunctionInfo(name : string) : Promise<Function> {
     return JSON.parse(await this.contract.getInfo(name));
   }
@@ -72,7 +67,7 @@ class EthereumContract implements EtherlessContract {
   }
 
   /** TODO */
-  async sendCodeUpdateRequest(name: string, filePath: string) : Promise<BigNumber> {
+  async sendCodeUpdateRequest(name: string, signature: string, cid: string) : Promise<BigNumber> {
     return new Promise<BigNumber>((resolve, reject) => {});
   }
 
