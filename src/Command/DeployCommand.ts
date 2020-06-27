@@ -18,7 +18,7 @@ import FileManager from '../IPFS/FileManager';
 
 const fs = require('fs');
 
-class RunCommand extends Command {
+class DeployCommand extends Command {
   command = 'deploy <function_name> <path> <description>';
 
   description = 'deploy a function ';
@@ -82,4 +82,4 @@ class RunCommand extends Command {
   }
 }
 
-export default RunCommand;
+export default DeployCommand;

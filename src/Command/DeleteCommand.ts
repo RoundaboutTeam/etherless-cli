@@ -14,10 +14,10 @@ import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
 import Command from './Command';
 
-class RunCommand extends Command {
+class DeleteCommand extends Command {
   command = 'delete <function_name>';
 
-  description = 'delete a function ';
+  description = 'delete a function';
 
   private contract : EtherlessContract;
 
@@ -53,4 +53,4 @@ class RunCommand extends Command {
   }
 }
 
-export default RunCommand;
+export default DeleteCommand;

@@ -1,6 +1,6 @@
 #!/usr/bin/env ts-node-script
 
-import { getDefaultProvider } from 'ethers';
+import { getDefaultProvider, Contract } from 'ethers';
 import Configstore from 'configstore';
 
 import Command from './Command/Command';
@@ -41,9 +41,11 @@ const ethSession : EthereumUsesSession = new EthereumUsesSession(
 );
 
 const ethContract : EthereumContract = new EthereumContract(
-  '0x7eAF55b6E2126f7931aeC056C7839716b804c767',
-  ESmart.abi,
-  provider,
+  new Contract(
+    '0x7eAF55b6E2126f7931aeC056C7839716b804c767',
+    ESmart.abi,
+    provider,
+  ),
 );
 
 const ipfsFileManager : FileManager = new IPFSFileManager(new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }));
