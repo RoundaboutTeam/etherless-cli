@@ -42,7 +42,7 @@ const ethSession : EthereumUsesSession = new EthereumUsesSession(
 
 const ethContract : EthereumContract = new EthereumContract(
   new Contract(
-    '0x7eAF55b6E2126f7931aeC056C7839716b804c767',
+    '0x0096E8C3052940C01E9663A95D4A981D8BA155c4',
     ESmart.abi,
     provider,
   ),
