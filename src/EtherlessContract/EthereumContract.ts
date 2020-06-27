@@ -68,12 +68,20 @@ class EthereumContract implements EtherlessContract {
 
   /** TODO */
   async sendCodeUpdateRequest(name: string, signature: string, cid: string) : Promise<BigNumber> {
-    return new Promise<BigNumber>((resolve, reject) => {});
+    console.log('Creating request to edit function..');
+    const tx = await this.contract.editFunction(name, signature, cid, { value: bigNumberify('10') });
+
+    console.log(`Sending request, transaction hash: ${tx.hash}`);
+    const receipt = await tx.wait();
+
+    console.log('Request done.');
+    const requestId : BigNumber = this.contract.interface.parseLog(receipt.events[0]).values.id;
+    return requestId;
   }
 
   /** TODO */
   async updateDesc(name: string, newDesc : string) : Promise<void> {
-    return new Promise<void>((resolve, reject) => {});
+    await this.contract.editFunctionDescr(name, newDesc);
   }
 
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
