@@ -9,7 +9,7 @@ import Command from './Command';
 class SearchCommand extends Command {
   command = 'search <keyword>';
 
-  description = 'list all functions having a keyowrd inside their name';
+  description = 'list all functions having a keyword inside their name';
 
   private contract : EtherlessContract;
 
