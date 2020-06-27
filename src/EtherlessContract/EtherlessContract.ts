@@ -12,6 +12,7 @@ export default interface EtherlessContract {
   // existsFunction(name : string) : Promise<boolean>;
 
   updateDesc(name: string, params: string) : Promise<void>;
+  connect(wallet : Wallet) : void;
 
   sendRunRequest(name : string, params: string) : Promise<BigNumber>;
   sendDeleteRequest(name: string) : Promise<BigNumber>;

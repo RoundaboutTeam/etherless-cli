@@ -4,8 +4,15 @@ import {
   Wallet,
   EventFilter,
 } from 'ethers';
+
 import { Provider } from 'ethers/providers';
-import { BigNumber, bigNumberify, getAddress, parseEther } from 'ethers/utils';
+
+import {
+  BigNumber,
+  bigNumberify,
+  getAddress,
+  parseEther,
+} from 'ethers/utils';
 
 import EtherlessContract from './EtherlessContract';
 import BriefFunction from './BriefFunction';
@@ -31,6 +38,10 @@ class EthereumContract implements EtherlessContract {
 
   async getFunctionInfo(name : string) : Promise<Function> {
     return JSON.parse(await this.contract.getInfo(name));
+  }
+
+  connect(wallet : Wallet) : void {
+    this.contract = this.contract.connect(wallet);
   }
 
   /** TODO */
