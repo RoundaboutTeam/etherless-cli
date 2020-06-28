@@ -66,7 +66,6 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
-  /** TODO */
   async sendCodeUpdateRequest(name: string, signature: string, cid: string) : Promise<BigNumber> {
     console.log('Creating request to edit function..');
     const tx = await this.contract.editFunction(name, signature, cid, { value: bigNumberify('10') });
@@ -79,7 +78,6 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
-  /** TODO */
   async updateDesc(name: string, newDesc : string) : Promise<void> {
     await this.contract.editFunctionDescr(name, newDesc);
   }

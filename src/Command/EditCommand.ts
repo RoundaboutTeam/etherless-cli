@@ -44,6 +44,8 @@ class EditCommand extends Command {
     const wallet : Wallet = await this.session.restoreWallet(password);
     this.contract.connect(wallet);
 
+    let commandOutput = '';
+
     if (args.s) {
       // message = `${message} \n - Source: ${args.s}`;
       this.fileParser.parse(args.s);
@@ -62,18 +64,17 @@ class EditCommand extends Command {
       );
 
       const result : string = await this.contract.listenResponse(requestId);
-
-      return JSON.parse(result).message;
+      commandOutput += JSON.parse(result).message + '\n';
     }
 
     if (args.d) {
       // message = `${message} \n - Description: ${args.d}`;
       await this.contract.updateDesc(args.function_name, args.d);
-      return 'Description updated correctly';
+      commandOutput += 'Description updated correctly\n';
     }
     // return message;
 
-    return '';
+    return commandOutput;
   }
 
   builder(yargs : Argv) : any {
