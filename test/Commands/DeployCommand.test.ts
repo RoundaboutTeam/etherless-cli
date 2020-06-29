@@ -22,8 +22,9 @@ inquirer.prompt = jest.fn().mockReturnValue(Promise.resolve('password'));
 
 const ethers = require('ethers');
 
-const yargs = require('yargs');
+let yargs = require('yargs');
 
+yargs = jest.fn().mockImplementation(() => {});
 yargs.positional = jest.fn().mockReturnValue(yargs);
 yargs.option = jest.fn().mockReturnValue(yargs);
 
@@ -49,6 +50,10 @@ const fileParser = new JSFileParser();
 
 const command = new DeployCommand(fileParser, fileManager, ethereumContract, ethereumUserSession);
 
+beforeAll(() => {
+  fs.writeFileSync('mockedSourceFile.js', 'function foo() {}');
+});
+
 test('check builder', () => {
   expect(command.builder(yargs)).toBeDefined();
 });
@@ -68,14 +73,17 @@ test('test command execution', () => {
   ethereumContract.listenResponse = jest.fn().mockReturnValue(
     Promise.resolve(JSON.stringify({ message: 'result message' })),
   );
-  (fs.readFileSync as jest.Mock).mockReturnValueOnce('source code');
   fileManager.save = jest.fn().mockReturnValue('mocked cid');
   fileParser.parse = jest.fn().mockImplementationOnce(() => {});
   fileParser.getFunctionSignature = jest.fn().mockReturnValueOnce('(p1, p2)');
 
   expect(command.exec({
     function_name: 'functionName',
-    path: 'mockedPath',
+    path: 'mockedSourceFile.js',
     desc: 'mockDescription',
   })).resolves.not.toThrowError();
+});
+
+afterAll(() => {
+  fs.unlinkSync('mockedSourceFile.js');
 });
