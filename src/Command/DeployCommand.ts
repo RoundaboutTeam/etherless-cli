@@ -21,7 +21,7 @@ const fs = require('fs');
 class DeployCommand extends Command {
   command = 'deploy <function_name> <path> <description>';
 
-  description = 'deploy a function ';
+  description = 'deploy a function';
 
   private contract : EtherlessContract;
 
