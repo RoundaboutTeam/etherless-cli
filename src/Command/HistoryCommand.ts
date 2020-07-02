@@ -27,13 +27,13 @@ class HistoryCommand extends Command {
 
   async exec(args: any) : Promise<string> {
     const address : string = await this.session.getAddress();
-    let history : Array<HistoryItem> = await this.contract.getExecHistory(address);
+    let history = await this.contract.getExecHistory(address);
 
     if (args.limit && args.limit > 0) history = history.slice(0, args.limit);
 
     return history.length === 0
       ? 'No past executions found'
-      : history.map((item : HistoryItem) => `- Date: ${item.date} - Function: ${item.name} - Params: ${item.parameters} - Result: ${item.result}`).join('\n');
+      : history.map((item : HistoryItem) => `- Date: ${item.date} - Function: ${item.name} - Params: ${item.params} - Result: ${item.result}`).join('\n');
   }
 
   builder(yargs : Argv) : any {

@@ -27,6 +27,7 @@ import IPFSFileManager from './IPFS/IPFSFileManager';
 import FileParser from './FileParser/FileParser';
 import JSFileParser from './FileParser/JSFileParser';
 import FileManager from './IPFS/FileManager';
+import HistoryCommand from './Command/HistoryCommand';
 
 
 const IPFS = require('ipfs-mini');
@@ -65,7 +66,8 @@ const commands : Array<Command> = [
   new DeleteCommand(ethContract, ethSession),
   new DeployCommand(jsFileParser, ipfsFileManager, ethContract, ethSession),
   new InitCommand(ethSession),
-  new EditCommand(jsFileParser, ipfsFileManager, ethContract, ethSession)
+  new EditCommand(jsFileParser, ipfsFileManager, ethContract, ethSession),
+  new HistoryCommand(ethContract, ethSession),
 ];
 
 commands.forEach(

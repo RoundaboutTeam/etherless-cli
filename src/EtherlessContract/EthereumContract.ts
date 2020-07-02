@@ -18,6 +18,7 @@ import EtherlessContract from './EtherlessContract';
 import BriefFunction from './BriefFunction';
 import Function from './Function';
 import HistoryItem from './HistoryItem';
+import { time } from 'console';
 
 class EthereumContract implements EtherlessContract {
   private contract: Contract;
@@ -44,9 +45,42 @@ class EthereumContract implements EtherlessContract {
     this.contract = this.contract.connect(wallet);
   }
 
-  /** TODO */
   async getExecHistory(address : string) : Promise<Array<HistoryItem>> {
-    return new Promise<Array<HistoryItem>>((resolve, reject) => {});
+    const resultFilter : any = this.contract.filters.runRequest(null, null, address, null);
+    resultFilter.fromBlock = 0;
+    resultFilter.toBlock = 'latest';
+    const pastRequest = await this.contract.provider.getLogs(resultFilter);
+
+    const responseOkFilter : any = this.contract.filters.resultOk();
+    responseOkFilter.fromBlock = 0;
+    responseOkFilter.toBlock = 'latest';
+
+    const responseErrorFilter : any = this.contract.filters.resultError();
+    responseErrorFilter.fromBlock = 0;
+    responseErrorFilter.toBlock = 'latest';
+
+    const responseOk = await this.contract.provider.getLogs(responseOkFilter);
+    const parsedOk = responseOk.map((response) => this.contract.interface.parseLog(response));
+
+    const responseError = await this.contract.provider.getLogs(responseErrorFilter);
+    const parsedError = responseError.map((response) => this.contract.interface.parseLog(response));
+
+    return Promise.all(pastRequest.map((async (request : any) => {
+      const { timestamp } = await this.contract.provider.getBlock(request.blockHash as string);
+      const parsedRequest = this.contract.interface.parseLog(request);
+
+      console.log(parsedRequest);
+
+      return {
+        date: timestamp.toString(),
+        name: parsedRequest.values.funcname,
+        params: parsedRequest.values.param,
+        result: '',
+          /*(parsedOk.filter((item) => (parsedOk.values as any).id === request.values.id)
+          || parsedError.filter((item) => (parsedOk.values as any).id === request.values.id)
+          ).toString(),*/
+      };
+    })));
   }
 
   async sendRunRequest(name : string, params: string) : Promise<BigNumber> {
