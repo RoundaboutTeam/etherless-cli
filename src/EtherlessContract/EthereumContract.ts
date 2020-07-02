@@ -18,6 +18,7 @@ import EtherlessContract from './EtherlessContract';
 import BriefFunction from './BriefFunction';
 import Function from './Function';
 import HistoryItem from './HistoryItem';
+import { RSA_X931_PADDING } from 'constants';
 
 class EthereumContract implements EtherlessContract {
   private contract: Contract;
@@ -86,7 +87,8 @@ class EthereumContract implements EtherlessContract {
   }
 
   async updateDesc(name: string, newDesc : string) : Promise<void> {
-    await this.contract.editFunctionDescr(name, newDesc);
+    const tx = await this.contract.editFunctionDescr(name, newDesc, {value: bigNumberify('10') });
+    await tx.wait();
   }
 
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)

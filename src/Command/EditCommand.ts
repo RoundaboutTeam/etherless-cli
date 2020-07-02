@@ -64,15 +64,14 @@ class EditCommand extends Command {
       );
 
       const result : string = await this.contract.listenResponse(requestId);
-      commandOutput += JSON.parse(result).message + '\n';
+      commandOutput += `${JSON.parse(result).message}\n`;
     }
 
     if (args.d) {
-      // message = `${message} \n - Description: ${args.d}`;
+      //  message = `${message} \n - Description: ${args.d}`;
       await this.contract.updateDesc(args.function_name, args.d);
       commandOutput += 'Description updated correctly\n';
     }
-    // return message;
 
     return commandOutput;
   }
