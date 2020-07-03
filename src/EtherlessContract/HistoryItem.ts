@@ -1,6 +1,6 @@
 export default interface HistoryItem {
   date: string;
   name: string;
-  parameters: string;
+  params: string;
   result: string;
 }

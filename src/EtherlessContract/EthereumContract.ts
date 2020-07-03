@@ -18,7 +18,6 @@ import EtherlessContract from './EtherlessContract';
 import BriefFunction from './BriefFunction';
 import Function from './Function';
 import HistoryItem from './HistoryItem';
-import { RSA_X931_PADDING } from 'constants';
 
 class EthereumContract implements EtherlessContract {
   private contract: Contract;
@@ -45,9 +44,39 @@ class EthereumContract implements EtherlessContract {
     this.contract = this.contract.connect(wallet);
   }
 
-  /** TODO */
+  private async getEvents(filter : any) : Promise<Array<any>> {
+    filter.fromBlock = 0;
+    filter.toBlock = 'latest';
+    return this.contract.provider.getLogs(filter);
+  }
+
+  private parseLogs(logs : Array<any>) : Array<any> {
+    return logs.map((log : any) => this.contract.interface.parseLog(log));
+  }
+
   async getExecHistory(address : string) : Promise<Array<HistoryItem>> {
-    return new Promise<Array<HistoryItem>>((resolve, reject) => {});
+    const pastRequest = await this.getEvents(
+      this.contract.filters.runRequest(null, null, address, null),
+    );
+
+    const parsedOk = this.parseLogs(await this.getEvents(this.contract.filters.resultOk()));
+    const parsedError = this.parseLogs(await this.getEvents(this.contract.filters.resultError()));
+    Array.prototype.push.apply(parsedOk, parsedError);
+
+    return Promise.all(pastRequest.map((async (request : any) => {
+      const { timestamp } = await this.contract.provider.getBlock(request.blockHash as string);
+      const parsedRequest = this.contract.interface.parseLog(request);
+      const result = parsedOk.find(
+        (item : any) => item.values.id.eq(parsedRequest.values.id),
+      )?.values.result;
+
+      return {
+        date: new Date(timestamp * 1000).toLocaleString(),
+        name: parsedRequest.values.funcname,
+        params: parsedRequest.values.param,
+        result: JSON.parse(result).message,
+      };
+    })));
   }
 
   async sendRunRequest(name : string, params: string) : Promise<BigNumber> {

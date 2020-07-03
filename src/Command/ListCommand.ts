@@ -17,7 +17,6 @@ class ListCommand extends Command {
   }
 
   async exec(args: any) : Promise<string> {
-
     const address : string = this.session.getAddress();
     const resDesc : string = args.m ? `Displaying all functions owned by current user: (address: ${address})\n`
       : 'Displaying all functions inside Etherless platform:\n';
@@ -28,7 +27,7 @@ class ListCommand extends Command {
 
     return resDesc + (list.length === 0
       ? 'No function found'
-      : list.map((item : BriefFunction) => `- Name: ${item.name} Price: ${item.price}`).join('\n'));
+      : list.map((item : BriefFunction) => `- Function: ${item.name}${item.signature} Price: ${item.price}`).join('\n'));
   }
 
   builder(yargs : Argv) : any {

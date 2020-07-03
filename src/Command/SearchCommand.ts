@@ -27,7 +27,7 @@ class SearchCommand extends Command {
 
     return resIntro + (filteredList.length === 0
       ? 'No function found'
-      : filteredList.map((item : BriefFunction) => `- Name: ${item.name} Price: ${item.price}`).join('\n'));
+      : filteredList.map((item : BriefFunction) => `- Function: ${item.name}${item.signature} Price: ${item.price}`).join('\n'));
   }
 
   builder(yargs : Argv) : any {
