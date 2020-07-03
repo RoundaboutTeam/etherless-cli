@@ -45,40 +45,37 @@ class EthereumContract implements EtherlessContract {
     this.contract = this.contract.connect(wallet);
   }
 
+  private async getEvents(filter : any) : Promise<Array<any>> {
+    filter.fromBlock = 0;
+    filter.toBlock = 'latest';
+    return this.contract.provider.getLogs(filter);
+  }
+
+  private parseLogs(logs : Array<any>) : Array<any> {
+    return logs.map((log : any) => this.contract.interface.parseLog(log));
+  }
+
   async getExecHistory(address : string) : Promise<Array<HistoryItem>> {
-    const resultFilter : any = this.contract.filters.runRequest(null, null, address, null);
-    resultFilter.fromBlock = 0;
-    resultFilter.toBlock = 'latest';
-    const pastRequest = await this.contract.provider.getLogs(resultFilter);
+    const pastRequest = await this.getEvents(
+      this.contract.filters.runRequest(null, null, address, null),
+    );
 
-    const responseOkFilter : any = this.contract.filters.resultOk();
-    responseOkFilter.fromBlock = 0;
-    responseOkFilter.toBlock = 'latest';
-
-    const responseErrorFilter : any = this.contract.filters.resultError();
-    responseErrorFilter.fromBlock = 0;
-    responseErrorFilter.toBlock = 'latest';
-
-    const responseOk = await this.contract.provider.getLogs(responseOkFilter);
-    const parsedOk = responseOk.map((response) => this.contract.interface.parseLog(response));
-
-    const responseError = await this.contract.provider.getLogs(responseErrorFilter);
-    const parsedError = responseError.map((response) => this.contract.interface.parseLog(response));
+    const parsedOk = this.parseLogs(await this.getEvents(this.contract.filters.resultOk()));
+    const parsedError = this.parseLogs(await this.getEvents(this.contract.filters.resultError()));
+    Array.prototype.push.apply(parsedOk, parsedError);
 
     return Promise.all(pastRequest.map((async (request : any) => {
       const { timestamp } = await this.contract.provider.getBlock(request.blockHash as string);
       const parsedRequest = this.contract.interface.parseLog(request);
-
-      console.log(parsedRequest);
+      const result = parsedOk.find(
+        (item : any) => item.values.id.eq(parsedRequest.values.id),
+      )?.values.result;
 
       return {
-        date: timestamp.toString(),
+        date: new Date(timestamp * 1000).toLocaleString(),
         name: parsedRequest.values.funcname,
         params: parsedRequest.values.param,
-        result: '',
-          /*(parsedOk.filter((item) => (parsedOk.values as any).id === request.values.id)
-          || parsedError.filter((item) => (parsedOk.values as any).id === request.values.id)
-          ).toString(),*/
+        result: JSON.parse(result).message,
       };
     })));
   }
