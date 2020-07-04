@@ -80,13 +80,9 @@ test('update description', () => {
 });
 
 test('send deploy request', () => {
-  expect(ethereumContract.sendDeployRequest('funcName', 'funcSignature','funcDesc', 'funcCid')).resolves.toBeDefined();
+  expect(ethereumContract.sendDeployRequest('funcName', 'funcSignature', 'funcDesc', 'funcCid')).resolves.toBeDefined();
 });
 
-test('listen response success', () => {
+test('listen response', () => {
   expect(ethereumContract.listenResponse(bigNumberify(10))).resolves.toBeDefined();
-});
-
-test('listen response error', () => {
-  //expect(ethereumContract.listenResponse(bigNumberify(10))).resolves.toBeDefined();
 });

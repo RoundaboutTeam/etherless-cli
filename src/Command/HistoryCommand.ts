@@ -16,7 +16,7 @@ import Command from './Command';
 class HistoryCommand extends Command {
   command = 'history [limit]';
 
-  description = 'get a list of yours past executions';
+  description = 'get a list of your past executions';
 
   private contract : EtherlessContract;
 
