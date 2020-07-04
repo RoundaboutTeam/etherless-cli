@@ -62,3 +62,7 @@ test('test signup without saving account', () => {
   expect(command.exec({ save: false })).resolves
     .toBe('Address: mockAddress \nPrivate Key: mockPrivateKey \nMnemonic phrase: mockMnemonic');
 });
+
+afterAll(() => {
+  fs.unlinkSync('credential.txt');
+});
