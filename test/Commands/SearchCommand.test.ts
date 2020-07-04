@@ -56,10 +56,10 @@ test('no function containing the keyword', () => {
 
 test('no function containing the keyword', () => {
   (ethereumContract.getAllFunctions as jest.Mock).mockReturnValueOnce([
-    { name: 'test0', price: 10 },
-    { name: 'mock', price: 20 },
+    { name: 'test0', signature: '()', price: 10 },
+    { name: 'mock', signature: '(n1)', price: 20 },
   ]);
 
   expect(command.exec({ keyword: 'test' }))
-    .resolves.toBe('Functions containing keyword "test" inside their name: \n- Name: test0 Price: 10');
+    .resolves.toBe('Functions containing keyword "test" inside their name: \n- Function: test0() Price: 10');
 });
