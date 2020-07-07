@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node-script
+#!/usr/bin/env node
 
 import { getDefaultProvider, Contract } from 'ethers';
 import Configstore from 'configstore';

@@ -2,8 +2,8 @@
   "name": "etherless-cli",
   "version": "1.0.0",
   "description": "Module to which the developer interacts with ​etherless​.",
-  "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "jest --coverage --verbose --detectOpenHandles",
     "lint": "eslint src/*/*.ts"
   },
@@ -13,8 +13,9 @@
   },
   "author": "",
   "license": "ISC",
+  "main": "./build/index.js",
   "bin": {
-    "etherless": "./src/index.ts"
+    "etherless": "./build/index.js"
   },
   "bugs": {
     "url": "https://github.com/Rounadbout/etherless-cli/issues"
