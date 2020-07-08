@@ -1,8 +1,15 @@
 import { Argv } from 'yargs';
+import Table from 'cli-table';
 import Command from './Command';
 import BriefFunction from '../EtherlessContract/BriefFunction';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
+
+// instantiate
+const table = new Table({
+  head: ['Function', 'Price'],
+  colWidths: [35, 10],
+});
 
 class ListCommand extends Command {
   command = 'list [m]';
@@ -25,9 +32,13 @@ class ListCommand extends Command {
       ? await this.contract.getMyFunctions(address)
       : await this.contract.getAllFunctions();
 
-    return resDesc + (list.length === 0
-      ? 'No function found'
-      : list.map((item : BriefFunction) => `- Function: ${item.name}${item.signature} Price: ${item.price}`).join('\n'));
+    if (list.length === 0) {
+      return 'No function found';
+    }
+
+    const values = list.map((item : BriefFunction) => [item.name + item.signature, item.price]);
+    table.push(...values);
+    return table.toString();
   }
 
   builder(yargs : Argv) : any {
