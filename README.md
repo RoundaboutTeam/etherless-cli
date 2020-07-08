@@ -2,8 +2,7 @@
 Module through which users can interact with the Etherless platform.
 
 # Installation 
-- Download this repo 
-- From inside of the downloaded repo run the command <code>npm install</code> to install all the missing dependecies. Then run the command <code>npm link</code> <b>as Administrator</b> (which allow you to use the keyword 'etherless' to execute commands).
+Open a terminal and run the command <code>npm i @roundabout-team/etherless-cli -g</code> (Depending on your OS, administrator privileges may be required)
 
 # Commands 
 To use a command from inside the repository run: <code>etherless `<command>` [params...]</code>
