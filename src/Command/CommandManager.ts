@@ -1,6 +1,6 @@
-import * as yargs from 'yargs';
-
 import Command from './Command';
+
+const yargs = require('yargs');
 
 class CommandManager {
   /**
@@ -11,7 +11,7 @@ class CommandManager {
       command.getCommand(),
       command.getDescription(),
       command.builder,
-      (args) => {
+      (args : any) => {
         command.exec(args)
           .then((result : string) => console.log(`${result}`))
           .catch((error : any) => {
@@ -28,6 +28,12 @@ class CommandManager {
    */
   static init() : void {
     yargs.parse();
+
+    const commands = yargs.getCommandInstance().getCommands();
+    const argv = yargs.argv;
+    if (!argv._[0] || commands.indexOf(argv._[0]) === -1) {
+      console.log('Non-existing or no command specified');
+    }
   }
 }
 
