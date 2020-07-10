@@ -149,7 +149,7 @@ class EthereumContract implements EtherlessContract {
 
       // asolto per eventi di errore
       this.contract.on(errorFilter, (result, id, event) => {
-        reject(result);
+        reject(JSON.parse(result));
         this.contract.removeAllListeners(successFilter);
         this.contract.removeAllListeners(errorFilter);
       });

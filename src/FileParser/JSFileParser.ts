@@ -37,7 +37,7 @@ class JSFileParser implements FileParser {
   }
 
   private findFuncNode(funcName: string) : any {
-    return this.parsedFile.body.find((x : any) => x.id.name === funcName);
+    return this.parsedFile.body.find((x : any) => x.id && x.id.name === funcName);
   }
 
   private funcSignatureFromNode(funcNode: any) : string {
