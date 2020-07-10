@@ -62,8 +62,35 @@ class EthereumContract {
             }))));
         });
     }
+    existsFunction(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const listInfo = yield this.getFunctionInfo(name);
+                return true;
+            }
+            catch (error) {
+                return false;
+            }
+        });
+    }
+    isOwner(name, devAddress) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return true;
+        });
+    }
     sendRunRequest(name, params) {
         return __awaiter(this, void 0, void 0, function* () {
+            let listInfo;
+            try {
+                listInfo = yield this.getFunctionInfo(name);
+            }
+            catch (error) {
+                throw new Error("The function you're looking for does not exist! :'(");
+            }
+            // NUMBER OF PARAMETERS
+            if (listInfo.signature.split(',').length !== params.split(',').length) {
+                throw new Error('The number of parameters is not correct!');
+            }
             console.log('Creating request to execute function..');
             const tx = yield this.contract.runFunction(name, params, { value: utils_1.bigNumberify('10') });
             console.log(`Sending request, transaction hash: ${tx.hash}`);
@@ -75,6 +102,16 @@ class EthereumContract {
     }
     sendDeleteRequest(name) {
         return __awaiter(this, void 0, void 0, function* () {
+            let listInfo;
+            try {
+                listInfo = yield this.getFunctionInfo(name);
+            }
+            catch (error) {
+                throw new Error("The function you're looking for does not exist! :'(");
+            }
+            if ((yield this.contract.signer.getAddress()) !== listInfo.developer) {
+                throw new Error('You are not the owner of the function!');
+            }
             console.log('Creating request to delete function..');
             const tx = yield this.contract.deleteFunction(name, { value: utils_1.bigNumberify('10') });
             console.log(`Sending request, transaction hash: ${tx.hash}`);
@@ -86,6 +123,16 @@ class EthereumContract {
     }
     sendCodeUpdateRequest(name, signature, cid) {
         return __awaiter(this, void 0, void 0, function* () {
+            let listInfo;
+            try {
+                listInfo = yield this.getFunctionInfo(name);
+            }
+            catch (error) {
+                throw new Error("The function you're looking for does not exist! :'(");
+            }
+            if ((yield this.contract.signer.getAddress()) !== listInfo.developer) {
+                throw new Error('You are not the owner of the function!');
+            }
             console.log('Creating request to edit function..');
             const tx = yield this.contract.editFunction(name, signature, cid, { value: utils_1.bigNumberify('10') });
             console.log(`Sending request, transaction hash: ${tx.hash}`);
@@ -97,6 +144,16 @@ class EthereumContract {
     }
     updateDesc(name, newDesc) {
         return __awaiter(this, void 0, void 0, function* () {
+            let listInfo;
+            try {
+                listInfo = yield this.getFunctionInfo(name);
+            }
+            catch (error) {
+                throw new Error("The function you're looking for does not exist! :'(");
+            }
+            if ((yield this.contract.signer.getAddress()) !== listInfo.developer) {
+                throw new Error('You are not the owner of the function!');
+            }
             const tx = yield this.contract.editFunctionDescr(name, newDesc, { value: utils_1.bigNumberify('10') });
             yield tx.wait();
         });
