@@ -117,6 +117,10 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
+  private caseInsensitiveEquality(s1 : string, s2: string) : boolean {
+    return s1.toUpperCase() === s2.toUpperCase();
+  }
+
   async sendDeleteRequest(name: string) : Promise<BigNumber> {
     let listInfo : Function;
     try {
@@ -125,7 +129,10 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
-    if (await this.contract.signer.getAddress() !== listInfo.developer.toUpperCase()) {
+    if (!this.caseInsensitiveEquality(
+      await this.contract.signer.getAddress(),
+      listInfo.developer,
+    )) {
       throw new Error('You are not the owner of the function!');
     }
 
@@ -148,7 +155,10 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
-    if (await this.contract.signer.getAddress() !== listInfo.developer.toUpperCase()) {
+    if (!this.caseInsensitiveEquality(
+      await this.contract.signer.getAddress(),
+      listInfo.developer,
+    )) {
       throw new Error('You are not the owner of the function!');
     }
 
@@ -171,7 +181,10 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
-    if (await this.contract.signer.getAddress() !== listInfo.developer.toUpperCase()) {
+    if (!this.caseInsensitiveEquality(
+      await this.contract.signer.getAddress(),
+      listInfo.developer,
+    )) {
       throw new Error('You are not the owner of the function!');
     }
 
