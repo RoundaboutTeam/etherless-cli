@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Command_1 = __importDefault(require("./Command"));
+const Table = require('cli-table');
 class InfoCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -26,11 +27,9 @@ class InfoCommand extends Command_1.default {
                 throw new Error('You must be logged to use this command');
             }
             const listInfo = yield this.contract.getFunctionInfo(args.function_name);
-            return `Informations about '${listInfo.name}' function: \n
-        - Owner: ${listInfo.developer}\n
-        - Signature: ${listInfo.signature}\n
-        - Price: ${listInfo.price} wei\n
-        - Description: ${listInfo.description}`;
+            const table = new Table();
+            table.push({ Name: listInfo.name }, { Owner: listInfo.developer }, { Signature: listInfo.signature }, { Price: listInfo.price }, { Description: listInfo.description });
+            return table.toString();
         });
     }
     builder(yargs) {

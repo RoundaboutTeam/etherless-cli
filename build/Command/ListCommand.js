@@ -12,7 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const cli_table_1 = __importDefault(require("cli-table"));
 const Command_1 = __importDefault(require("./Command"));
+// instantiate
+const table = new cli_table_1.default({
+    head: ['Function', 'Price'],
+    colWidths: [35, 10],
+});
 class ListCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -23,14 +29,15 @@ class ListCommand extends Command_1.default {
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
             const address = this.session.getAddress();
-            const resDesc = args.m ? `Displaying all functions owned by current user: (address: ${address})\n`
-                : 'Displaying all functions inside Etherless platform:\n';
             const list = args.m
                 ? yield this.contract.getMyFunctions(address)
                 : yield this.contract.getAllFunctions();
-            return resDesc + (list.length === 0
-                ? 'No function found'
-                : list.map((item) => `- Function: ${item.name}${item.signature} Price: ${item.price}`).join('\n'));
+            if (list.length === 0) {
+                return 'No function found';
+            }
+            const values = list.map((item) => [item.name + item.signature, item.price]);
+            table.push(...values);
+            return table.toString();
         });
     }
     builder(yargs) {

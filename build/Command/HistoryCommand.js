@@ -12,7 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const cli_table_1 = __importDefault(require("cli-table"));
 const Command_1 = __importDefault(require("./Command"));
+const table = new cli_table_1.default({
+    head: ['Id', 'Date', 'Request', 'Result'],
+});
 class HistoryCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -26,9 +30,12 @@ class HistoryCommand extends Command_1.default {
             let history = yield this.contract.getExecHistory(address);
             if (args.limit && args.limit > 0)
                 history = history.slice(0, args.limit);
-            return history.length === 0
-                ? 'No past executions found'
-                : history.map((item) => `- Date: ${item.date} - Function: ${item.name} - Params: ${item.params} - Result: ${item.result}`).join('\n');
+            if (history.length === 0)
+                return 'No past executions found';
+            history.sort((a, b) => (a.id >= b.id ? 1 : -1));
+            const values = history.map((item) => [item.id, item.date, `${item.name}(${item.params})`, item.result]);
+            table.push(...values);
+            return table.toString();
         });
     }
     builder(yargs) {
