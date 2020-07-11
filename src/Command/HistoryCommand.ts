@@ -33,7 +33,7 @@ class HistoryCommand extends Command {
 
     if (history.length === 0) return 'No past executions found';
 
-    history.sort((a, b) => (a.id >= b.id ? 1 : -1));
+    history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? 1 : -1));
     const values = history.map(
       (item : HistoryItem) => [item.id, item.date, `${item.name}(${item.params})`, item.result],
     );
