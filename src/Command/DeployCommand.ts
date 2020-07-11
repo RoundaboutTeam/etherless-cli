@@ -8,6 +8,7 @@ import {
 } from 'ethers';
 import { BigNumber } from 'ethers/utils';
 import * as inquirer from 'inquirer';
+import DeployInfo from '../IPFS/DeployInfo';
 
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
@@ -17,6 +18,7 @@ import FileParser from '../FileParser/FileParser';
 import FileManager from '../IPFS/FileManager';
 
 const fs = require('fs');
+const path = require('path');
 
 class DeployCommand extends Command {
   command = 'deploy <function_name> <path> <description>';
@@ -48,13 +50,29 @@ class DeployCommand extends Command {
     const wallet : Wallet = await this.session.restoreWallet(password);
     this.contract.connect(wallet);
 
-    this.fileParser.parse(args.path);
+    const isDir : boolean = fs.lstatSync(args.path).isDirectory();
+    const sourcePath : string = isDir ? path.normalize(`${args.path}${path.sep}index.js`) : args.path;
+
+    this.fileParser.parse(sourcePath);
     const signature : string = this.fileParser.getFunctionSignature(args.function_name);
 
-    const sourceCode : Buffer = fs.readFileSync(args.path);
+    const sourceCode : string = fs.readFileSync(sourcePath).toString();
+    const packageJSON : string = isDir
+      ? fs.readFileSync(path.normalize(`${args.path}${path.sep}package.json`)).toString()
+      : '';
+    const packageJSONLock : string = isDir
+      ? fs.readFileSync(path.normalize(`${args.path}${path.sep}package-lock.json`)).toString()
+      : '';
+
+    const deploymentInfo : DeployInfo = {
+      dep: isDir,
+      sourceCode,
+      package: packageJSON,
+      package_lock: packageJSONLock,
+    };
 
     console.log('Uploading file in IPFS');
-    const CID : string = await this.fileManager.save(sourceCode);
+    const CID : string = await this.fileManager.save(deploymentInfo);
     console.log(`File uploaded, cid: ${CID}`);
 
     const requestId : BigNumber = await this.contract.sendDeployRequest(

@@ -4,6 +4,8 @@ import Function from '../EtherlessContract/Function';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
+const Table = require('cli-table');
+
 class InfoCommand extends Command {
   command = 'info <function_name>';
 
@@ -22,11 +24,17 @@ class InfoCommand extends Command {
     }
 
     const listInfo : Function = await this.contract.getFunctionInfo(args.function_name);
-    return `Informations about '${listInfo.name}' function: \n
-        - Owner: ${listInfo.developer}\n
-        - Signature: ${listInfo.signature}\n
-        - Price: ${listInfo.price} wei\n
-        - Description: ${listInfo.description}`;
+
+    const table = new Table();
+    table.push(
+      { Name: listInfo.name },
+      { Owner: listInfo.developer },
+      { Signature: listInfo.signature },
+      { Price: listInfo.price },
+      { Description: listInfo.description },
+    );
+
+    return table.toString();
   }
 
   builder(yargs : Argv) : any {

@@ -29,7 +29,6 @@ import JSFileParser from './FileParser/JSFileParser';
 import FileManager from './IPFS/FileManager';
 import HistoryCommand from './Command/HistoryCommand';
 
-
 const IPFS = require('ipfs-mini');
 
 const ESmart = require('../contracts/EtherlessSmart.json');

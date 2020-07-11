@@ -22,19 +22,21 @@
   },
   "homepage": "https://github.com/Rounadbout/etherless-cli#readme",
   "dependencies": {
+    "@types/cli-table": "^0.3.0",
     "@types/configstore": "^4.0.0",
     "@types/inquirer": "^6.5.0",
     "@types/node": "^13.13.12",
     "@types/yargs": "^15.0.4",
     "acorn": "^7.2.0",
+    "cli-table": "^0.3.1",
     "configstore": "^5.0.1",
     "ethers": "^4.0.47",
     "fs": "0.0.1-security",
     "inquirer": "^7.1.0",
     "ipfs-mini": "^1.1.5",
     "ts-node": "^8.9.1",
-    "yargs": "^15.3.1",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",

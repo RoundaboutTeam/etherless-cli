@@ -5,6 +5,7 @@ import {
 import { BigNumber } from 'ethers/utils';
 import * as inquirer from 'inquirer';
 
+import DeployInfo from '../IPFS/DeployInfo';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
@@ -13,6 +14,7 @@ import FileParser from '../FileParser/FileParser';
 import FileManager from '../IPFS/FileManager';
 
 const fs = require('fs');
+const path = require('path');
 
 class EditCommand extends Command {
   command = 'edit <function_name> [s] [d]';
@@ -47,14 +49,29 @@ class EditCommand extends Command {
     let commandOutput = '';
 
     if (args.s) {
-      // message = `${message} \n - Source: ${args.s}`;
-      this.fileParser.parse(args.s);
+      const isDir : boolean = fs.lstatSync(args.s).isDirectory();
+      const sourcePath : string = isDir ? path.normalize(`${args.s}${path.sep}index.js`) : args.s;
+
+      this.fileParser.parse(sourcePath);
       const signature : string = this.fileParser.getFunctionSignature(args.function_name);
 
-      const sourceCode : Buffer = fs.readFileSync(args.s);
+      const sourceCode : string = fs.readFileSync(sourcePath).toString();
+      const packageJSON : string = isDir
+        ? fs.readFileSync(path.normalize(`${args.s}${path.sep}package.json`)).toString()
+        : '';
+      const packageJSONLock : string = isDir
+        ? fs.readFileSync(path.normalize(`${args.s}${path.sep}package-lock.json`)).toString()
+        : '';
+
+      const deploymentInfo : DeployInfo = {
+        dep: isDir,
+        sourceCode,
+        package: packageJSON,
+        package_lock: packageJSONLock,
+      };
 
       console.log('Uploading file in IPFS');
-      const CID : string = await this.fileManager.save(sourceCode);
+      const CID : string = await this.fileManager.save(deploymentInfo);
       console.log(`File uploaded, cid: ${CID}`);
 
       const requestId : BigNumber = await this.contract.sendCodeUpdateRequest(
@@ -68,7 +85,6 @@ class EditCommand extends Command {
     }
 
     if (args.d) {
-      //  message = `${message} \n - Description: ${args.d}`;
       await this.contract.updateDesc(args.function_name, args.d);
       commandOutput += 'Description updated correctly\n';
     }

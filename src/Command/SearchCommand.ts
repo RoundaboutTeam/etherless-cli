@@ -1,10 +1,14 @@
 import { Argv } from 'yargs';
-
+import Table from 'cli-table';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 import BriefFunction from '../EtherlessContract/BriefFunction';
-
 import Command from './Command';
+
+const table = new Table({
+  head: ['Function', 'Price'],
+  colWidths: [35, 10],
+});
 
 class SearchCommand extends Command {
   command = 'search <keyword>';
@@ -25,9 +29,12 @@ class SearchCommand extends Command {
       (item : BriefFunction) => item.name.includes(args.keyword),
     );
 
-    return resIntro + (filteredList.length === 0
-      ? 'No function found'
-      : filteredList.map((item : BriefFunction) => `- Function: ${item.name}${item.signature} Price: ${item.price}`).join('\n'));
+    if (filteredList.length === 0) return 'No function found';
+
+    const items = filteredList
+      .map((item : BriefFunction) => [item.name + item.signature, item.price]);
+    table.push(...items);
+    return table.toString();
   }
 
   builder(yargs : Argv) : any {
