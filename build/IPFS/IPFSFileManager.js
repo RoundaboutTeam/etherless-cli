@@ -18,10 +18,10 @@ class IPFSFileManager {
     * @returns The IPFS CID related to the uploaded JSON
     * @param buffer The buffer you want to save to IPFS
     */
-    save(buffer) {
+    save(deployInfo) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                this.ipfs.add(buffer.toString('hex'))
+                this.ipfs.addJSON(deployInfo)
                     .then(resolve)
                     .catch((error) => {
                     reject(new Error(`It seems that there are some problems with IPFS, error: ${error}`));
@@ -37,7 +37,7 @@ class IPFSFileManager {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
                 this.ipfs.cat(cid)
-                    .then((result) => resolve(Buffer.from(result, 'hex')))
+                    .then((result) => resolve(result))
                     .catch((error) => {
                     reject(new Error(`It seems that there are some problems with IPFS, error: ${error}`));
                 });

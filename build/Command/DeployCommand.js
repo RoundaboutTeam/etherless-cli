@@ -34,6 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer = __importStar(require("inquirer"));
 const Command_1 = __importDefault(require("./Command"));
 const fs = require('fs');
+const path = require('path');
 class DeployCommand extends Command_1.default {
     constructor(fileParser, fileManager, contract, session) {
         super(session);
@@ -53,11 +54,25 @@ class DeployCommand extends Command_1.default {
                 }]).then((answer) => answer.password);
             const wallet = yield this.session.restoreWallet(password);
             this.contract.connect(wallet);
-            this.fileParser.parse(args.path);
+            const isDir = fs.lstatSync(args.path).isDirectory();
+            const sourcePath = isDir ? path.normalize(`${args.path}${path.sep}index.js`) : args.path;
+            this.fileParser.parse(sourcePath);
             const signature = this.fileParser.getFunctionSignature(args.function_name);
-            const sourceCode = fs.readFileSync(args.path);
+            const sourceCode = fs.readFileSync(sourcePath).toString();
+            const packageJSON = isDir
+                ? fs.readFileSync(path.normalize(`${args.path}${path.sep}package.json`)).toString()
+                : '';
+            const packageJSONLock = isDir
+                ? fs.readFileSync(path.normalize(`${args.path}${path.sep}package-lock.json`)).toString()
+                : '';
+            const deploymentInfo = {
+                dep: isDir,
+                sourceCode,
+                package: packageJSON,
+                package_lock: packageJSONLock,
+            };
             console.log('Uploading file in IPFS');
-            const CID = yield this.fileManager.save(sourceCode);
+            const CID = yield this.fileManager.save(deploymentInfo);
             console.log(`File uploaded, cid: ${CID}`);
             const requestId = yield this.contract.sendDeployRequest(args.function_name, signature, args.description, CID);
             const result = yield this.contract.listenResponse(requestId);

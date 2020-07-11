@@ -97,6 +97,10 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
+    console.log(await this.contract.signer.getAddress());
+    console.log('\n');
+    console.log(listInfo.developer);
+
     // NUMBER OF PARAMETERS
     if (listInfo.signature.split(',').length !== params.split(',').length) {
       throw new Error('The number of parameters is not correct!');
@@ -121,7 +125,7 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
-    if (await this.contract.signer.getAddress() !== listInfo.developer) {
+    if (await this.contract.signer.getAddress() !== listInfo.developer.toUpperCase()) {
       throw new Error('You are not the owner of the function!');
     }
 
@@ -144,7 +148,7 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
-    if (await this.contract.signer.getAddress() !== listInfo.developer) {
+    if (await this.contract.signer.getAddress() !== listInfo.developer.toUpperCase()) {
       throw new Error('You are not the owner of the function!');
     }
 
@@ -167,7 +171,7 @@ class EthereumContract implements EtherlessContract {
       throw new Error("The function you're looking for does not exist! :'(");
     }
 
-    if (await this.contract.signer.getAddress() !== listInfo.developer) {
+    if (await this.contract.signer.getAddress() !== listInfo.developer.toUpperCase()) {
       throw new Error('You are not the owner of the function!');
     }
 

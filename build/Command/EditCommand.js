@@ -34,6 +34,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer = __importStar(require("inquirer"));
 const Command_1 = __importDefault(require("./Command"));
 const fs = require('fs');
+const path = require('path');
 class EditCommand extends Command_1.default {
     constructor(fileParser, fileManager, contract, session) {
         super(session);
@@ -55,19 +56,31 @@ class EditCommand extends Command_1.default {
             this.contract.connect(wallet);
             let commandOutput = '';
             if (args.s) {
-                // message = `${message} \n - Source: ${args.s}`;
-                this.fileParser.parse(args.s);
+                const isDir = fs.lstatSync(args.s).isDirectory();
+                const sourcePath = isDir ? path.normalize(`${args.s}${path.sep}index.js`) : args.s;
+                this.fileParser.parse(sourcePath);
                 const signature = this.fileParser.getFunctionSignature(args.function_name);
-                const sourceCode = fs.readFileSync(args.s);
+                const sourceCode = fs.readFileSync(sourcePath).toString();
+                const packageJSON = isDir
+                    ? fs.readFileSync(path.normalize(`${args.s}${path.sep}package.json`)).toString()
+                    : '';
+                const packageJSONLock = isDir
+                    ? fs.readFileSync(path.normalize(`${args.s}${path.sep}package-lock.json`)).toString()
+                    : '';
+                const deploymentInfo = {
+                    dep: isDir,
+                    sourceCode,
+                    package: packageJSON,
+                    package_lock: packageJSONLock,
+                };
                 console.log('Uploading file in IPFS');
-                const CID = yield this.fileManager.save(sourceCode);
+                const CID = yield this.fileManager.save(deploymentInfo);
                 console.log(`File uploaded, cid: ${CID}`);
                 const requestId = yield this.contract.sendCodeUpdateRequest(args.function_name, signature, CID);
                 const result = yield this.contract.listenResponse(requestId);
                 commandOutput += `${JSON.parse(result).message}\n`;
             }
             if (args.d) {
-                //  message = `${message} \n - Description: ${args.d}`;
                 yield this.contract.updateDesc(args.function_name, args.d);
                 commandOutput += 'Description updated correctly\n';
             }

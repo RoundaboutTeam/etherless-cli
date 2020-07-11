@@ -52,12 +52,13 @@ class EthereumContract {
                 var _a;
                 const { timestamp } = yield this.contract.provider.getBlock(request.blockHash);
                 const parsedRequest = this.contract.interface.parseLog(request);
-                const result = (_a = parsedOk.find((item) => item.values.id.eq(parsedRequest.values.id))) === null || _a === void 0 ? void 0 : _a.values.result;
+                const result = (_a = parsedOk.find((item) => item.values.id.eq(parsedRequest.values.id))) === null || _a === void 0 ? void 0 : _a.values;
                 return {
+                    id: result.id,
                     date: new Date(timestamp * 1000).toLocaleString(),
                     name: parsedRequest.values.funcname,
                     params: parsedRequest.values.param,
-                    result: JSON.parse(result).message,
+                    result: JSON.parse(result.result).message,
                 };
             }))));
         });
@@ -82,6 +83,9 @@ class EthereumContract {
             catch (error) {
                 throw new Error("The function you're looking for does not exist! :'(");
             }
+            console.log(yield this.contract.signer.getAddress());
+            console.log('\n');
+            console.log(listInfo.developer);
             // NUMBER OF PARAMETERS
             if (listInfo.signature.split(',').length !== params.split(',').length) {
                 throw new Error('The number of parameters is not correct!');
@@ -104,7 +108,7 @@ class EthereumContract {
             catch (error) {
                 throw new Error("The function you're looking for does not exist! :'(");
             }
-            if ((yield this.contract.signer.getAddress()) !== listInfo.developer) {
+            if ((yield this.contract.signer.getAddress()) !== listInfo.developer.toUpperCase()) {
                 throw new Error('You are not the owner of the function!');
             }
             console.log('Creating request to delete function..');
@@ -125,7 +129,7 @@ class EthereumContract {
             catch (error) {
                 throw new Error("The function you're looking for does not exist! :'(");
             }
-            if ((yield this.contract.signer.getAddress()) !== listInfo.developer) {
+            if ((yield this.contract.signer.getAddress()) !== listInfo.developer.toUpperCase()) {
                 throw new Error('You are not the owner of the function!');
             }
             console.log('Creating request to edit function..');
@@ -146,7 +150,7 @@ class EthereumContract {
             catch (error) {
                 throw new Error("The function you're looking for does not exist! :'(");
             }
-            if ((yield this.contract.signer.getAddress()) !== listInfo.developer) {
+            if ((yield this.contract.signer.getAddress()) !== listInfo.developer.toUpperCase()) {
                 throw new Error('You are not the owner of the function!');
             }
             if (newDesc.length > 150) {
@@ -189,7 +193,7 @@ class EthereumContract {
             });
             // asolto per eventi di errore
             this.contract.on(errorFilter, (result, id, event) => {
-                reject(result);
+                reject(JSON.parse(result));
                 this.contract.removeAllListeners(successFilter);
                 this.contract.removeAllListeners(errorFilter);
             });

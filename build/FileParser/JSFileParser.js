@@ -27,7 +27,7 @@ class JSFileParser {
         return `(${funcParams})`;
     }
     findFuncNode(funcName) {
-        return this.parsedFile.body.find((x) => x.id.name === funcName);
+        return this.parsedFile.body.find((x) => x.id && x.id.name === funcName);
     }
     funcSignatureFromNode(funcNode) {
         return funcNode.params.map((param) => param.name).join(', ');

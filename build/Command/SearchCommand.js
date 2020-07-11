@@ -12,7 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const cli_table_1 = __importDefault(require("cli-table"));
 const Command_1 = __importDefault(require("./Command"));
+const table = new cli_table_1.default({
+    head: ['Function', 'Price'],
+    colWidths: [35, 10],
+});
 class SearchCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -25,9 +30,12 @@ class SearchCommand extends Command_1.default {
             const resIntro = `Functions containing keyword "${args.keyword}" inside their name: \n`;
             const list = yield this.contract.getAllFunctions();
             const filteredList = list.filter((item) => item.name.includes(args.keyword));
-            return resIntro + (filteredList.length === 0
-                ? 'No function found'
-                : filteredList.map((item) => `- Function: ${item.name}${item.signature} Price: ${item.price}`).join('\n'));
+            if (filteredList.length === 0)
+                return 'No function found';
+            const items = filteredList
+                .map((item) => [item.name + item.signature, item.price]);
+            table.push(...items);
+            return table.toString();
         });
     }
     builder(yargs) {
