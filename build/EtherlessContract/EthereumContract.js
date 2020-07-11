@@ -158,7 +158,7 @@ class EthereumContract {
     }
     sendDeployRequest(name, signature, desc, cid) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.existsFunction(name)) {
+            if (yield this.existsFunction(name)) {
                 throw new Error('The name of the function is already used!');
             }
             if (name.length > 30) {

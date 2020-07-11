@@ -180,7 +180,7 @@ class EthereumContract implements EtherlessContract {
 
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
       : Promise<BigNumber> {
-    if (this.existsFunction(name)) {
+    if (await this.existsFunction(name)) {
       throw new Error('The name of the function is already used!');
     }
 
