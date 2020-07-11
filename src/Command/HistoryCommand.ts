@@ -1,17 +1,17 @@
 import { Argv } from 'yargs';
-import {
-  ethers,
-  Contract,
-  getDefaultProvider,
-  EventFilter,
-  Wallet,
-} from 'ethers';
+import Table from 'cli-table';
 
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 import HistoryItem from '../EtherlessContract/HistoryItem';
 
 import Command from './Command';
+
+const table = new Table({
+  head: ['Id', 'Date', 'Request', 'Result'],
+  // colWidths: [5, 20, 20, 10],
+});
+
 
 class HistoryCommand extends Command {
   command = 'history [limit]';
@@ -27,13 +27,18 @@ class HistoryCommand extends Command {
 
   async exec(args: any) : Promise<string> {
     const address : string = await this.session.getAddress();
-    let history = await this.contract.getExecHistory(address);
+    let history : Array<HistoryItem> = await this.contract.getExecHistory(address);
 
     if (args.limit && args.limit > 0) history = history.slice(0, args.limit);
 
-    return history.length === 0
-      ? 'No past executions found'
-      : history.map((item : HistoryItem) => `- Date: ${item.date} - Function: ${item.name} - Params: ${item.params} - Result: ${item.result}`).join('\n');
+    if (history.length === 0) return 'No past executions found';
+
+    history.sort((a, b) => (a.id >= b.id ? 1 : -1));
+    const values = history.map(
+      (item : HistoryItem) => [item.id, item.date, `${item.name}(${item.params})`, item.result],
+    );
+    table.push(...values);
+    return table.toString();
   }
 
   builder(yargs : Argv) : any {

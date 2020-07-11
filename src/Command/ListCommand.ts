@@ -25,8 +25,6 @@ class ListCommand extends Command {
 
   async exec(args: any) : Promise<string> {
     const address : string = this.session.getAddress();
-    const resDesc : string = args.m ? `Displaying all functions owned by current user: (address: ${address})\n`
-      : 'Displaying all functions inside Etherless platform:\n';
 
     const list : Array<BriefFunction> = args.m
       ? await this.contract.getMyFunctions(address)

@@ -68,13 +68,14 @@ class EthereumContract implements EtherlessContract {
       const parsedRequest = this.contract.interface.parseLog(request);
       const result = parsedOk.find(
         (item : any) => item.values.id.eq(parsedRequest.values.id),
-      )?.values.result;
+      )?.values;
 
       return {
+        id: result.id,
         date: new Date(timestamp * 1000).toLocaleString(),
         name: parsedRequest.values.funcname,
         params: parsedRequest.values.param,
-        result: JSON.parse(result).message,
+        result: JSON.parse(result.result).message,
       };
     })));
   }

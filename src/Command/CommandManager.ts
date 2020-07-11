@@ -15,6 +15,7 @@ class CommandManager {
         command.exec(args)
           .then((result : string) => console.log(`${result}`))
           .catch((error : any) => {
+            console.log(error);
             console.log(`Something went wrong! \nError name: ${error.name} \nMessage: ${error.message}`);
             if (error.reason) console.log(`Reason: ${error.reason}`);
           });
@@ -27,8 +28,6 @@ class CommandManager {
    *               to manage all added commands
    */
   static init() : void {
-    yargs.parse();
-
     const commands = yargs.getCommandInstance().getCommands();
     const argv = yargs.argv;
     if (!argv._[0] || commands.indexOf(argv._[0]) === -1) {
