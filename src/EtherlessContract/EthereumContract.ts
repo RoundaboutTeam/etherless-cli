@@ -80,7 +80,28 @@ class EthereumContract implements EtherlessContract {
     })));
   }
 
+  private async existsFunction(name : string) : Promise<boolean> {
+    try {
+      const listInfo : Function = await this.getFunctionInfo(name);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   async sendRunRequest(name : string, params: string) : Promise<BigNumber> {
+    let listInfo : Function;
+    try {
+      listInfo = await this.getFunctionInfo(name);
+    } catch (error) {
+      throw new Error("The function you're looking for does not exist! :'(");
+    }
+
+    // NUMBER OF PARAMETERS
+    if (listInfo.signature.split(',').length !== params.split(',').length) {
+      throw new Error('The number of parameters is not correct!');
+    }
+
     console.log('Creating request to execute function..');
     const tx = await this.contract.runFunction(name, params, { value: bigNumberify('10') });
 
@@ -93,6 +114,17 @@ class EthereumContract implements EtherlessContract {
   }
 
   async sendDeleteRequest(name: string) : Promise<BigNumber> {
+    let listInfo : Function;
+    try {
+      listInfo = await this.getFunctionInfo(name);
+    } catch (error) {
+      throw new Error("The function you're looking for does not exist! :'(");
+    }
+
+    if (await this.contract.signer.getAddress() !== listInfo.developer) {
+      throw new Error('You are not the owner of the function!');
+    }
+
     console.log('Creating request to delete function..');
     const tx = await this.contract.deleteFunction(name, { value: bigNumberify('10') });
 
@@ -105,6 +137,17 @@ class EthereumContract implements EtherlessContract {
   }
 
   async sendCodeUpdateRequest(name: string, signature: string, cid: string) : Promise<BigNumber> {
+    let listInfo : Function;
+    try {
+      listInfo = await this.getFunctionInfo(name);
+    } catch (error) {
+      throw new Error("The function you're looking for does not exist! :'(");
+    }
+
+    if (await this.contract.signer.getAddress() !== listInfo.developer) {
+      throw new Error('You are not the owner of the function!');
+    }
+
     console.log('Creating request to edit function..');
     const tx = await this.contract.editFunction(name, signature, cid, { value: bigNumberify('10') });
 
@@ -117,12 +160,39 @@ class EthereumContract implements EtherlessContract {
   }
 
   async updateDesc(name: string, newDesc : string) : Promise<void> {
-    const tx = await this.contract.editFunctionDescr(name, newDesc, {value: bigNumberify('10') });
+    let listInfo : Function;
+    try {
+      listInfo = await this.getFunctionInfo(name);
+    } catch (error) {
+      throw new Error("The function you're looking for does not exist! :'(");
+    }
+
+    if (await this.contract.signer.getAddress() !== listInfo.developer) {
+      throw new Error('You are not the owner of the function!');
+    }
+
+    if (newDesc.length > 150) {
+      throw new Error('The new description must be at most 150 characters long');
+    }
+
+    const tx = await this.contract.editFunctionDescr(name, newDesc, { value: bigNumberify('10') });
     await tx.wait();
   }
 
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
       : Promise<BigNumber> {
+    if (await this.existsFunction(name)) {
+      throw new Error('The name of the function is already used!');
+    }
+
+    if (name.length > 30) {
+      throw new Error('The name must be at most 30 characters long!');
+    }
+
+    if (desc.length > 150) {
+      throw new Error('The description must be at most 150 characters long!');
+    }
+
     console.log('Creating request to deploy function..');
     const tx = await this.contract.deployFunction(name, signature, desc, cid, { value: bigNumberify('10') });
 

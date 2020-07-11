@@ -9,7 +9,6 @@ export default interface EtherlessContract {
   getMyFunctions(address : string) : Promise<Array<BriefFunction>>;
   getFunctionInfo(name : string) : Promise<Function>;
   getExecHistory(address : string) : Promise<Array<HistoryItem>>;
-  // existsFunction(name : string) : Promise<boolean>;
 
   updateDesc(name: string, params: string) : Promise<void>;
   connect(wallet : Wallet) : void;
