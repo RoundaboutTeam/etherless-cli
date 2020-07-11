@@ -79,17 +79,13 @@ class EthereumContract implements EtherlessContract {
     })));
   }
 
-  async existsFunction(name : string) : Promise<boolean> {
+  private async existsFunction(name : string) : Promise<boolean> {
     try {
       const listInfo : Function = await this.getFunctionInfo(name);
       return true;
     } catch (error) {
       return false;
     }
-  }
-
-  async isOwner(name: string, devAddress: string) : Promise<boolean> {
-    return true;
   }
 
   async sendRunRequest(name : string, params: string) : Promise<BigNumber> {
@@ -114,7 +110,6 @@ class EthereumContract implements EtherlessContract {
     console.log('Request done.');
     const requestId : BigNumber = this.contract.interface.parseLog(receipt.events[0]).values.id;
     return requestId;
-
   }
 
   async sendDeleteRequest(name: string) : Promise<BigNumber> {
@@ -175,12 +170,28 @@ class EthereumContract implements EtherlessContract {
       throw new Error('You are not the owner of the function!');
     }
 
+    if (newDesc.length > 150) {
+      throw new Error('The new description must be at most 150 characters long');
+    }
+
     const tx = await this.contract.editFunctionDescr(name, newDesc, { value: bigNumberify('10') });
     await tx.wait();
   }
 
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
       : Promise<BigNumber> {
+    if (this.existsFunction(name)) {
+      throw new Error('The name of the function is already used!');
+    }
+
+    if (name.length > 30) {
+      throw new Error('The name must be at most 30 characters long!');
+    }
+
+    if (desc.length > 150) {
+      throw new Error('The description must be at most 150 characters long!');
+    }
+
     console.log('Creating request to deploy function..');
     const tx = await this.contract.deployFunction(name, signature, desc, cid, { value: bigNumberify('10') });
 
