@@ -50,6 +50,19 @@ class DeployCommand extends Command {
     const wallet : Wallet = await this.session.restoreWallet(password);
     this.contract.connect(wallet);
 
+    if (await this.contract.existsFunction(args.function_name)) {
+      throw new Error('The name of the function is already used!');
+    }
+
+    if (args.function_name.length > 30) {
+      throw new Error('The name must be at most 30 characters long!');
+    }
+
+    if (args.description.length > 150) {
+      throw new Error('The description must be at most 150 characters long!');
+    }
+
+
     const isDir : boolean = fs.lstatSync(args.path).isDirectory();
     const sourcePath : string = isDir ? path.normalize(`${args.path}${path.sep}index.js`) : args.path;
 

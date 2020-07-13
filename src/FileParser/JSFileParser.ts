@@ -11,6 +11,11 @@ class JSFileParser implements FileParser {
       throw new Error('File doesn\'t exists');
     }
 
+    const splittedPath = path.split('.');
+    if (splittedPath[splittedPath.length - 1] !== 'js') {
+      throw new Error('The source file must be a Javascript file!');
+    }
+
     this.parsedFile = Parser.parse(fs.readFileSync(path).toString());
   }
 

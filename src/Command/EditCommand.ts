@@ -8,6 +8,7 @@ import * as inquirer from 'inquirer';
 import DeployInfo from '../IPFS/DeployInfo';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
+import Function from '../EtherlessContract/Function';
 
 import Command from './Command';
 import FileParser from '../FileParser/FileParser';
@@ -46,8 +47,19 @@ class EditCommand extends Command {
     const wallet : Wallet = await this.session.restoreWallet(password);
     this.contract.connect(wallet);
 
-    let commandOutput = '';
+    // CHECK IF FUNCTION EXISTS
+    let listInfo : Function;
+    try {
+      listInfo = await this.contract.getFunctionInfo(args.function_name);
+    } catch (error) {
+      throw new Error("The function you're looking for does not exist! :'(");
+    }
 
+    if (!(this.session.getAddress().toUpperCase() === listInfo.developer.toUpperCase())) {
+      throw new Error('You are not the owner of the function!');
+    }
+
+    let commandOutput = '';
     if (args.s) {
       const isDir : boolean = fs.lstatSync(args.s).isDirectory();
       const sourcePath : string = isDir ? path.normalize(`${args.s}${path.sep}index.js`) : args.s;
@@ -88,7 +100,6 @@ class EditCommand extends Command {
       await this.contract.updateDesc(args.function_name, args.d);
       commandOutput += 'Description updated correctly\n';
     }
-
     return commandOutput;
   }
 
