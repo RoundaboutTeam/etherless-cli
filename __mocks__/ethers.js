@@ -31,6 +31,18 @@ const ethers = {
       }))),
     }))),
 
+    editFunction: jest.fn().mockImplementation((name, signature, cid, options) => Promise.resolve(({
+      wait: jest.fn().mockImplementation(() => Promise.resolve(({
+        events: ['mockEvent0', 'mockEvent1', 'mockEvent2'],
+      }))),
+    }))),
+
+    editFunctionDescr: jest.fn().mockImplementation((name, newDesc, options) => Promise.resolve(({
+      wait: jest.fn().mockImplementation(() => Promise.resolve(({
+        events: ['mockEvent0', 'mockEvent1', 'mockEvent2'],
+      }))),
+    }))),
+
     on: jest.fn().mockImplementation(),
 
     interface: jest.fn().mockImplementation(() => ({

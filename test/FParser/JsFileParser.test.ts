@@ -23,21 +23,29 @@ test('parsing not existing file', () => {
   (fs.existsSync as jest.Mock).mockReturnValue(false);
   (fs.readFileSync as jest.Mock).mockReturnValue(fileContent);
 
-  expect(() => fileParser.parse('mockPath')).toThrowError();
+  expect(() => fileParser.parse('mockPath.js')).toThrowError();
 });
+
+test('parsing not javascript file', () => {
+  (fs.existsSync as jest.Mock).mockReturnValue(true);
+  (fs.readFileSync as jest.Mock).mockReturnValue(fileContent);
+
+  expect(() => fileParser.parse('mockPath.txt')).toThrowError();
+});
+
 
 test('parsing existing file', () => {
   (fs.existsSync as jest.Mock).mockReturnValue(true);
   (fs.readFileSync as jest.Mock).mockReturnValue(fileContent);
 
-  expect(() => fileParser.parse('mockPath')).not.toThrowError();
+  expect(() => fileParser.parse('mockPath.js')).not.toThrowError();
 });
 
 test('request function signature of not existing function', () => {
   (fs.existsSync as jest.Mock).mockReturnValue(true);
   (fs.readFileSync as jest.Mock).mockReturnValue(fileContent);
 
-  fileParser.parse('randomFilePath');
+  fileParser.parse('randomFilePath.js');
   expect(() => fileParser.getFunctionSignature('randomFuncName')).toThrowError();
 });
 
@@ -45,7 +53,7 @@ test('get function signature of existing function', () => {
   (fs.existsSync as jest.Mock).mockReturnValue(true);
   (fs.readFileSync as jest.Mock).mockReturnValue(fileContent);
 
-  fileParser.parse('randomFilePath');
+  fileParser.parse('randomFilePath.js');
   expect(fileParser.getFunctionSignature(funcName)).toEqual(funcSignature);
 });
 
@@ -53,7 +61,7 @@ test('check presence of function', () => {
   (fs.existsSync as jest.Mock).mockReturnValue(true);
   (fs.readFileSync as jest.Mock).mockReturnValue(fileContent);
 
-  fileParser.parse('randomFilePath');
+  fileParser.parse('randomFilePath.js');
   expect(fileParser.existsFunction(funcName)).toBeTruthy();
 });
 

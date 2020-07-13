@@ -66,7 +66,34 @@ test('get command description', () => {
   expect(command.getDescription()).toBe('deploy a function');
 });
 
-test('test command execution', () => {
+test('deploy: error function already exists', async () => {
+  ethereumContract.connect = jest.fn().mockReturnValue(null);
+  ethereumUserSession.restoreWallet = jest.fn().mockReturnValue(Promise.resolve({}));
+  ethereumContract.existsFunction = jest.fn().mockReturnValueOnce(true);
+
+  expect(command.exec({ function_name: 'functionName' }))
+    .rejects.toStrictEqual(Error('The name of the function is already used!'));
+});
+
+test('deploy: error name too long', async () => {
+  ethereumContract.connect = jest.fn().mockReturnValue(null);
+  ethereumUserSession.restoreWallet = jest.fn().mockReturnValue(Promise.resolve({}));
+  ethereumContract.existsFunction = jest.fn().mockReturnValueOnce(false);
+
+  expect(command.exec({ function_name: 'A'.repeat(100) }))
+    .rejects.toStrictEqual(Error('The name must be at most 30 characters long!'));
+});
+
+test('deploy: error description too long', async () => {
+  ethereumContract.connect = jest.fn().mockReturnValue(null);
+  ethereumUserSession.restoreWallet = jest.fn().mockReturnValue(Promise.resolve({}));
+  ethereumContract.existsFunction = jest.fn().mockReturnValueOnce(false);
+
+  expect(command.exec({ function_name: 'functionName', description: 'A'.repeat(160) }))
+    .rejects.toStrictEqual(Error('The description must be at most 150 characters long!'));
+});
+
+test('test command execution', async () => {
   ethereumContract.connect = jest.fn().mockReturnValue(null);
   ethereumUserSession.restoreWallet = jest.fn().mockReturnValue(Promise.resolve({}));
   ethereumContract.sendDeployRequest = jest.fn().mockReturnValue(Promise.resolve(bigNumberify(1)));
@@ -80,7 +107,7 @@ test('test command execution', () => {
   expect(command.exec({
     function_name: 'functionName',
     path: 'mockedSourceFile.js',
-    desc: 'mockDescription',
+    description: 'mockDescription',
   })).resolves.not.toThrowError();
 });
 

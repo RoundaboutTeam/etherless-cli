@@ -122,7 +122,7 @@ class EthereumContract implements EtherlessContract {
     try {
       listInfo = await this.getFunctionInfo(name);
     } catch (error) {
-      throw new Error("The function you're looking for does not exist! :'(");
+      throw new Error("The function you're looking for does not exist!");
     }
 
     if (!this.caseInsensitiveEquality(

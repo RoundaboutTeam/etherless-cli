@@ -62,7 +62,6 @@ class DeployCommand extends Command {
       throw new Error('The description must be at most 150 characters long!');
     }
 
-
     const isDir : boolean = fs.lstatSync(args.path).isDirectory();
     const sourcePath : string = isDir ? path.normalize(`${args.path}${path.sep}index.js`) : args.path;
 

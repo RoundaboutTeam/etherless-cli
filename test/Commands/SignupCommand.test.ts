@@ -64,5 +64,5 @@ test('test signup without saving account', () => {
 });
 
 afterAll(() => {
-  fs.unlinkSync('credential.txt');
+  fs.unlinkSync('credentials.txt');
 });

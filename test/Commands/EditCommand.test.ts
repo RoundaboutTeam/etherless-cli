@@ -70,6 +70,10 @@ test('edit function description', () => {
   ethereumContract.connect = jest.fn().mockReturnValue(null);
   ethereumUserSession.restoreWallet = jest.fn().mockReturnValue(Promise.resolve({}));
   ethereumContract.updateDesc = jest.fn().mockReturnValue(Promise.resolve({}));
+  ethereumUserSession.getAddress = jest.fn().mockReturnValue('address');
+  ethereumContract.getFunctionInfo = jest.fn().mockReturnValue({
+    developer: 'address',
+  });
 
   expect(command.exec({ function_name: 'foo', d: 'new description' }))
     .resolves.toBe('Description updated correctly\n');
@@ -78,6 +82,7 @@ test('edit function description', () => {
 test('edit function source code', () => {
   ethereumContract.connect = jest.fn().mockReturnValue(null);
   ethereumUserSession.restoreWallet = jest.fn().mockReturnValue(Promise.resolve({}));
+  ethereumUserSession.getAddress = jest.fn().mockReturnValue('address');
   ethereumContract.sendDeployRequest = jest.fn().mockReturnValue(Promise.resolve(bigNumberify(1)));
   ethereumContract.listenResponse = jest.fn().mockReturnValue(
     Promise.resolve(JSON.stringify({ message: 'result message' })),
@@ -85,6 +90,9 @@ test('edit function source code', () => {
   fileManager.save = jest.fn().mockReturnValue('mocked cid');
   fileParser.parse = jest.fn().mockImplementationOnce(() => {});
   fileParser.getFunctionSignature = jest.fn().mockReturnValueOnce('(p1, p2)');
+  ethereumContract.getFunctionInfo = jest.fn().mockReturnValue({
+    developer: 'address',
+  });
 
   expect(command.exec({
     function_name: 'foo',

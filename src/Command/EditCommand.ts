@@ -100,6 +100,7 @@ class EditCommand extends Command {
       await this.contract.updateDesc(args.function_name, args.d);
       commandOutput += 'Description updated correctly\n';
     }
+
     return commandOutput;
   }
 

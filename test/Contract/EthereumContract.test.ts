@@ -57,6 +57,13 @@ Object.defineProperty(contract, 'filters', {
   },
 });
 
+Object.defineProperty(contract, 'signer', {
+  value: {
+    getAddress: jest.fn().mockReturnValue('address'),
+  },
+  writable: true,
+});
+
 const ethereumContract : EthereumContract = new EthereumContract(contract);
 
 const briefFunction : BriefFunction = { name: 'f1', signature: '()', price: 10 };
@@ -149,6 +156,10 @@ test('send delete request: error function not exists', async () => {
       new Error('mocked error'),
     );
 
+  contract.signer = {
+    getAddress: jest.fn().mockReturnValue('address'),
+  };
+
   expect(ethereumContract.sendDeleteRequest('foo'))
     .rejects.toEqual(Error("The function you're looking for does not exist!"));
 });
@@ -157,7 +168,7 @@ test('send delete request: error function not exists', async () => {
   (contract.getInfo as jest.Mock)
     .mockReturnValueOnce(
       Promise.resolve(
-        JSON.stringify(briefFunction),
+        JSON.stringify({ developer: 'mockDeveloper' }),
       ),
     );
 
@@ -165,21 +176,58 @@ test('send delete request: error function not exists', async () => {
     .rejects.toEqual(Error('You are not the owner of the function!'));
 });
 
-/*
-test('send delete request', () => {
-  expect(ethereumContract.sendDeleteRequest('funcName')).resolves.toBeDefined();
+test('send delete request successfully', async () => {
+  (contract.getInfo as jest.Mock)
+    .mockReturnValueOnce(
+      Promise.resolve(
+        JSON.stringify({ developer: 'address' }),
+      ),
+    );
+
+  expect(ethereumContract.sendDeleteRequest('foo')).resolves.toBeDefined();
 });
 
-test('update description', () => {
-
+test('update function code', async () => {
+  expect(ethereumContract.sendCodeUpdateRequest('foo', '()', 'mockedCID'))
+    .resolves.toBeDefined();
 });
 
-test('send deploy request', () => {
-  expect(ethereumContract.sendDeployRequest('funcName', 'funcSignature', 'funcDesc', 'funcCid')).resolves.toBeDefined();
+test('update function description: error length', async () => {
+  expect(ethereumContract.updateDesc('foo', 'a'.repeat(160)))
+    .rejects.toStrictEqual(Error('The new description must be at most 150 characters long'));
 });
-*/
+
+test('update function description', async () => {
+  expect(ethereumContract.updateDesc('foo', 'a'.repeat(50)))
+    .resolves.not.toThrowError();
+});
+
+test('send deploy request', async () => {
+  expect(ethereumContract.sendDeployRequest('funcName', 'funcSignature', 'funcDesc', 'funcCid'))
+    .resolves.toBeDefined();
+});
 
 test('listen response', () => {
-  expect(ethereumContract.listenResponse(bigNumberify(10))).resolves.toBeDefined();
+  expect(ethereumContract.listenResponse(bigNumberify(10)))
+    .resolves.toBeDefined();
 });
 
+test('exists function: false', async () => {
+  (contract.getInfo as jest.Mock)
+    .mockReturnValueOnce(
+      new Error('no function found'),
+    );
+
+  expect(ethereumContract.existsFunction('foo')).resolves.toBeFalsy();
+});
+
+test('exists function: true', async () => {
+  (contract.getInfo as jest.Mock)
+    .mockReturnValueOnce(
+      Promise.resolve(
+        JSON.stringify({ developer: 'address' }),
+      ),
+    );
+
+  expect(ethereumContract.existsFunction('foo')).resolves.toBeTruthy();
+});
