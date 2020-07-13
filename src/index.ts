@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-
-import { getDefaultProvider, Contract } from 'ethers';
+import { ethers, getDefaultProvider, Contract } from 'ethers';
 import Configstore from 'configstore';
 
 import Command from './Command/Command';
@@ -19,7 +18,6 @@ import DeployCommand from './Command/DeployCommand';
 import InitCommand from './Command/InitCommand';
 import EditCommand from './Command/EditCommand';
 
-
 import EthereumUsesSession from './Session/EthereumUserSession';
 import EthereumContract from './EtherlessContract/EthereumContract';
 
@@ -29,13 +27,18 @@ import JSFileParser from './FileParser/JSFileParser';
 import FileManager from './IPFS/FileManager';
 import HistoryCommand from './Command/HistoryCommand';
 
+require('dotenv').config();
+
 const IPFS = require('ipfs-mini');
 
 const ESmart = require('../contracts/EtherlessSmart.json');
 
 const pkg = require('../package.json');
 
-const provider = getDefaultProvider('ropsten');
+const network : string = process.env.NETWORK as string;
+const provider = network === 'ganache'
+  ? new ethers.providers.JsonRpcProvider('http://localhost:8545')
+  : getDefaultProvider(network);
 
 const ethSession : EthereumUsesSession = new EthereumUsesSession(
   new Configstore(pkg.name),
@@ -44,7 +47,7 @@ const ethSession : EthereumUsesSession = new EthereumUsesSession(
 
 const ethContract : EthereumContract = new EthereumContract(
   new Contract(
-    '0x0096E8C3052940C01E9663A95D4A981D8BA155c4',
+    process.env.SMART_ADDRESS as string,
     ESmart.abi,
     provider,
   ),
