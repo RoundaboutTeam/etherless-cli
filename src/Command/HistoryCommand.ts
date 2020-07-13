@@ -1,5 +1,5 @@
 import { Argv } from 'yargs';
-import Table from 'cli-table';
+import Table from 'cli-table3';
 
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
@@ -35,7 +35,7 @@ class HistoryCommand extends Command {
 
     history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? 1 : -1));
     const values = history.map(
-      (item : HistoryItem) => [item.id, item.date, `${item.name}(${item.params})`, item.result],
+      (item : HistoryItem) => [item.id.toString(), item.date, `${item.name}(${item.params})`, item.result],
     );
     table.push(...values);
     return table.toString();

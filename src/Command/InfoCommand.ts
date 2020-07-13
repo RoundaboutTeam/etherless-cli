@@ -4,7 +4,7 @@ import Function from '../EtherlessContract/Function';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
-const Table = require('cli-table');
+const Table = require('cli-table3');
 
 class InfoCommand extends Command {
   command = 'info <function_name>';

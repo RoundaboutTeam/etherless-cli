@@ -1,8 +1,6 @@
 import FileManager from './FileManager';
 import DeployInfo from './DeployInfo';
 
-const fs = require('fs');
-
 class IPFSFileManager implements FileManager {
   private ipfs : any;
 
@@ -30,7 +28,7 @@ class IPFSFileManager implements FileManager {
   */
   public async get(cid : string) : Promise<DeployInfo> {
     return new Promise((resolve, reject) => {
-      this.ipfs.cat(cid)
+      this.ipfs.catJSON(cid)
         .then((result : DeployInfo) => resolve(result))
         .catch((error : Error) => {
           reject(new Error(`It seems that there are some problems with IPFS, error: ${error}`));

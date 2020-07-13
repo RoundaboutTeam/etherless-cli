@@ -16,6 +16,14 @@ yargs.positional = jest.fn().mockReturnValue(require('yargs'));
 
 yargs.parse = jest.fn().mockImplementation();
 yargs.command = jest.fn().mockImplementation();
+yargs.getCommandInstance = jest.fn().mockImplementation(() => ({
+  getCommands: jest.fn().mockImplementation(),
+}));
+Object.defineProperty(yargs, 'argv', {
+  value: {
+    _: [],
+  },
+});
 
 const pkg = require('../../package.json');
 

@@ -53,17 +53,15 @@ test('history with no past element', () => {
   ethereumUserSession.getAddress = jest.fn().mockReturnValue(Promise.resolve('mockedAddress'));
   ethereumContract.getExecHistory = jest.fn().mockReturnValue(Promise.resolve([]));
 
-  expect(command.exec({ limit: 10 }))
-    .resolves.toBe('No past executions found');
+  expect(command.exec({ limit: 10 })).resolves.toBe('No past executions found');
 });
 
 test('history with past element', () => {
   ethereumContract.connect = jest.fn().mockReturnValue(null);
   ethereumUserSession.getAddress = jest.fn().mockReturnValue(Promise.resolve('mockedAddress'));
   ethereumContract.getExecHistory = jest.fn().mockReturnValue(Promise.resolve([
-    { date: 'mockDate', name: 'sum', params: '5, 4', result: '9' }
+    { id: 'mockID', date: 'mockDate', name: 'sum', params: '5, 4', result: '9' }
   ]));
 
-  expect(command.exec({ limit: 10 }))
-    .resolves.toBe('- Date: mockDate - Function: sum - Params: 5, 4 - Result: 9');
+  expect(command.exec({ limit: 10 })).resolves.toBeDefined();
 });

@@ -28,7 +28,7 @@ class CommandManager {
    */
   static init() : void {
     const commands = yargs.getCommandInstance().getCommands();
-    const argv = yargs.argv;
+    const { argv } = yargs;
     if (!argv._[0] || commands.indexOf(argv._[0]) === -1) {
       console.log('Non-existing or no command specified');
     }

@@ -1,5 +1,5 @@
 import { Argv } from 'yargs';
-import Table from 'cli-table';
+import Table from 'cli-table3';
 import Command from './Command';
 import BriefFunction from '../EtherlessContract/BriefFunction';
 import UserSession from '../Session/UserSession';

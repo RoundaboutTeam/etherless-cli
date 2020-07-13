@@ -8,6 +8,7 @@ const ethers = {
     getFuncList: jest.fn(),
     getOwnedList: jest.fn(),
     getInfo: jest.fn(),
+    connect: jest.fn(),
 
     removeAllListeners: jest.fn().mockImplementation(() => {}),
 

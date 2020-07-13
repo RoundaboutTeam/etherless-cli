@@ -62,7 +62,7 @@ test('no functions inside the platform', () => {
   (ethereumUserSession.getAddress as jest.Mock).mockReturnValueOnce('mockedAddress');
   (ethereumContract.getAllFunctions as jest.Mock).mockReturnValueOnce([]);
 
-  expect(command.exec({ m: false })).resolves.toBe('Displaying all functions inside Etherless platform:\nNo function found');
+  expect(command.exec({ m: false })).resolves.toBe('No function found');
 });
 
 test('get all deployed fuunctions by current user', () => {
@@ -79,6 +79,6 @@ test('no function deployed by current user', () => {
   (ethereumUserSession.getAddress as jest.Mock).mockReturnValueOnce('mockedAddress');
   (ethereumContract.getMyFunctions as jest.Mock).mockReturnValueOnce([]);
 
-  expect(command.exec({ m: true })).resolves.toBe('Displaying all functions owned by current user: (address: mockedAddress)\nNo function found');
+  expect(command.exec({ m: true })).resolves.toBe('No function found');
 });
 

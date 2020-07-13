@@ -94,12 +94,8 @@ class EthereumContract implements EtherlessContract {
     try {
       listInfo = await this.getFunctionInfo(name);
     } catch (error) {
-      throw new Error("The function you're looking for does not exist! :'(");
+      throw new Error("The function you're looking for does not exist!");
     }
-
-    console.log(await this.contract.signer.getAddress());
-    console.log('\n');
-    console.log(listInfo.developer);
 
     // NUMBER OF PARAMETERS
     if (listInfo.signature.split(',').length !== params.split(',').length) {

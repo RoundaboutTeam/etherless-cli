@@ -54,12 +54,11 @@ test('test command execution', () => {
   ethereumUserSession.isLogged = jest.fn().mockReturnValue(true);
   ethereumContract.getFunctionInfo = jest.fn().mockReturnValue(Promise.resolve({
     name: 'function',
-    owner: 'owner',
+    developer: 'owner',
     signature: 'signature',
     price: 'price',
     description: 'description',
   }));
 
-  expect(command.exec({ function_name: 'functionName' }))
-    .resolves.toBeDefined();
+  expect(command.exec({ function_name: 'functionName' })).resolves.toBeDefined();
 });

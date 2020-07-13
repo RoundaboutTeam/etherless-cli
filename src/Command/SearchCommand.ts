@@ -1,5 +1,5 @@
 import { Argv } from 'yargs';
-import Table from 'cli-table';
+import Table from 'cli-table3';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 import BriefFunction from '../EtherlessContract/BriefFunction';
@@ -23,7 +23,6 @@ class SearchCommand extends Command {
   }
 
   async exec(args: any) : Promise<string> {
-    const resIntro : string = `Functions containing keyword "${args.keyword}" inside their name: \n`;
     const list : Array<BriefFunction> = await this.contract.getAllFunctions();
     const filteredList : Array<BriefFunction> = list.filter(
       (item : BriefFunction) => item.name.includes(args.keyword),
