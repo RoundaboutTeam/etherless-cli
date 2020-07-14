@@ -54,11 +54,11 @@ class EthereumContract {
                 const parsedRequest = this.contract.interface.parseLog(request);
                 const result = (_a = parsedOk.find((item) => item.values.id.eq(parsedRequest.values.id))) === null || _a === void 0 ? void 0 : _a.values;
                 return {
-                    id: result.id,
+                    id: parsedRequest.values.id,
                     date: new Date(timestamp * 1000).toLocaleString(),
                     name: parsedRequest.values.funcname,
                     params: parsedRequest.values.param,
-                    result: JSON.parse(result.result).message,
+                    result: result !== undefined ? JSON.parse(result.result).message : '--Request with no response--',
                 };
             }))));
         });
@@ -81,11 +81,8 @@ class EthereumContract {
                 listInfo = yield this.getFunctionInfo(name);
             }
             catch (error) {
-                throw new Error("The function you're looking for does not exist! :'(");
+                throw new Error("The function you're looking for does not exist!");
             }
-            console.log(yield this.contract.signer.getAddress());
-            console.log('\n');
-            console.log(listInfo.developer);
             // NUMBER OF PARAMETERS
             if (listInfo.signature.split(',').length !== params.split(',').length) {
                 throw new Error('The number of parameters is not correct!');
@@ -99,6 +96,9 @@ class EthereumContract {
             return requestId;
         });
     }
+    caseInsensitiveEquality(s1, s2) {
+        return s1.toUpperCase() === s2.toUpperCase();
+    }
     sendDeleteRequest(name) {
         return __awaiter(this, void 0, void 0, function* () {
             let listInfo;
@@ -106,9 +106,9 @@ class EthereumContract {
                 listInfo = yield this.getFunctionInfo(name);
             }
             catch (error) {
-                throw new Error("The function you're looking for does not exist! :'(");
+                throw new Error("The function you're looking for does not exist!");
             }
-            if ((yield this.contract.signer.getAddress()) !== listInfo.developer.toUpperCase()) {
+            if (!this.caseInsensitiveEquality(yield this.contract.signer.getAddress(), listInfo.developer)) {
                 throw new Error('You are not the owner of the function!');
             }
             console.log('Creating request to delete function..');
@@ -122,16 +122,6 @@ class EthereumContract {
     }
     sendCodeUpdateRequest(name, signature, cid) {
         return __awaiter(this, void 0, void 0, function* () {
-            let listInfo;
-            try {
-                listInfo = yield this.getFunctionInfo(name);
-            }
-            catch (error) {
-                throw new Error("The function you're looking for does not exist! :'(");
-            }
-            if ((yield this.contract.signer.getAddress()) !== listInfo.developer.toUpperCase()) {
-                throw new Error('You are not the owner of the function!');
-            }
             console.log('Creating request to edit function..');
             const tx = yield this.contract.editFunction(name, signature, cid, { value: utils_1.bigNumberify('10') });
             console.log(`Sending request, transaction hash: ${tx.hash}`);
@@ -143,16 +133,6 @@ class EthereumContract {
     }
     updateDesc(name, newDesc) {
         return __awaiter(this, void 0, void 0, function* () {
-            let listInfo;
-            try {
-                listInfo = yield this.getFunctionInfo(name);
-            }
-            catch (error) {
-                throw new Error("The function you're looking for does not exist! :'(");
-            }
-            if ((yield this.contract.signer.getAddress()) !== listInfo.developer.toUpperCase()) {
-                throw new Error('You are not the owner of the function!');
-            }
             if (newDesc.length > 150) {
                 throw new Error('The new description must be at most 150 characters long');
             }
@@ -162,15 +142,6 @@ class EthereumContract {
     }
     sendDeployRequest(name, signature, desc, cid) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (yield this.existsFunction(name)) {
-                throw new Error('The name of the function is already used!');
-            }
-            if (name.length > 30) {
-                throw new Error('The name must be at most 30 characters long!');
-            }
-            if (desc.length > 150) {
-                throw new Error('The description must be at most 150 characters long!');
-            }
             console.log('Creating request to deploy function..');
             const tx = yield this.contract.deployFunction(name, signature, desc, cid, { value: utils_1.bigNumberify('10') });
             console.log(`Sending request, transaction hash: ${tx.hash}`);

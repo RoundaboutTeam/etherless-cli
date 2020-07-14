@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require('fs');
 class IPFSFileManager {
     constructor(ipfsObj) {
         this.ipfs = ipfsObj;
@@ -36,7 +35,7 @@ class IPFSFileManager {
     get(cid) {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve, reject) => {
-                this.ipfs.cat(cid)
+                this.ipfs.catJSON(cid)
                     .then((result) => resolve(result))
                     .catch((error) => {
                     reject(new Error(`It seems that there are some problems with IPFS, error: ${error}`));
