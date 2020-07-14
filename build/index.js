@@ -24,7 +24,8 @@ const EthereumContract_1 = __importDefault(require("./EtherlessContract/Ethereum
 const IPFSFileManager_1 = __importDefault(require("./IPFS/IPFSFileManager"));
 const JSFileParser_1 = __importDefault(require("./FileParser/JSFileParser"));
 const HistoryCommand_1 = __importDefault(require("./Command/HistoryCommand"));
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.normalize(__dirname + '/../.env') });
 const IPFS = require('ipfs-mini');
 const ESmart = require('../contracts/EtherlessSmart.json');
 const pkg = require('../package.json');
