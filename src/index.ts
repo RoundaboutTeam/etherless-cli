@@ -29,7 +29,8 @@ import HistoryCommand from './Command/HistoryCommand';
 
 const path = require('path');
 
-require('dotenv').config({ path: path.normalize(__dirname + '/../.env') });
+const envPath = path.normalize(__dirname + '/../.env');
+require('dotenv').config({ path: envPath });
 
 const IPFS = require('ipfs-mini');
 

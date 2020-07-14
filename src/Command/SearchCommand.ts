@@ -1,14 +1,12 @@
 import { Argv } from 'yargs';
-import Table from 'cli-table3';
+import { table } from 'table';
+
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 import BriefFunction from '../EtherlessContract/BriefFunction';
 import Command from './Command';
 
-const table = new Table({
-  head: ['Function', 'Price'],
-  colWidths: [35, 10],
-});
+const chalk = require('chalk');
 
 class SearchCommand extends Command {
   command = 'search <keyword>';
@@ -32,8 +30,18 @@ class SearchCommand extends Command {
 
     const items = filteredList
       .map((item : BriefFunction) => [item.name + item.signature, item.price]);
-    table.push(...items);
-    return table.toString();
+    items.unshift([chalk.bold('Function'), chalk.bold('Price')]);
+    return table(items, {
+      columns: {
+        0: {
+          width: 30,
+        },
+        1: {
+          width: 5,
+          alignment: 'center',
+        },
+      },
+    });
   }
 
   builder(yargs : Argv) : any {

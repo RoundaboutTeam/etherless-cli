@@ -1,10 +1,12 @@
 import { Argv } from 'yargs';
+import { table } from 'table';
+
 import Command from './Command';
 import Function from '../EtherlessContract/Function';
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
 
-const Table = require('cli-table3');
+const chalk = require('chalk');
 
 class InfoCommand extends Command {
   command = 'info <function_name>';
@@ -25,16 +27,24 @@ class InfoCommand extends Command {
 
     const listInfo : Function = await this.contract.getFunctionInfo(args.function_name);
 
-    const table = new Table();
-    table.push(
-      { Name: listInfo.name },
-      { Owner: listInfo.developer },
-      { Signature: listInfo.signature },
-      { Price: listInfo.price },
-      { Description: listInfo.description },
-    );
+    const data = [
+      [chalk.bold('Name'), listInfo.name],
+      [chalk.bold('Owner'), listInfo.developer],
+      [chalk.bold('Signature'), listInfo.signature],
+      [chalk.bold('Price'), listInfo.price],
+      [chalk.bold('Description'), listInfo.description],
+    ];
 
-    return table.toString();
+    return table(data, {
+      columns: {
+        0: {
+          width: 20,
+        },
+        1: {
+          width: 50,
+        },
+      },
+    });
   }
 
   builder(yargs : Argv) : any {

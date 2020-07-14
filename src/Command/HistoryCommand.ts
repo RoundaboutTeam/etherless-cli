@@ -1,5 +1,5 @@
 import { Argv } from 'yargs';
-import Table from 'cli-table3';
+import { table } from 'table';
 
 import UserSession from '../Session/UserSession';
 import EtherlessContract from '../EtherlessContract/EtherlessContract';
@@ -7,11 +7,7 @@ import HistoryItem from '../EtherlessContract/HistoryItem';
 
 import Command from './Command';
 
-const table = new Table({
-  head: ['Id', 'Date', 'Request', 'Result'],
-  // colWidths: [5, 20, 20, 10],
-});
-
+const chalk = require('chalk');
 
 class HistoryCommand extends Command {
   command = 'history [limit]';
@@ -29,16 +25,31 @@ class HistoryCommand extends Command {
     const address : string = await this.session.getAddress();
     let history : Array<HistoryItem> = await this.contract.getExecHistory(address);
 
-    if (args.limit && args.limit > 0) history = history.slice(0, args.limit);
-
     if (history.length === 0) return 'No past executions found';
 
-    history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? 1 : -1));
+    history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? -1 : 1));
+    if (args.limit && args.limit > 0) history = history.slice(0, args.limit);
+
     const values = history.map(
       (item : HistoryItem) => [item.id.toString(), item.date, `${item.name}(${item.params})`, item.result],
     );
-    table.push(...values);
-    return table.toString();
+    values.unshift([chalk.bold('Id'), chalk.bold('Date'), chalk.bold('Request'), chalk.bold('Result')]);
+    return table(values, {
+      columns: {
+        0: {
+          width: 5,
+        },
+        1: {
+          width: 20,
+        },
+        2: {
+          width: 20,
+        },
+        3: {
+          width: 20,
+        },
+      },
+    });
   }
 
   builder(yargs : Argv) : any {
