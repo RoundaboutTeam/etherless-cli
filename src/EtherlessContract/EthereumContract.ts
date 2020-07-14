@@ -71,11 +71,11 @@ class EthereumContract implements EtherlessContract {
       )?.values;
 
       return {
-        id: result.id,
+        id: parsedRequest.values.id,
         date: new Date(timestamp * 1000).toLocaleString(),
         name: parsedRequest.values.funcname,
         params: parsedRequest.values.param,
-        result: JSON.parse(result.result).message,
+        result: result !== undefined ? JSON.parse(result.result).message : '--Request with no response--',
       };
     })));
   }
