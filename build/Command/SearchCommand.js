@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_table_1 = __importDefault(require("cli-table"));
+const cli_table3_1 = __importDefault(require("cli-table3"));
 const Command_1 = __importDefault(require("./Command"));
-const table = new cli_table_1.default({
+const table = new cli_table3_1.default({
     head: ['Function', 'Price'],
     colWidths: [35, 10],
 });
@@ -27,7 +27,6 @@ class SearchCommand extends Command_1.default {
     }
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
-            const resIntro = `Functions containing keyword "${args.keyword}" inside their name: \n`;
             const list = yield this.contract.getAllFunctions();
             const filteredList = list.filter((item) => item.name.includes(args.keyword));
             if (filteredList.length === 0)

@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Command_1 = __importDefault(require("./Command"));
-const Table = require('cli-table');
+const Table = require('cli-table3');
 class InfoCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);

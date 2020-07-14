@@ -12,10 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_table_1 = __importDefault(require("cli-table"));
+const cli_table3_1 = __importDefault(require("cli-table3"));
 const Command_1 = __importDefault(require("./Command"));
 // instantiate
-const table = new cli_table_1.default({
+const table = new cli_table3_1.default({
     head: ['Function', 'Price'],
     colWidths: [35, 10],
 });

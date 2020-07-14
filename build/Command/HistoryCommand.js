@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_table_1 = __importDefault(require("cli-table"));
+const cli_table3_1 = __importDefault(require("cli-table3"));
 const Command_1 = __importDefault(require("./Command"));
-const table = new cli_table_1.default({
+const table = new cli_table3_1.default({
     head: ['Id', 'Date', 'Request', 'Result'],
 });
 class HistoryCommand extends Command_1.default {
@@ -32,8 +32,8 @@ class HistoryCommand extends Command_1.default {
                 history = history.slice(0, args.limit);
             if (history.length === 0)
                 return 'No past executions found';
-            history.sort((a, b) => (a.id >= b.id ? 1 : -1));
-            const values = history.map((item) => [item.id, item.date, `${item.name}(${item.params})`, item.result]);
+            history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? 1 : -1));
+            const values = history.map((item) => [item.id.toString(), item.date, `${item.name}(${item.params})`, item.result]);
             table.push(...values);
             return table.toString();
         });

@@ -24,7 +24,7 @@ class SignupCommand extends Command_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const wallet = this.session.signup();
             if (args.save) {
-                fs.writeFileSync('./credential.txt', `Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`);
+                fs.writeFileSync('./credentials.txt', `Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`);
             }
             return `Address: ${wallet.address} \nPrivate Key: ${wallet.privateKey} \nMnemonic phrase: ${wallet.mnemonic}`;
         });

@@ -24,12 +24,16 @@ const EthereumContract_1 = __importDefault(require("./EtherlessContract/Ethereum
 const IPFSFileManager_1 = __importDefault(require("./IPFS/IPFSFileManager"));
 const JSFileParser_1 = __importDefault(require("./FileParser/JSFileParser"));
 const HistoryCommand_1 = __importDefault(require("./Command/HistoryCommand"));
+require('dotenv').config();
 const IPFS = require('ipfs-mini');
 const ESmart = require('../contracts/EtherlessSmart.json');
 const pkg = require('../package.json');
-const provider = ethers_1.getDefaultProvider('ropsten');
+const network = process.env.NETWORK;
+const provider = network === 'ganache'
+    ? new ethers_1.ethers.providers.JsonRpcProvider('http://localhost:8545')
+    : ethers_1.getDefaultProvider(network);
 const ethSession = new EthereumUserSession_1.default(new configstore_1.default(pkg.name), provider);
-const ethContract = new EthereumContract_1.default(new ethers_1.Contract('0x0096E8C3052940C01E9663A95D4A981D8BA155c4', ESmart.abi, provider));
+const ethContract = new EthereumContract_1.default(new ethers_1.Contract(process.env.SMART_ADDRESS, ESmart.abi, provider));
 const ipfsFileManager = new IPFSFileManager_1.default(new IPFS({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' }));
 const jsFileParser = new JSFileParser_1.default();
 const commands = [

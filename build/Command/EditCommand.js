@@ -54,6 +54,17 @@ class EditCommand extends Command_1.default {
                 }]).then((answer) => answer.password);
             const wallet = yield this.session.restoreWallet(password);
             this.contract.connect(wallet);
+            // CHECK IF FUNCTION EXISTS
+            let listInfo;
+            try {
+                listInfo = yield this.contract.getFunctionInfo(args.function_name);
+            }
+            catch (error) {
+                throw new Error("The function you're looking for does not exist! :'(");
+            }
+            if (!(this.session.getAddress().toUpperCase() === listInfo.developer.toUpperCase())) {
+                throw new Error('You are not the owner of the function!');
+            }
             let commandOutput = '';
             if (args.s) {
                 const isDir = fs.lstatSync(args.s).isDirectory();
