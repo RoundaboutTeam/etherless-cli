@@ -27,7 +27,9 @@ import JSFileParser from './FileParser/JSFileParser';
 import FileManager from './IPFS/FileManager';
 import HistoryCommand from './Command/HistoryCommand';
 
-require('dotenv').config();
+const path = require('path');
+
+require('dotenv').config({ path: path.normalize(__dirname + '/../.env') });
 
 const IPFS = require('ipfs-mini');
 
