@@ -70,12 +70,16 @@ class EthereumContract implements EtherlessContract {
         (item : any) => item.values.id.eq(parsedRequest.values.id),
       )?.values;
 
+      let requestResult;
+      try { requestResult = JSON.parse(result.result).message; }
+      catch (error) { requestResult = '--Error trying to find the result--'; }
+
       return {
         id: parsedRequest.values.id,
         date: new Date(timestamp * 1000).toLocaleString(),
         name: parsedRequest.values.funcname,
         params: parsedRequest.values.param,
-        result: result !== undefined ? JSON.parse(result.result).message : '--Request with no response--',
+        result: requestResult,
       };
     })));
   }
