@@ -1,17 +1,13 @@
 import {
-  ethers,
   Contract,
   Wallet,
   EventFilter,
 } from 'ethers';
 
-import { Provider } from 'ethers/providers';
-
 import {
   BigNumber,
   bigNumberify,
   getAddress,
-  parseEther,
 } from 'ethers/utils';
 
 import EtherlessContract from './EtherlessContract';
@@ -26,34 +22,61 @@ class EthereumContract implements EtherlessContract {
     this.contract = contract;
   }
 
+  /**
+   * Get a list of all functions available inside the platform
+   */
   async getAllFunctions() : Promise<Array<BriefFunction>> {
     return JSON.parse(await this.contract.getFuncList()).functionArray;
   }
 
+  /**
+   * Get a list of all functions owned by a user
+   * @param address: address of the user to consider
+   */
   async getMyFunctions(address : string) : Promise<Array<BriefFunction>> {
     return JSON.parse(
       await this.contract.getOwnedList(getAddress(address)),
     ).functionArray;
   }
 
+  /**
+   * Returns all details about a function
+   * @param name: name of the function
+   */
   async getFunctionInfo(name : string) : Promise<Function> {
     return JSON.parse(await this.contract.getInfo(name));
   }
 
+  /**
+   * Connect a wallet to a contract instance
+   * @param wallet: wallet to connect
+   */
   connect(wallet : Wallet) : void {
     this.contract = this.contract.connect(wallet);
   }
 
+  /**
+   * Get all events related to a filter
+   * @param filter: filter to use to retrieve events
+   */
   private async getEvents(filter : any) : Promise<Array<any>> {
     filter.fromBlock = 0;
     filter.toBlock = 'latest';
     return this.contract.provider.getLogs(filter);
   }
 
+  /**
+   * Parse a list of log
+   * @param logs: array of logs
+   */
   private parseLogs(logs : Array<any>) : Array<any> {
     return logs.map((log : any) => this.contract.interface.parseLog(log));
   }
 
+  /**
+   * Get details about past run request of a user
+   * @param address: address of the considered user
+   */
   async getExecHistory(address : string) : Promise<Array<HistoryItem>> {
     const pastRequest = await this.getEvents(
       this.contract.filters.runRequest(null, null, address, null),
@@ -84,6 +107,10 @@ class EthereumContract implements EtherlessContract {
     })));
   }
 
+  /**
+   * Check if a function is available on the platform
+   * @param name: name of the function
+   */
   async existsFunction(name : string) : Promise<boolean> {
     try {
       const listInfo : Function = await this.getFunctionInfo(name);
@@ -93,6 +120,12 @@ class EthereumContract implements EtherlessContract {
     }
   }
 
+  /**
+   * Send a run request to the smart contract
+   * @param name: name of the function to execute
+   * @param params: params to pass to the function
+   * @returns the request ID
+   */
   async sendRunRequest(name : string, params: string) : Promise<BigNumber> {
     let listInfo : Function;
     try {
@@ -117,10 +150,20 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
+  /**
+   * Check if two string are case-insensitive equals
+   * @param s1: first string
+   * @param s2: second string
+   */
   private caseInsensitiveEquality(s1 : string, s2: string) : boolean {
     return s1.toUpperCase() === s2.toUpperCase();
   }
 
+  /**
+   * Send a delete request to the smart contract
+   * @param name: name of the function to delete
+   * @returns the request ID
+   */
   async sendDeleteRequest(name: string) : Promise<BigNumber> {
     let listInfo : Function;
     try {
@@ -147,6 +190,13 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
+  /**
+   * Send a code update request to the smart contract
+   * @param name: name of the function to update
+   * @param signature: new signature of the function
+   * @param cid: id of the IPFS resource
+   * @returns the request ID
+   */
   async sendCodeUpdateRequest(name: string, signature: string, cid: string) : Promise<BigNumber> {
     console.log('Creating request to edit function..');
     const tx = await this.contract.editFunction(name, signature, cid, { value: bigNumberify('10') });
@@ -159,6 +209,11 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
+  /**
+   * Update the description of a function
+   * @param name: function name
+   * @param newDesc: new description
+   */
   async updateDesc(name: string, newDesc : string) : Promise<void> {
     if (newDesc.length > 150) {
       throw new Error('The new description must be at most 150 characters long');
@@ -168,6 +223,14 @@ class EthereumContract implements EtherlessContract {
     await tx.wait();
   }
 
+  /**
+   * Send a deployment request to the smart contract
+   * @param name: name of the function to update
+   * @param desc: description of the function
+   * @param signature: new signature of the function
+   * @param cid: id of the IPFS resource
+   * @returns the request ID
+   */
   async sendDeployRequest(name: string, signature: string, desc : string, cid: string)
       : Promise<BigNumber> {
     console.log('Creating request to deploy function..');
@@ -181,6 +244,10 @@ class EthereumContract implements EtherlessContract {
     return requestId;
   }
 
+  /**
+   * Listen to the server response of a request
+   * @param requestId: id of the considered request
+   */
   listenResponse(requestId : BigNumber) : Promise<string> {
     console.log('Waiting for the response...');
 

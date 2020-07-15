@@ -19,6 +19,11 @@ class EthereumUserSession implements UserSession {
     this.provider = provider;
   }
 
+  /**
+   * Save locally an encrypted version of the wallet
+   * @param password: password to use to encrypt the wallet
+   * @param wallet: wallet to save
+   */
   private saveWallet(password : string, wallet : Wallet) : void {
     wallet.encrypt(password).then((encryptedJson : string) => {
       this.conf.set(EthereumUserSession.WALLET_KEY, encryptedJson);
@@ -27,11 +32,20 @@ class EthereumUserSession implements UserSession {
     this.conf.set(EthereumUserSession.ADDRESS_KEY, wallet.address);
   }
 
+  /**
+   * Check if there is a user logged inside the platform
+   */
   isLogged() : boolean {
     return this.conf.get(EthereumUserSession.WALLET_KEY) !== null
       && this.conf.get(EthereumUserSession.WALLET_KEY) !== undefined;
   }
 
+  /**
+   * Access a wallet using a private key, and store a copy of it
+   *  locally (using saveWallet function)
+   * @param privateKey: private key to access the wallet
+   * @param password: password to store locally the wallet
+   */
   loginWithPrivateKey(privateKey : string, password : string) : Wallet {
     if (this.isLogged()) {
       throw new Error('You are already logged in!');
@@ -42,6 +56,12 @@ class EthereumUserSession implements UserSession {
     return wallet;
   }
 
+  /**
+   * Access a wallet using a mnemonic phrase, and store a copy of it
+   *  locally (using saveWallet function)
+   * @param mnemonic: mnemonic phrase to access the wallet
+   * @param password: password to store locally the wallet
+   */
   loginWithMnemonicPhrase(mnemonic : string, password: string) : Wallet {
     if (this.isLogged()) {
       throw new Error('You are already logged in!');
@@ -52,10 +72,16 @@ class EthereumUserSession implements UserSession {
     return wallet;
   }
 
+  /**
+   * Create a new random wallet
+   */
   signup() : Wallet {
     return Wallet.createRandom();
   }
 
+  /**
+   * Logout and deletes all past information about the wallet
+   */
   logout() : void {
     if (this.isLogged()) {
       this.conf.delete(EthereumUserSession.WALLET_KEY);
@@ -64,6 +90,10 @@ class EthereumUserSession implements UserSession {
     }
   }
 
+  /**
+   * Restore the local encrypted copy of the wallet
+   * @param password: password to decrypt the local wallet
+   */
   async restoreWallet(password:string) : Promise<Wallet> {
     if (this.isLogged()) {
       const wallet : Wallet = await Wallet.fromEncryptedJson(
@@ -77,6 +107,9 @@ class EthereumUserSession implements UserSession {
     throw new Error('No user logged in');
   }
 
+  /**
+   * Return the address of the current user
+   */
   getAddress() : string {
     if (this.isLogged()) {
       return this.conf.get(EthereumUserSession.ADDRESS_KEY);

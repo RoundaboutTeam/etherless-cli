@@ -10,7 +10,7 @@ class IPFSFileManager implements FileManager {
 
   /**
   * @returns The IPFS CID related to the uploaded JSON
-  * @param buffer The buffer you want to save to IPFS
+  * @param buffer The deployment info you want to save to IPFS
   */
   public async save(deployInfo : DeployInfo) : Promise<string> {
     return new Promise((resolve, reject) => {
