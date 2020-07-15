@@ -13,7 +13,7 @@ class InitCommand extends Command {
   async exec(args: any) : Promise<any> {
     let data = table([
       [chalk.bgRed('Welcome to Etherless')],
-      ['Perform any action following the sintax below :\netherless <command_name> [-flag] [params..]'],
+      ['Perform any action following the sintax below : \netherless <command_name> [-flag] [params..] '],
     ], {
       columns: {
         0: {

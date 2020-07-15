@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const table_1 = require("table");
 const Command_1 = __importDefault(require("./Command"));
-const Table = require('cli-table3');
+const chalk = require('chalk');
 class InitCommand extends Command_1.default {
     constructor() {
         super(...arguments);
@@ -22,13 +23,34 @@ class InitCommand extends Command_1.default {
     }
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
-            const intro = new Table({ chars: { 'mid': ' ', 'left-mid': '|', 'mid-mid': ' ', 'right-mid': '|' } });
-            intro.push(['Welcome to Etherless'], ['Perform any action following the sintax below :'], ['etherless <command_name> [-flag] [params..]']);
-            const table = new Table({
-                head: ['Command', 'Description']
+            let data = table_1.table([
+                [chalk.bgRed('Welcome to Etherless')],
+                ['Perform any action following the sintax below : \netherless <command_name> [-flag] [params..] '],
+            ], {
+                columns: {
+                    0: {
+                        width: 50,
+                        alignment: 'center',
+                    },
+                },
             });
-            table.push(['signup \n\n\n\n\nsignup -save', 'Signup into ethereum network, the following information will be provided:\n-Private Key, \n-Mnenonic Phrase, \n-Address\n\nSave credentials to file'], ['login <your_private_key> | -m <your_mnemonic_phrase>', 'Login into the ethereum network'], ['logout', 'Logout from ethereum network'], ['whoami', 'Return the address of your current session']);
-            return intro.toString() + '\n' + table.toString();
+            data += table_1.table([
+                [chalk.bold('Command'), chalk.bold('Description')],
+                ['signup \n\n\n\n\n\nsignup -save', 'Signup into Ethereum network, the following information will be provided:\n-Private Key, \n-Mnenonic Phrase, \n-Address\n\nSave credentials to file'],
+                ['login <your_private_key> | -m <your_mnemonic_phrase>', 'Login into the ethereum network'],
+                ['logout', 'Logout from ethereum network'],
+                ['whoami', 'Return the address of your current session'],
+            ], {
+                columns: {
+                    0: {
+                        width: 30,
+                    },
+                    1: {
+                        width: 50,
+                    },
+                },
+            });
+            return data;
         });
     }
     builder(yargs) {

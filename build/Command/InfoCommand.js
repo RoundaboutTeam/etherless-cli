@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const table_1 = require("table");
 const Command_1 = __importDefault(require("./Command"));
-const Table = require('cli-table3');
+const chalk = require('chalk');
 class InfoCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -27,9 +28,23 @@ class InfoCommand extends Command_1.default {
                 throw new Error('You must be logged to use this command');
             }
             const listInfo = yield this.contract.getFunctionInfo(args.function_name);
-            const table = new Table();
-            table.push({ Name: listInfo.name }, { Owner: listInfo.developer }, { Signature: listInfo.signature }, { Price: listInfo.price }, { Description: listInfo.description });
-            return table.toString();
+            const data = [
+                [chalk.bold('Name'), listInfo.name],
+                [chalk.bold('Owner'), listInfo.developer],
+                [chalk.bold('Signature'), listInfo.signature],
+                [chalk.bold('Price'), listInfo.price],
+                [chalk.bold('Description'), listInfo.description],
+            ];
+            return table_1.table(data, {
+                columns: {
+                    0: {
+                        width: 20,
+                    },
+                    1: {
+                        width: 50,
+                    },
+                },
+            });
         });
     }
     builder(yargs) {
