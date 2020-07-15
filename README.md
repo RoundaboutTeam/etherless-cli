@@ -7,6 +7,10 @@ Open a terminal and run the command <code>npm i @roundabout-team/etherless-cli -
 # Commands 
 To use a command from inside the repository run: <code>etherless `<command>` [params...]</code>
 
+## Init 
+Command: <code>etherless init</code> <br/> 
+The init command shows a brief introduction to the Etherless-cli module. 
+
 ## Signup 
 Command: <code>etherless signup [--save]</code> <br/> 
 Will create an Ethereum account for you, and show its: address, private key and mnemonic phrase. You can request to save these informations inside a file of the current directory with the flag <code>--save</code>.
@@ -54,4 +58,11 @@ After executing this command the considered function will be deleted
 ## History 
 Command: <code>etherless history [--limit]</code> <br />
 Following the execution of this command, a list of the user's past execution requests will be shown, with the relative results. The limit parameter indicates the maximum number of elements in this list.
-  
+
+## Search 
+Command: <code>etherless search `<keyword>` </code> <br />
+A list of all functions containing the "keyword" parameter inside their name will be shown. 
+
+## Whoami 
+Command: <code>etherless whoami</code> <br />
+If there is a user logged inside the Etherless-cli module, his address will be shown. 

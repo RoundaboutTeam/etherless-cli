@@ -25,8 +25,8 @@ class InitCommand extends Command {
 
     data += table([
       [chalk.bold('Command'), chalk.bold('Description')],
-      ['signup \n\n\n\n\n\nsignup -save','Signup into Ethereum network, the following information will be provided:\n-Private Key, \n-Mnenonic Phrase, \n-Address\n\nSave credentials to file'],
-      ['login <your_private_key> | -m <your_mnemonic_phrase>','Login into the ethereum network'],
+      ['signup \n\n\n\n\n\nsignup -save', 'Signup into Ethereum network, the following information will be provided:\n-Private Key, \n-Mnenonic Phrase, \n-Address\n\nSave credentials to file'],
+      ['login <your_private_key> | -m <your_mnemonic_phrase>', 'Login into the ethereum network'],
       ['logout', 'Logout from ethereum network'],
       ['whoami', 'Return the address of your current session'],
     ], {
