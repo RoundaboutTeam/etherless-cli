@@ -74,7 +74,7 @@ class EthereumUserSession implements UserSession {
       return wallet.connect(this.provider);
     }
 
-    throw new Error('No wallet found');
+    throw new Error('No user logged in');
   }
 
   getAddress() : string {

@@ -25,26 +25,29 @@ class InfoCommand extends Command {
       throw new Error('You must be logged to use this command');
     }
 
-    const listInfo : Function = await this.contract.getFunctionInfo(args.function_name);
+    try {
+      const listInfo : Function = await this.contract.getFunctionInfo(args.function_name);
+      const data = [
+        [chalk.bold('Name'), listInfo.name],
+        [chalk.bold('Owner'), listInfo.developer],
+        [chalk.bold('Signature'), listInfo.signature],
+        [chalk.bold('Price'), listInfo.price],
+        [chalk.bold('Description'), listInfo.description],
+      ];
 
-    const data = [
-      [chalk.bold('Name'), listInfo.name],
-      [chalk.bold('Owner'), listInfo.developer],
-      [chalk.bold('Signature'), listInfo.signature],
-      [chalk.bold('Price'), listInfo.price],
-      [chalk.bold('Description'), listInfo.description],
-    ];
-
-    return table(data, {
-      columns: {
-        0: {
-          width: 20,
+      return table(data, {
+        columns: {
+          0: {
+            width: 20,
+          },
+          1: {
+            width: 50,
+          },
         },
-        1: {
-          width: 50,
-        },
-      },
-    });
+      });
+    } catch (error) {
+      throw Error('The function you are looking for doesn not exist!');
+    }
   }
 
   builder(yargs : Argv) : any {
