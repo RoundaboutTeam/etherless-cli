@@ -14,6 +14,8 @@ const yargs = require('yargs');
 
 yargs.positional = jest.fn().mockReturnValue(require('yargs'));
 
+yargs.locale = jest.fn().mockImplementation();
+
 yargs.parse = jest.fn().mockImplementation();
 yargs.command = jest.fn().mockImplementation();
 yargs.getCommandInstance = jest.fn().mockImplementation(() => ({

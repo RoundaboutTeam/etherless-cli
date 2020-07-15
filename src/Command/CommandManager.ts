@@ -1,6 +1,8 @@
 import Command from './Command';
 
-const yargs = require('yargs').locale('en');
+const yargs = require('yargs');
+
+yargs.locale('en');
 
 class CommandManager {
   /**
