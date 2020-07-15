@@ -12,12 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_table3_1 = __importDefault(require("cli-table3"));
+const table_1 = require("table");
 const Command_1 = __importDefault(require("./Command"));
-const table = new cli_table3_1.default({
-    head: ['Function', 'Price'],
-    colWidths: [35, 10],
-});
+const chalk = require('chalk');
 class SearchCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -33,8 +30,18 @@ class SearchCommand extends Command_1.default {
                 return 'No function found';
             const items = filteredList
                 .map((item) => [item.name + item.signature, item.price]);
-            table.push(...items);
-            return table.toString();
+            items.unshift([chalk.bold('Function'), chalk.bold('Price')]);
+            return table_1.table(items, {
+                columns: {
+                    0: {
+                        width: 30,
+                    },
+                    1: {
+                        width: 5,
+                        alignment: 'center',
+                    },
+                },
+            });
         });
     }
     builder(yargs) {

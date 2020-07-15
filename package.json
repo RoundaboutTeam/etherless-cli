@@ -1,6 +1,6 @@
 {
   "name": "@roundabout-team/etherless-cli",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Module to which the developer interacts with ​etherless​.",
   "scripts": {
     "build": "tsc",

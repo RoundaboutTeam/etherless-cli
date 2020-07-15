@@ -12,11 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const cli_table3_1 = __importDefault(require("cli-table3"));
+const table_1 = require("table");
 const Command_1 = __importDefault(require("./Command"));
-const table = new cli_table3_1.default({
-    head: ['Id', 'Date', 'Request', 'Result'],
-});
+const chalk = require('chalk');
 class HistoryCommand extends Command_1.default {
     constructor(contract, session) {
         super(session);
@@ -28,14 +26,29 @@ class HistoryCommand extends Command_1.default {
         return __awaiter(this, void 0, void 0, function* () {
             const address = yield this.session.getAddress();
             let history = yield this.contract.getExecHistory(address);
-            if (args.limit && args.limit > 0)
-                history = history.slice(0, args.limit);
             if (history.length === 0)
                 return 'No past executions found';
-            history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? 1 : -1));
+            history.sort((a, b) => (parseInt(a.id) > parseInt(b.id) ? -1 : 1));
+            if (args.limit && args.limit > 0)
+                history = history.slice(0, args.limit);
             const values = history.map((item) => [item.id.toString(), item.date, `${item.name}(${item.params})`, item.result]);
-            table.push(...values);
-            return table.toString();
+            values.unshift([chalk.bold('Id'), chalk.bold('Date'), chalk.bold('Request'), chalk.bold('Result')]);
+            return table_1.table(values, {
+                columns: {
+                    0: {
+                        width: 5,
+                    },
+                    1: {
+                        width: 20,
+                    },
+                    2: {
+                        width: 20,
+                    },
+                    3: {
+                        width: 20,
+                    },
+                },
+            });
         });
     }
     builder(yargs) {
