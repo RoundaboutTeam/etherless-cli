@@ -10,7 +10,7 @@ class JSFileParser implements FileParser {
    * Parse a javascript source file
    * @param path: path of the file to parse
    */
-  parse(path : string) {
+  parse(path : string) : void {
     if (!fs.existsSync(path)) {
       throw new Error('File doesn\'t exists');
     }

@@ -1,6 +1,5 @@
 import Configstore from 'configstore';
 import { Wallet } from 'ethers';
-import { BigNumber } from 'ethers/utils';
 import { Provider } from 'ethers/providers';
 
 import UserSession from './UserSession';

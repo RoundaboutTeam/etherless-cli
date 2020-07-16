@@ -1,9 +1,5 @@
 import { Argv } from 'yargs';
 import {
-  ethers,
-  Contract,
-  getDefaultProvider,
-  EventFilter,
   Wallet,
 } from 'ethers';
 import { BigNumber } from 'ethers/utils';
