@@ -17,13 +17,23 @@ class WhoAmICommand extends Command_1.default {
     constructor() {
         super(...arguments);
         this.command = 'whoami';
-        this.description = 'show current wallet address';
+        this.description = 'Description:\n_\b  Show the address of the current session';
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command returns the address of the current user.
+     *  If no user is logged, an error is thrown.
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
             return `Current user address: ${this.session.getAddress()}`;
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return {};
     }

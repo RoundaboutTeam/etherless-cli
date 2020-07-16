@@ -34,12 +34,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer = __importStar(require("inquirer"));
 const Command_1 = __importDefault(require("./Command"));
 class DeleteCommand extends Command_1.default {
+    /**
+     * Delete command constructor
+     * @param contract: instance of class implementing EtherlessContract interface
+     * @param session: instance of class implementing UserSession interface
+     */
     constructor(contract, session) {
         super(session);
         this.command = 'delete <function_name>';
-        this.description = 'delete a function';
+        this.description = 'Description:\n_\b  Delete a function you own inside Etherless';
         this.contract = contract;
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command deletes the function indicated by the user,
+     * if an error occurs, a corresponding exception will be thrown
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
             const password = yield inquirer
@@ -48,16 +59,23 @@ class DeleteCommand extends Command_1.default {
                     message: 'Enter the password to decrypt your wallet: ',
                     name: 'password',
                 }]).then((answer) => answer.password);
+            // restore and connect to the wallet
             const wallet = yield this.session.restoreWallet(password);
             this.contract.connect(wallet);
+            // send deletion request
             const requestId = yield this.contract.sendDeleteRequest(args.function_name);
+            // wait for the server result
             const result = yield this.contract.listenResponse(requestId);
             return JSON.parse(result).message;
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return yargs.positional('function_name', {
-            describe: 'Name of the function to execute',
+            describe: 'Name of the function to delete',
             type: 'string',
         });
     }

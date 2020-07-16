@@ -15,7 +15,7 @@ class IPFSFileManager {
     }
     /**
     * @returns The IPFS CID related to the uploaded JSON
-    * @param buffer The buffer you want to save to IPFS
+    * @param buffer The deployment info you want to save to IPFS
     */
     save(deployInfo) {
         return __awaiter(this, void 0, void 0, function* () {

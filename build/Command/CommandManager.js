@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const yargs = require('yargs');
+yargs.locale('en');
 class CommandManager {
     /**
      * @param command: to be added to managed commands

@@ -19,10 +19,16 @@ class InitCommand extends Command_1.default {
     constructor() {
         super(...arguments);
         this.command = 'init';
-        this.description = 'Functionality showcase';
+        this.description = 'Description:\n_\b  Guide to basic Etherless functionality';
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command returns an introduction to the product
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
+            // introduction to the product
             let data = table_1.table([
                 [chalk.bgRed('Welcome to Etherless')],
                 ['Perform any action following the sintax below : \netherless <command_name> [-flag] [params..] '],
@@ -34,6 +40,7 @@ class InitCommand extends Command_1.default {
                     },
                 },
             });
+            // some commands that can be useful to the user
             data += table_1.table([
                 [chalk.bold('Command'), chalk.bold('Description')],
                 ['signup \n\n\n\n\n\nsignup -save', 'Signup into Ethereum network, the following information will be provided:\n-Private Key, \n-Mnenonic Phrase, \n-Address\n\nSave credentials to file'],
@@ -53,6 +60,10 @@ class InitCommand extends Command_1.default {
             return data;
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return {};
     }

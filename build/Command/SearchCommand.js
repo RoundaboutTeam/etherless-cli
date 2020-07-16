@@ -16,18 +16,33 @@ const table_1 = require("table");
 const Command_1 = __importDefault(require("./Command"));
 const chalk = require('chalk');
 class SearchCommand extends Command_1.default {
+    /**
+     * Search command constructor
+     * @param contract: instance of class implementing EtherlessContract interface
+     * @param session: instance of class implementing UserSession interface
+     */
     constructor(contract, session) {
         super(session);
         this.command = 'search <keyword>';
-        this.description = 'list all functions having a keyword inside their name';
+        this.description = 'Description:\n_\b  List all functions having a keyword inside their name';
         this.contract = contract;
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command looks for functions in the platform that contain
+     *  a keyword inside their name
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
+            // get all functions from the contract
             const list = yield this.contract.getAllFunctions();
+            // filter the functions by the keyword
             const filteredList = list.filter((item) => item.name.includes(args.keyword));
+            // if there are no function found, return a message
             if (filteredList.length === 0)
                 return 'No function found';
+            // otherwise, a table with all details is created
             const items = filteredList
                 .map((item) => [item.name + item.signature, item.price]);
             items.unshift([chalk.bold('Function'), chalk.bold('Price')]);

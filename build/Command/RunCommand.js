@@ -34,27 +34,46 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const inquirer = __importStar(require("inquirer"));
 const Command_1 = __importDefault(require("./Command"));
 class RunCommand extends Command_1.default {
+    /**
+     * Run command constructor
+     * @param contract: instance of class implementing EtherlessContract interface
+     * @param session: instance of class implementing UserSession interface
+     */
     constructor(contract, session) {
         super(session);
         this.command = 'run <function_name> [params..]';
-        this.description = 'execute a function';
+        this.description = 'Description:\n_\b  Execute a function';
         this.contract = contract;
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command executes the considered function using
+     *  the parameters indicated by the user
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
+            // request the password to decrypt the wallet
             const password = yield inquirer
                 .prompt([{
                     type: 'password',
                     message: 'Enter the password to decrypt your wallet: ',
                     name: 'password',
                 }]).then((answer) => answer.password);
+            // restore the wallet and connect it to the cotract instance
             const wallet = yield this.session.restoreWallet(password);
             this.contract.connect(wallet);
+            // send the run request
             const requestId = yield this.contract.sendRunRequest(args.function_name, args.params.toString());
+            // return the message received from the server
             const result = yield this.contract.listenResponse(requestId);
             return JSON.parse(result).message;
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return yargs.positional('function_name', {
             describe: 'Name of the function to execute',

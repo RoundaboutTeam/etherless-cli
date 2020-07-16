@@ -16,40 +16,63 @@ const table_1 = require("table");
 const Command_1 = __importDefault(require("./Command"));
 const chalk = require('chalk');
 class InfoCommand extends Command_1.default {
+    /**
+     * Info command constructor
+     * @param contract: instance of class implementing EtherlessContract interface
+     * @param session: instance of class implementing UserSession interface
+     */
     constructor(contract, session) {
         super(session);
         this.command = 'info <function_name>';
-        this.description = 'info of a specific function inside Etherless platform';
+        this.description = 'Description:\n_\b  Information of a specific function inside Etherless platform';
         this.contract = contract;
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command returns all details about a specific function
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
+            // it is required that a user must be logged
             if (!this.session.isLogged()) {
                 throw new Error('You must be logged to use this command');
             }
-            const listInfo = yield this.contract.getFunctionInfo(args.function_name);
-            const data = [
-                [chalk.bold('Name'), listInfo.name],
-                [chalk.bold('Owner'), listInfo.developer],
-                [chalk.bold('Signature'), listInfo.signature],
-                [chalk.bold('Price'), listInfo.price],
-                [chalk.bold('Description'), listInfo.description],
-            ];
-            return table_1.table(data, {
-                columns: {
-                    0: {
-                        width: 20,
+            try {
+                // get details about the function from the smart contract
+                const listInfo = yield this.contract.getFunctionInfo(args.function_name);
+                // show data in a table
+                const data = [
+                    [chalk.bold('Name'), listInfo.name],
+                    [chalk.bold('Owner'), listInfo.developer],
+                    [chalk.bold('Signature'), listInfo.signature],
+                    [chalk.bold('Price'), listInfo.price],
+                    [chalk.bold('Description'), listInfo.description],
+                ];
+                return table_1.table(data, {
+                    columns: {
+                        0: {
+                            width: 20,
+                        },
+                        1: {
+                            width: 50,
+                        },
                     },
-                    1: {
-                        width: 50,
-                    },
-                },
-            });
+                });
+            }
+            catch (error) {
+                // if the function doesn't exits, an error is thrown
+                throw Error('The function you are looking for doesn not exist!');
+            }
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return yargs.positional('function_name', {
-            describe: 'Name of the function you want to view informations',
+            describe: 'Name of the function you want to view details',
             type: 'string',
         });
     }

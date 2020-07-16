@@ -17,14 +17,24 @@ class LogoutCommand extends Command_1.default {
     constructor() {
         super(...arguments);
         this.command = 'logout';
-        this.description = 'logout from Ethereum network';
+        this.description = 'Description:\n_\b  Logout from Ethereum network';
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command deletes all information about the current user. If no user
+     * is logged, it throw a corrisponding error
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
             this.session.logout();
             return 'Logout from Ethereum network successfully done';
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return {};
     }

@@ -37,16 +37,24 @@ class LoginCommand extends Command_1.default {
     constructor() {
         super(...arguments);
         this.command = 'login [m] <value..>';
-        this.description = 'login inside Ethereum network';
+        this.description = 'Description:\n_\b  Login inside Ethereum network';
     }
+    /**
+     * @method exec
+     * @param yargs: arguments nedded for the command
+     * @description the command deletes the function indicated by the user,
+     * if an error occurs, a corresponding exception will be thrown
+     */
     exec(args) {
         return __awaiter(this, void 0, void 0, function* () {
+            // request the password to encrypt the wallet
             const password = yield Inquirer
                 .prompt([{
                     type: 'password',
                     message: 'Enter the password to encrypt your wallet: ',
                     name: 'password',
                 }]).then((answer) => answer.password);
+            // check if the user want to access using mnemonic or private key
             const value = args.value.join(' ');
             const wallet = args.m
                 ? this.session.loginWithMnemonicPhrase(value, password)
@@ -54,6 +62,10 @@ class LoginCommand extends Command_1.default {
             return `Login successfully done within the Ethereum network with address ${wallet.address}`;
         });
     }
+    /**
+     * Descriptor of the command
+     * @param yargs: object used to define the command params
+     */
     builder(yargs) {
         return yargs.positional('value', {
             describe: 'Value to access the wallet, it can be a private key or mnemonic phrase',
