@@ -4,7 +4,7 @@ import Command from './Command';
 class LogoutCommand extends Command {
   command = 'logout';
 
-  description = 'logout from Ethereum network';
+  description = 'Description:\n_\b  Logout from Ethereum network';
 
   /**
    * @method exec

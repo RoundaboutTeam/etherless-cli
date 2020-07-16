@@ -19,7 +19,7 @@ const path = require('path');
 class DeployCommand extends Command {
   command = 'deploy <function_name> <path> <description>';
 
-  description = 'deploy a function';
+  description = 'Description:\n_\b  Deploy a function inside Etherless';
 
   private contract : EtherlessContract;
 
@@ -130,7 +130,7 @@ class DeployCommand extends Command {
       describe: 'Name of the function to deploy',
       type: 'string',
     }).positional('path', {
-      describe: 'relative path of the source file',
+      describe: 'Relative path of the source file',
       type: 'string',
     }).positional('description', {
       describe: 'Description of the function to deploy',

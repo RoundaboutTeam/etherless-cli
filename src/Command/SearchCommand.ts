@@ -11,7 +11,7 @@ const chalk = require('chalk');
 class SearchCommand extends Command {
   command = 'search <keyword>';
 
-  description = 'list all functions having a keyword inside their name';
+  description = 'Description:\n_\b  List all functions having a keyword inside their name';
 
   private contract : EtherlessContract;
 

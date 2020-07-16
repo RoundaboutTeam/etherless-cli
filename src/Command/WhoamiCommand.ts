@@ -5,7 +5,7 @@ import Command from './Command';
 class WhoAmICommand extends Command {
   command = 'whoami';
 
-  description = 'show current wallet address';
+  description = 'Description:\n_\b  Show the address of the current session';
 
   /**
    * @method exec

@@ -8,7 +8,7 @@ const chalk = require('chalk');
 class InitCommand extends Command {
   command = 'init';
 
-  description = 'Functionality showcase';
+  description = 'Description:\n_\b  Guide to basic Etherless functionality';
 
   /**
    * @method exec

@@ -20,7 +20,7 @@ const path = require('path');
 class EditCommand extends Command {
   command = 'edit <function_name> [s] [d]';
 
-  description = 'edit a function you deployed';
+  description = 'Description:\n_\b  Edit a function you deployed';
 
   private contract : EtherlessContract;
 

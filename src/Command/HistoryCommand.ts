@@ -12,7 +12,7 @@ const chalk = require('chalk');
 class HistoryCommand extends Command {
   command = 'history [limit]';
 
-  description = 'get a list of your past executions';
+  description = 'Description:\n_\b  Get a list of your past request';
 
   private contract : EtherlessContract;
 

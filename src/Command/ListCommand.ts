@@ -11,7 +11,7 @@ const chalk = require('chalk');
 class ListCommand extends Command {
   command = 'list [m]';
 
-  description = 'list functions inside Etherless platform';
+  description = 'Description:\n_\b  List the functions inside Etherless platform';
 
   private contract : EtherlessContract;
 
