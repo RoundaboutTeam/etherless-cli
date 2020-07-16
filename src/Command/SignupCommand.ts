@@ -8,7 +8,7 @@ const fs = require('fs');
 class SignupCommand extends Command {
   command = 'signup [save]';
 
-  description = 'create a new account';
+  description = 'Description:\n_\b  Create a new account';
 
   /**
    * @method exec

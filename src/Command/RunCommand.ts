@@ -17,7 +17,7 @@ import Command from './Command';
 class RunCommand extends Command {
   command = 'run <function_name> [params..]';
 
-  description = 'execute a function';
+  description = 'Description:\n_\b  Execute a function';
 
   private contract : EtherlessContract;
 

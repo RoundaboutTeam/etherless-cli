@@ -11,7 +11,7 @@ const chalk = require('chalk');
 class InfoCommand extends Command {
   command = 'info <function_name>';
 
-  description = 'info of a specific function inside Etherless platform';
+  description = 'Description:\n_\b  Information of a specific function inside Etherless platform';
 
   private contract : EtherlessContract;
 
@@ -71,7 +71,7 @@ class InfoCommand extends Command {
    */
   builder(yargs : Argv) : any {
     return yargs.positional('function_name', {
-      describe: 'Name of the function you want to view informations',
+      describe: 'Name of the function you want to view details',
       type: 'string',
     });
   }

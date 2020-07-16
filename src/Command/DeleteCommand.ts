@@ -17,7 +17,7 @@ import Command from './Command';
 class DeleteCommand extends Command {
   command = 'delete <function_name>';
 
-  description = 'delete a function';
+  description = 'Description:\n_\b  Delete a function you own inside Etherless';
 
   private contract : EtherlessContract;
 
@@ -65,7 +65,7 @@ class DeleteCommand extends Command {
    */
   builder(yargs : Argv) : any {
     return yargs.positional('function_name', {
-      describe: 'Name of the function to execute',
+      describe: 'Name of the function to delete',
       type: 'string',
     });
   }

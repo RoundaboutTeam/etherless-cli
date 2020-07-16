@@ -7,7 +7,7 @@ import Command from './Command';
 class LoginCommand extends Command {
   command = 'login [m] <value..>';
 
-  description = 'login inside Ethereum network';
+  description = 'Description:\n_\b  Login inside Ethereum network';
 
   /**
    * @method exec
