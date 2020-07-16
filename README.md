@@ -4,6 +4,15 @@ Module through which users can interact with the Etherless platform.
 # Installation 
 Open a terminal and run the command <code>npm i @roundabout-team/etherless-cli -g</code> (Depending on your OS, administrator privileges may be required)
 
+# Settings 
+## Change Ethereum network used 
+To change the Ethereum network used by the cli, open the .env file and modify the NETWORK field. 
+
+## Update the contract of Etherless-smart module 
+If the contract of Etherless-smart module change, to update the CLI you have to: 
+ - Update the abi file inside the contracts directory 
+ - If the address of the smart contract has changed, update the field SMART_ADDRESS inside .env file
+
 # Commands 
 To use a command from inside the repository run: <code>etherless `<command>` [params...]</code>
 
