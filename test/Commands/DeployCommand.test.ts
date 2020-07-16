@@ -63,7 +63,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('deploy a function');
+  expect(command.getDescription()).toBe('Description:\n_\b  Deploy a function inside Etherless');
 });
 
 test('deploy: error function already exists', async () => {

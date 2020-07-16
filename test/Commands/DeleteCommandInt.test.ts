@@ -20,6 +20,58 @@ const yargs = require('yargs');
 yargs.positional = jest.fn().mockReturnValue(require('yargs'));
 
 const contract = new ethers.Contract();
+Object.defineProperty(contract, 'interface', {
+  value: {
+    parseLog: jest.fn().mockImplementation(() => ({
+      values: {
+        id: {
+          value: 0,
+          eq: jest.fn().mockReturnValue(true),
+        },
+        funcname: 'mockedFunc',
+        param: 'params',
+        result: JSON.stringify({ message: 'mocked result message' }),
+      },
+    })),
+  },
+});
+
+Object.defineProperty(contract, 'provider', {
+  value: {
+    getLogs: jest.fn().mockImplementation(() => [
+      {
+        blockHash: 'mockedBlockHash',
+      },
+    ]),
+    getBlock: jest.fn().mockImplementation(() => ({
+      timestamp: '123456789',
+    })),
+  },
+});
+
+Object.defineProperty(contract, 'filters', {
+  value: {
+    resultOk: jest.fn().mockReturnValue({
+      fromBlock: '',
+      toBlock: '',
+    }),
+    resultError: jest.fn().mockReturnValue({
+      fromBlock: '',
+      toBlock: '',
+    }),
+    runRequest: jest.fn().mockReturnValue({
+      fromBlock: '',
+      toBlock: '',
+    }),
+  },
+});
+
+Object.defineProperty(contract, 'signer', {
+  value: {
+    getAddress: jest.fn().mockReturnValue('address'),
+  },
+  writable: true,
+});
 
 const pkg = require('../../package.json');
 
@@ -42,11 +94,10 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('delete a function');
+  expect(command.getDescription()).toBe('Description:\n_\b  Delete a function you own inside Etherless');
 });
 
 test('test command execution', () => {
-
   (contract.getInfo as jest.Mock)
     .mockReturnValueOnce(
       Promise.resolve(

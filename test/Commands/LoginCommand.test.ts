@@ -40,7 +40,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('login inside Ethereum network');
+  expect(command.getDescription()).toBe('Description:\n_\b  Login inside Ethereum network');
 });
 
 test('test login with mnemonic phrase', () => {

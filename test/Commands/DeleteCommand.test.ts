@@ -44,7 +44,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('delete a function');
+  expect(command.getDescription()).toBe('Description:\n_\b  Delete a function you own inside Etherless');
 });
 
 test('test command execution', () => {

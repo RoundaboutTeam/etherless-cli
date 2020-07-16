@@ -41,7 +41,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('info of a specific function inside Etherless platform');
+  expect(command.getDescription()).toBe('Description:\n_\b  Information of a specific function inside Etherless platform');
 });
 
 test('command execution with no user logged', () => {

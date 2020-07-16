@@ -45,7 +45,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('list functions inside Etherless platform');
+  expect(command.getDescription()).toBe('Description:\n_\b  List the functions inside Etherless platform');
 });
 
 test('get all functions inside platform', () => {

@@ -37,7 +37,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('Functionality showcase');
+  expect(command.getDescription()).toBe('Description:\n_\b  Guide to basic Etherless functionality');
 });
 
 test('test login with mnemonic phrase', () => {

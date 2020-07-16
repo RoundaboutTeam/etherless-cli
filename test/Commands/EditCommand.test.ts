@@ -63,7 +63,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('edit a function you deployed');
+  expect(command.getDescription()).toBe('Description:\n_\b  Edit a function you deployed');
 });
 
 test('edit function description', () => {

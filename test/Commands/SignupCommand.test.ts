@@ -37,7 +37,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('create a new account');
+  expect(command.getDescription()).toBe('Description:\n_\b  Create a new account');
 });
 
 test('test signup without saving account', () => {

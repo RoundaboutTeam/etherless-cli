@@ -45,7 +45,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('execute a function');
+  expect(command.getDescription()).toBe('Description:\n_\b  Execute a function');
 });
 
 test('test command execution', () => {

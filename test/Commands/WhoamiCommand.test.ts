@@ -39,7 +39,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('show current wallet address');
+  expect(command.getDescription()).toBe('Description:\n_\b  Show the address of the current session');
 });
 
 test('test login with mnemonic phrase', () => {

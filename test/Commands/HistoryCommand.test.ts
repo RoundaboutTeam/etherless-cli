@@ -45,7 +45,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('get a list of your past executions');
+  expect(command.getDescription()).toBe('Description:\n_\b  Get a list of your past request');
 });
 
 test('history with no past element', () => {

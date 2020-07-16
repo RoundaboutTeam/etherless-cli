@@ -39,7 +39,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('logout from Ethereum network');
+  expect(command.getDescription()).toBe('Description:\n_\b  Logout from Ethereum network');
 });
 
 test('test logout command execution', () => {

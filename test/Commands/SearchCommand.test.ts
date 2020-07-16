@@ -44,7 +44,7 @@ test('get command syntax', () => {
 });
 
 test('get command description', () => {
-  expect(command.getDescription()).toBe('list all functions having a keyword inside their name');
+  expect(command.getDescription()).toBe('Description:\n_\b  List all functions having a keyword inside their name');
 });
 
 test('no function containing the keyword', () => {
