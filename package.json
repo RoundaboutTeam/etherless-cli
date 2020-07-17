@@ -1,6 +1,6 @@
 {
   "name": "@roundabout-team/etherless-cli",
-  "version": "1.4.6",
+  "version": "2.0.0",
   "description": "Module to which the developer interacts with ​etherless​.",
   "scripts": {
     "build": "tsc",
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/Rounadbout/etherless-cli.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "main": "./build/index.js",
   "bin": {
     "etherless": "./build/index.js"
