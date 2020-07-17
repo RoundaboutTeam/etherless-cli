@@ -1,50 +1,53 @@
 {
-  "name": "etherless-cli",
-  "version": "1.0.0",
+  "name": "@roundabout-team/etherless-cli",
+  "version": "2.0.1",
   "description": "Module to which the developer interacts with ​etherless​.",
-  "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register test/*.ts || exit 0",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
-    "lint": "eslint src/**/*.ts"
+    "build": "tsc",
+    "test": "jest --coverage --verbose --detectOpenHandles",
+    "lint": "eslint src/*/*.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Rounadbout/etherless-cli.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
+  "main": "./build/index.js",
   "bin": {
-    "etherless": "./src/index.ts"
+    "etherless": "./build/index.js"
   },
   "bugs": {
     "url": "https://github.com/Rounadbout/etherless-cli/issues"
   },
   "homepage": "https://github.com/Rounadbout/etherless-cli#readme",
   "dependencies": {
-    "@types/chai": "^4.2.11",
     "@types/configstore": "^4.0.0",
     "@types/inquirer": "^6.5.0",
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^13.13.4",
+    "@types/node": "^13.13.12",
+    "@types/table": "^5.0.0",
+    "@types/yargs": "^15.0.4",
     "acorn": "^7.2.0",
+    "chalk": "^4.1.0",
     "configstore": "^5.0.1",
+    "dotenv": "^8.2.0",
     "ethers": "^4.0.47",
+    "fs": "0.0.1-security",
     "inquirer": "^7.1.0",
     "ipfs-mini": "^1.1.5",
+    "table": "^5.4.6",
     "ts-node": "^8.9.1",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.5",
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "@types/yargs": "^15.0.4",
+    "@types/jest": "^25.2.3",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
-    "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "mocha": "^7.2.0",
-    "nyc": "^15.0.1"
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0"
   }
 }
